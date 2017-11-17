@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    21:45:27 11/17/2017 
--- Design Name: 
--- Module Name:    RegisterFile - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Company:
+-- Engineer:
 --
--- Dependencies: 
+-- Create Date:    21:45:27 11/17/2017
+-- Design Name:
+-- Module Name:    RegisterFile - Behavioral
+-- Project Name:
+-- Target Devices:
+-- Tool versions:
+-- Description:
 --
--- Revision: 
+-- Dependencies:
+--
+-- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments: 
+-- Additional Comments:
 --
 ----------------------------------------------------------------------------------
 library IEEE;
@@ -37,7 +37,7 @@ entity RegisterFile is
         RdRegB : in std_logic_vector(3 downto 0);
         WrReg : in std_logic_vector(3 downto 0);
         WrData : in std_logic_vector(15 downto 0);
-        
+
         RegDataA : out std_logic_vector(15 downto 0);
         RegDataB : out std_logic_vector(15 downto 0)
     );
@@ -58,4 +58,3 @@ begin
     end process;
 
 end Behavioral;
-
