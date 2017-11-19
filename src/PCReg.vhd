@@ -2,9 +2,9 @@
 -- Company:
 -- Engineer:
 --
--- Create Date:    21:45:27 11/17/2017
+-- Create Date:    14:23:12 11/19/2017
 -- Design Name:
--- Module Name:    RegisterFile - Behavioral
+-- Module Name:    PCReg - Behavioral
 -- Project Name:
 -- Target Devices:
 -- Tool versions:
@@ -19,7 +19,6 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -30,33 +29,37 @@ use IEEE.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity RegisterFile is
+entity PCReg is
     port(
-        RegWrEn : in std_logic;
-        RdRegA  : in std_logic_vector(3 downto 0);
-        RdRegB  : in std_logic_vector(3 downto 0);
-        WrReg   : in std_logic_vector(3 downto 0);
-        WrData  : in std_logic_vector(15 downto 0);
+        clk   : in std_logic;
+        rst   : in std_logic;
 
-        RPC     : in std_logic_vector(15 downto 0);
-        ARWr    : in std_logic;
+        clear : in std_logic;
+        WE    : in std_logic;
+        PC_i  : in std_logic_vector (15 downto 0);
 
-        RegDataA : out std_logic_vector(15 downto 0);
-        RegDataB : out std_logic_vector(15 downto 0)
+        PC_o  : out std_logic_vector (15 downto 0)
     );
-end RegisterFile;
+end PCReg;
 
-architecture Behavioral of RegisterFile is
+architecture Behavioral of PCReg is
 
-    type RegFile is array(0 to 15) of std_logic_vector(15 downto 0);
-    signal regs : RegFile;
+    signal pc : std_logic_vector (15 downto 0);
 
 begin
+
+    PC_o <= pc;
 
     process(clk, rst)
     begin
         if (rst = '1') then
-            reg <= (others => (others => '0'));
+            pc <= (others => '0');
+        elsif (clk'event and clk = '1') then
+            if (clear = '1') then
+                pc <= (others => '0');
+            elsif (WE = '1') then
+                pc <= PC_i;
+            end if;
         end if;
     end process;
 
