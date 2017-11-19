@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    21:44:54 11/17/2017 
--- Design Name: 
--- Module Name:    Extender - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Company:
+-- Engineer:
 --
--- Dependencies: 
+-- Create Date:    21:44:54 11/17/2017
+-- Design Name:
+-- Module Name:    Extender - Behavioral
+-- Project Name:
+-- Target Devices:
+-- Tool versions:
+-- Description:
 --
--- Revision: 
+-- Dependencies:
+--
+-- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments: 
+-- Additional Comments:
 --
 ----------------------------------------------------------------------------------
 library IEEE;
@@ -70,16 +70,16 @@ begin
         SXT(from4to0, ImmeOut'length) when first5 = "10011"     -- LW
                                         or first5 = "11011"     -- SW
                                       else
-        EXT(from4to2, ImmeOut'length) when first5 = "00110"     -- SLL + SRA + SRL
-                                      else
-        EXT(from7to0, ImmeOut'length) when first5 = "01101"     -- LI
-                                      else
         SXT(from7to0, ImmeOut'length) when first5 = "10010"     -- LW_SP
                                       else
         SXT(from7to0, ImmeOut'length) when first8 = "01100011"  -- ADDSP
                                         or first8 = "01100000"  -- BTEQZ
                                       else
-        SXT(from10to0, ImmeOut'length) when first5 = "00010"     -- B
+        SXT(from10to0, ImmeOut'length) when first5 = "00010"    -- B
+                                      else
+        EXT(from4to2, ImmeOut'length) when first5 = "00110"     -- SLL + SRA + SRL
+                                      else
+        EXT(from7to0, ImmeOut'length) when first5 = "01101"     -- LI
                                       else
         (others => 'Z');
 
