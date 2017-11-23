@@ -3,6 +3,7 @@
 （还没）写完软工的SAOest又要开始造CPU啦！
 
 ## 目标
+
 1. 基本功能
     - 25+5条指令（详见doc/我们要做的指令集.xlsx）
 2. 拓展功能
@@ -10,5 +11,27 @@
     - Forward, Hazard Detection完善冲突处理
     - 其他可能的拓展
 
+## 目录树
+
+```bash
+.
+├── common
+│   ├── Mux2.vhd
+│   ├── Mux3.vhd
+│   ├── Mux4.vhd
+│   └── Mux6.vhd
+├── CPU
+│   ├── ALU.vhd
+│   ├── Controller.vhd
+│   ├── CPU.vhd
+│   ├── Extender.vhd
+│   ├── PCReg.vhd
+│   └── RegisterFile.vhd
+├── IO
+│   └── IOBridge.vhd
+└── THINPAD_top.vhd
+```
+
 ***
+
 Powered by SAOest, 2017.
