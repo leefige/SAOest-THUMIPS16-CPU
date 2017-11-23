@@ -33,13 +33,10 @@ use IEEE.numeric_std.all;
 entity RegisterFile is
     port(
         RegWrEn : in std_logic;
-        RdRegA  : in std_logic_vector(3 downto 0);
-        RdRegB  : in std_logic_vector(3 downto 0);
-        WrReg   : in std_logic_vector(3 downto 0);
-        WrData  : in std_logic_vector(15 downto 0);
-
-        RPC     : in std_logic_vector(15 downto 0);
-        ARWr    : in std_logic;
+        RegSrcA  : in std_logic_vector(3 downto 0);
+        RegSrcB  : in std_logic_vector(3 downto 0);
+        RegDst   : in std_logic_vector(3 downto 0);
+        RegWrData  : in std_logic_vector(15 downto 0);
 
         RegDataA : out std_logic_vector(15 downto 0);
         RegDataB : out std_logic_vector(15 downto 0)
@@ -52,11 +49,18 @@ architecture Behavioral of RegisterFile is
     signal regs : RegFile;
 
 begin
+    
+    RegDataA <= regs[RegSrcA];
+    RegDataB <= regs[RegSrcB];
 
     process(clk, rst)
     begin
         if (rst = '1') then
-            reg <= (others => (others => '0'));
+            regs <= (others => (others => '0'));
+        else if (clk'event and clk = '1') then
+            if (RegWrEn = '1') then
+                regs[RegDst] <= RegWrData;
+            end if;
         end if;
     end process;
 
