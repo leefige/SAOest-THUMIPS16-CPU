@@ -37,14 +37,13 @@ entity Controller is
         RegWrEn  : out std_logic;
         MemWr    : out std_logic;
         MemRd    : out std_logic;
-        WBSrc    : out std_logic_vector (1 downto 0);
+        WBSrc    : out std_logic;
         JumpType : out std_logic_vector (2 downto 0);
-        MemSrc   : out std_logic;
         ALUop    : out std_logic_vector (3 downto 0);
         RegSrcA  : out std_logic_vector (3 downto 0);
         RegSrcB  : out std_logic_vector (3 downto 0);
         RegDst   : out std_logic_vector (3 downto 0);
-        ExRes    : out std_logic_vector (1 downto 0);
+        ExRes    : out std_logic_vector (2 downto 0);
         ALUSrc   : out std_logic
     );
 end Controller;
