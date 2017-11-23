@@ -38,7 +38,7 @@ entity ALU is
         ALUOp    : in std_logic_vector (3 downto 0);
 
         ALUFlag  : out std_logic_vector (3 downto 0);
-        ALURes   : out std_logic_vector (15 downto 0);
+        ALURes   : out std_logic_vector (15 downto 0)
     );
 end ALU;
 
