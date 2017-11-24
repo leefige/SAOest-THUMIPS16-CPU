@@ -49,7 +49,7 @@ architecture Behavioral of RegisterFile is
     signal regs : RegFile;
 
 begin
-    
+
     RegDataA <= regs[RegSrcA];
     RegDataB <= regs[RegSrcB];
 
@@ -57,7 +57,7 @@ begin
     begin
         if (rst = '1') then
             regs <= (others => (others => '0'));
-        else if (clk'event and clk = '1') then
+        elsif (clk'event and clk = '1') then
             if (RegWrEn = '1') then
                 regs[RegDst] <= RegWrData;
             end if;
