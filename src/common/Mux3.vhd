@@ -37,7 +37,7 @@ entity Mux3 is
         inputB   : in std_logic_vector (15 downto 0);
         inputC   : in std_logic_vector (15 downto 0);
 
-        output   : out std_logic_vector (15 downto 0)
+        res   : out std_logic_vector (15 downto 0)
     );
 end Mux3;
 
@@ -46,7 +46,7 @@ architecture Behavioral of Mux3 is
 begin
 
     with selector select
-        output <=
+        res <=
             inputA when "00",
             inputB when "01",
             inputC when "10",

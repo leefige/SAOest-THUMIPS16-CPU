@@ -36,7 +36,7 @@ entity Mux2 is
         inputA   : in std_logic_vector (15 downto 0);
         inputB   : in std_logic_vector (15 downto 0);
 
-        output   : out std_logic_vector (15 downto 0)
+        res   : out std_logic_vector (15 downto 0)
     );
 end Mux2;
 
@@ -45,7 +45,7 @@ architecture Behavioral of Mux2 is
 begin
 
     with selector select
-        output <=
+        res <=
             inputA when '0',
             inputB when '1',
             (others => '0') when others;

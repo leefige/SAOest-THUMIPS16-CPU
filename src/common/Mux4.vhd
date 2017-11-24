@@ -38,7 +38,7 @@ entity Mux4 is
         inputC   : in std_logic_vector (15 downto 0);
         inputD   : in std_logic_vector (15 downto 0);
 
-        output   : out std_logic_vector (15 downto 0)
+        res   : out std_logic_vector (15 downto 0)
     );
 end Mux4;
 
@@ -47,7 +47,7 @@ architecture Behavioral of Mux4 is
 begin
 
     with selector select
-        output <=
+        res <=
             inputA when "00",
             inputB when "01",
             inputC when "10",

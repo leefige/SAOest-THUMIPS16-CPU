@@ -40,7 +40,7 @@ entity Mux6 is
         inputE   : in std_logic_vector (15 downto 0);
         inputF   : in std_logic_vector (15 downto 0);
 
-        output   : out std_logic_vector (15 downto 0)
+        res   : out std_logic_vector (15 downto 0)
     );
 end Mux6;
 
@@ -49,7 +49,7 @@ architecture Behavioral of Mux6 is
 begin
 
     with selector select
-        output <=
+        res <=
             inputA when "000",
             inputB when "001",
             inputC when "010",

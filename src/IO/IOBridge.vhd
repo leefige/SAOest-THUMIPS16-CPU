@@ -34,29 +34,29 @@ entity IOBridge is
            rst : in  STD_LOGIC;
            clk_CPU : out  STD_LOGIC;
 
-		   IO_WE : in  STD_LOGIC;
-		   IO_RE : in  STD_LOGIC;
+           IO_WE : in  STD_LOGIC;
+           IO_RE : in  STD_LOGIC;
 
            InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-		   InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
+           InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
            IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
            IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
            IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-		   SRAM1_EN : out  STD_LOGIC;
+           SRAM1_EN : out  STD_LOGIC;
            SRAM1_OE : out  STD_LOGIC;
            SRAM1_WE : out  STD_LOGIC;
            SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
            SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-		   SRAM2_EN : out  STD_LOGIC;
+           SRAM2_EN : out  STD_LOGIC;
            SRAM2_OE : out  STD_LOGIC;
            SRAM2_WE : out  STD_LOGIC;
            SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
            SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-		   COM_rdn : out  STD_LOGIC;
+           COM_rdn : out  STD_LOGIC;
            COM_wrn : out  STD_LOGIC;
            COM_data_ready : in  STD_LOGIC;
            COM_tbre : in  STD_LOGIC;

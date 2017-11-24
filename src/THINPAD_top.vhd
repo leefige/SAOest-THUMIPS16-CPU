@@ -34,13 +34,13 @@ entity THINPAD_top is
            clk_PS2 : in  STD_LOGIC;
            rst : in  STD_LOGIC;
 
-		   SRAM1_EN : out  STD_LOGIC;
+           SRAM1_EN : out  STD_LOGIC;
            SRAM1_OE : out  STD_LOGIC;
            SRAM1_WE : out  STD_LOGIC;
            SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
            SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-		   SRAM2_EN : out  STD_LOGIC;
+           SRAM2_EN : out  STD_LOGIC;
            SRAM2_OE : out  STD_LOGIC;
            SRAM2_WE : out  STD_LOGIC;
            SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
@@ -145,7 +145,7 @@ signal s_IO_RE : STD_LOGIC;
 begin
 
     c_CPU : CPU port map (
-		clk => s_clk_CPU,
+        clk => s_clk_CPU,
         rst => rst,
         IO_RE => s_IO_RE,
         IO_WE => s_IO_WE,
@@ -154,10 +154,10 @@ begin
         InstAddr => s_InstAddr,
         IOAddr => s_IOAddr,
         IODataOut => s_IODataCPU2Bridge
-	);
+    );
 
     c_IOBridge : IOBridge port map (
-		clk_Bridge => clk_top,
+        clk_Bridge => clk_top,
         rst => rst,
         clk_CPU => s_clk_CPU,
 
@@ -196,7 +196,7 @@ begin
         VGA_VS => VGA_VS,
 
         PS2_DATA => PS2_DATA
-	);
+    );
 
 
 end Behavioral;
