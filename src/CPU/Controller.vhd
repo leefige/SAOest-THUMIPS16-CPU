@@ -218,6 +218,7 @@ begin
         MemRd <= '0';
         JumpType <= "000";
         ALUOp <= "0000";
+        RegDst <= "1111"; -- No use
 
     elsif (first5 = "00100") then                           -- BEQZ
         RegWrEn <= '0';
@@ -226,6 +227,7 @@ begin
         JumpType <= "001";
         ALUOp <= "0000";
         RegSrcA <= '0' & Inst(10 downto 8);
+        RegDst <= "1111";
 
     elsif (first5 = "00101") then                           -- BNEZ
         RegWrEn <= '0';
@@ -234,6 +236,7 @@ begin
         JumpType <= "010";
         ALUOp <= "0000";
         RegSrcA <= '0' & Inst(10 downto 8);
+        RegDst <= "1111";
 
     elsif (first8 = "01100000") then                        -- BTEQZ
         RegWrEn <= '0';
@@ -242,6 +245,7 @@ begin
         JumpType <= "011";
         ALUOp <= "0000";
         RegSrcA <= "1000"; -- T
+        RegDst <= "1111";
 
     elsif (first5 = "11101" and last8 = "00000000") then    -- JR
         RegWrEn <= '0';
@@ -250,6 +254,7 @@ begin
         JumpType <= "100";
         ALUOp <= "0000";
         RegSrcA <= '0' & Inst(10 downto 8);
+        RegDst <= "1111";
 
     elsif (first5 = "11101" and last8 = "11000000") then    -- JALR
         RegWrEn <= '1';
@@ -268,6 +273,7 @@ begin
         JumpType <= "110";
         ALUOp <= "0000";
         RegSrcA <= "1011"; -- RA
+        RegDst <= "1111";
 
     -- 比较
     elsif (first5 = "11101" and last5 = "01010") then       -- CMP
@@ -401,7 +407,7 @@ begin
         ALUOp     <= "0001";
         RegSrcA   <= '0' & rx;
         RegSrcB   <= '0' & ry;
-        RegDst    <= (others => 'Z');
+        RegDst    <= "1111";
         ExRes     <= "011";
         ALUSrc    <= '1';
     elsif (first8 = "01100010") then                        -- SW_RS
@@ -414,7 +420,7 @@ begin
         ALUOp     <= "0001";
         RegSrcA   <= "1010";
         RegSrcB   <= "1011";
-        RegDst   <= (others => 'Z');
+        RegDst   <= "1111";
         ExRes     <= "011";
         ALUSrc    <= '1';
     elsif (first5 = "11010") then                           -- SW_SP
@@ -427,7 +433,7 @@ begin
         ALUOp     <= "0001";
         RegSrcA   <= "1010";
         RegSrcB   <= '0' & rx;
-        RegDst    <= (others => 'Z');
+        RegDst    <= "1111";
         ExRes     <= "011";
         ALUSrc    <= '1';
 
@@ -445,6 +451,8 @@ begin
         RegDst    <= "1100";
         ExRes     <= "011";
         ALUSrc    <= '1';
+    else
+        RegDst <= "1111";
     end if;
 
 end Behavioral;
