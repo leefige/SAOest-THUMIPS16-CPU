@@ -10,8 +10,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity IdExRegisters is
-    --ID/EX阶段寄存器
+entity IdExRegister is
+    --ID/EX阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -60,9 +60,9 @@ entity IdExRegisters is
         RegDataB_o : out std_logic_vector(15 downto 0);
         Imme_o : out std_logic_vector(15 downto 0)
     );
-end IdExRegisters;
+end IdExRegister;
 
-architecture Behavioral of IdExRegisters is
+architecture Behavioral of IdExRegister is
 
 begin
     process(rst, clk)

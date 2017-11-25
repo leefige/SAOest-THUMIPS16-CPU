@@ -10,8 +10,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity MemWbRegisters is
-    --EX/MEM阶段寄存器
+entity MemWbRegister is
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -34,9 +34,9 @@ entity MemWbRegisters is
         RegWrEn_o : out std_logic;
         WBSrc_o : out std_logic
     );
-end MemWbRegisters;
+end MemWbRegister;
 
-architecture Behavioral of MemWbRegisters is
+architecture Behavioral of MemWbRegister is
 
 begin
     process(rst, clk)
