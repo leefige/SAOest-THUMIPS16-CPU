@@ -1,0 +1,19 @@
+#:C0     
+#Xilinx FPGA Editor Command Log File
+#Editor Version:
+#:V   NT M2.1 P.28xd
+#Current Working Directory:
+#:D   C:\Users\Liyf\Desktop\CO\proj\THINPAD\SAOestCPU
+#Date/Time:
+#:T   Sun Nov 26 20:10:12 2017
+#------------------------------
+	#Reading THINPAD_top_map.ncd...
+	#Loading device for application Rf_Device from file '3s1200e.nph' in environment C:\Develop\Xilinx\14.2\ISE_DS\ISE\.
+	#   "THINPAD_top" is an NCD, version 3.2, device xc3s1200e, package fg320, speed -4
+	#Design creation date: 2017.11.26.12.09.38
+	#Building chip graphics...
+	#Loading speed info...
+	#1
+setattr main edit-mode no-logic-changes
+	#2
+select -k comp 'SRAM1_ADDR<0>'

@@ -75,7 +75,7 @@ architecture Behavioral of IOBridge is
 
 --------------component-----------------
 
-component DataMem is
+component Memory is
     Port ( Addr : in  STD_LOGIC_VECTOR (17 downto 0);
            DataIn : in  STD_LOGIC_VECTOR (15 downto 0);
            DataOut : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -83,22 +83,17 @@ component DataMem is
            RE : in STD_LOGIC;
 
            -- connect to SRAM1 on board
-           SRAM1_EN : out  STD_LOGIC;
-           SRAM1_OE : out  STD_LOGIC;
-           SRAM1_WE : out  STD_LOGIC;
-           SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0));
+           SRAM_EN : out  STD_LOGIC;
+           SRAM_OE : out  STD_LOGIC;
+           SRAM_WE : out  STD_LOGIC;
+           SRAM_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+           SRAM_DATA : inout  STD_LOGIC_VECTOR (15 downto 0));
 end component;
 
 --------------signal--------------------
 
 type InstMemState is (RD_INST, WR_INST);          -- for inst mem, 2 state: normally read / write user's program
 signal state_Inst : InstMemState := RD_INST;
-
-signal s_InstAddrRd : STD_LOGIC_VECTOR (17 downto 0);
-signal s_InstAddrWr : STD_LOGIC_VECTOR (17 downto 0);
-signal s_InstDataIn : STD_LOGIC_VECTOR (15 downto 0);
-signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);
 signal s_IODataIn : STD_LOGIC_VECTOR (15 downto 0);
@@ -110,15 +105,18 @@ signal s_DataMemRE : STD_LOGIC;
 signal s_MemDataIn : STD_LOGIC_VECTOR (15 downto 0);
 signal s_MemDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
-signal s_InstMemWE : STD_LOGIC;   -- control bus: whether w/r dataMem (SRAM1)
+-- instruction mem (SRAM2)
+signal s_InstAddrRd : STD_LOGIC_VECTOR (17 downto 0);
+signal s_InstAddrWr : STD_LOGIC_VECTOR (17 downto 0);
+signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
+signal s_InstDataIn : STD_LOGIC_VECTOR (15 downto 0);
+signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
+signal s_InstMemWE : STD_LOGIC;   -- control whether w/r instMem (SRAM2)
 signal s_InstMemRE : STD_LOGIC;
 
 begin
 
 --------------linking-------------------
-
-    -- SRAM2 will always be enabled
-    SRAM2_EN <= '0';
 
     -- extend addr
     s_IOAddr <= "00" & IOAddr;
@@ -131,8 +129,8 @@ begin
     s_IODataIn <= IODataIn;
     s_InstDataIn <= IODataIn;
 
-    -- DataMem
-    c_DataMem: DataMem port map (
+    -- DataMem, SRAM1
+    c_DataMem: Memory port map (
         Addr => s_IOAddr,
         DataIn => s_MemDataIn,
         DataOut => s_MemDataOut,
@@ -140,11 +138,27 @@ begin
         RE => s_DataMemRE,
 
         -- connect to SRAM1 on board
-        SRAM1_EN => SRAM1_EN,
-        SRAM1_OE => SRAM1_OE,
-        SRAM1_WE => SRAM1_WE,
-        SRAM1_ADDR => SRAM1_ADDR,
-        SRAM1_DATA => SRAM1_DATA
+        SRAM_EN => SRAM1_EN,
+        SRAM_OE => SRAM1_OE,
+        SRAM_WE => SRAM1_WE,
+        SRAM_ADDR => SRAM1_ADDR,
+        SRAM_DATA => SRAM1_DATA
+    );
+
+    -- InstMem, SRAM2
+    c_InstMem: Memory port map (
+        Addr => s_InstAddr,
+        DataIn => s_InstDataIn,
+        DataOut => s_InstDataOut,
+        WE => s_InstMemWE,
+        RE => s_InstMemRE,
+
+        -- connect to SRAM1 on board
+        SRAM_EN => SRAM2_EN,
+        SRAM_OE => SRAM2_OE,
+        SRAM_WE => SRAM2_WE,
+        SRAM_ADDR => SRAM2_ADDR,
+        SRAM_DATA => SRAM2_DATA
     );
 
 
