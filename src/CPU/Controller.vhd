@@ -51,7 +51,7 @@ end Controller;
 architecture Behavioral of Controller is
 
     signal first5 : std_logic_vector (4 downto 0);
-    signal first8 : std_logic_vector (4 downto 0);
+    signal first8 : std_logic_vector (7 downto 0);
     signal last8 : std_logic_vector (7 downto 0);
     signal last5 : std_logic_vector (4 downto 0);
     signal last2 : std_logic_vector (1 downto 0);
@@ -83,7 +83,7 @@ begin
             ALUop <= "0001"; -- plus
             RegSrcA <= '0' & Inst(10 downto 8);
             RegDst <= '0' & Inst(10 downto 8);
-            ExRes <= "11"; -- 3 stands for ExData get data from ALURes
+            ExRes <= "011"; -- 3 stands for ExData get data from ALURes
             ALUSrc <= '1'; -- imme
 
         elsif (first5 = "01000") then                           -- ADDIU3
@@ -306,7 +306,7 @@ begin
             ExRes     <= "000";
             ALUSrc    <= '0';
 
-        -- 特殊寄存器取/赋值
+        -- 特殊寄存器取/赋�
         elsif (first5 = "11110" and last8 = "00000000") then    -- MFIH
             TRegType  <= 'Z';
             RegWrEn   <= '1';
@@ -440,7 +440,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
 
-        -- 空
+        -- �
         elsif (Inst = "0000100000000000") then                  -- NOP
             TRegType  <= 'Z';
             RegWrEn   <= '1';

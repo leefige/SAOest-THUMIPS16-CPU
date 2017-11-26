@@ -69,11 +69,11 @@ begin
     -- end if;
 
     WillBranch <= '1' when JumpType = "000" or ((JumpType = "001" or JumpType = "011") and RegData = (others => '0'))
-                            or (JumpType = "010" and RegData != (others => '0'))
+                            or (JumpType = "010" and RegData /= (others => '0'))
                             or JumpType = "100" or JumpType = "101" or JumpType = "110"
                       else '0';
     PCSelect <= "10" when JumpType = "000" or ((JumpType = "001" or JumpType = "011") and RegData = (others => '0'))
-                            or (JumpType = "010" and RegData != (others => '0'))
+                            or (JumpType = "010" and RegData /= (others => '0'))
                       else "00" when JumpType = "100" or JumpType = "101" or JumpType = "110"
                       else "01";
 

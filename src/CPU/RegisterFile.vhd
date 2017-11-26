@@ -63,8 +63,8 @@ begin
     -- end if;
 
     -- Faster way, but may cause some conflict if controller's delay is not enough
-    RegDataA <= regs[RegSrcA];
-    RegDataB <= regs[RegSrcB];
+    RegDataA <= regs(RegSrcA);
+    RegDataB <= regs(RegSrcB);
 
     process(clk, rst)
     begin
@@ -72,7 +72,7 @@ begin
             regs <= (others => (others => '0'));
         elsif (clk'event and clk = '1') then
             if (RegWrEn = '1') then
-                regs[RegDst] <= RegWrData;
+                regs(RegDst) <= RegWrData;
             end if;
         end if;
     end process;

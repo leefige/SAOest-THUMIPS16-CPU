@@ -522,7 +522,7 @@ begin
         inputC => ex_RPC,
         inputD => ex_ALURes,
         inputE => ex_DataA,
-        inputF => ex_DataB
+        inputF => ex_DataB,
         res => ex_DataOut
     );
 
