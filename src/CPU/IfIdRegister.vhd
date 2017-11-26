@@ -10,8 +10,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity IfIdRegisters is
-    --EX/MEM阶段寄存器
+entity IfIdRegister is
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -30,9 +30,9 @@ entity IfIdRegisters is
         --信号输出
         Inst_o : out std_logic_vector(15 downto 0)
     );
-end IfIdRegisters;
+end IfIdRegister;
 
-architecture Behavioral of IfIdRegisters is
+architecture Behavioral of IfIdRegister is
 
 begin
     process(rst, clk)
