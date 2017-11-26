@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company:
--- Engineer: 李逸飞
+-- Engineer: Li Yifei
 --
 -- Create Date:    21:04:27 11/21/2017
 -- Design Name:
@@ -30,9 +30,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity IOBridge is
-    Port ( clk_Bridge : in  STD_LOGIC;
-           rst : in  STD_LOGIC;
-           clk_CPU : out  STD_LOGIC;
+    Port ( clk_PS2 : in STD_LOGIC;
+           clk_VGA : in STD_LOGIC;
 
            IO_WE : in  STD_LOGIC;
            IO_RE : in  STD_LOGIC;
@@ -44,6 +43,7 @@ entity IOBridge is
            IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
            IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
+           -- connect to instruments on board; just connect without change
            SRAM1_EN : out  STD_LOGIC;
            SRAM1_OE : out  STD_LOGIC;
            SRAM1_WE : out  STD_LOGIC;
@@ -75,52 +75,80 @@ architecture Behavioral of IOBridge is
 
 --------------component-----------------
 
+component DataMem is
+    Port ( Addr : in  STD_LOGIC_VECTOR (17 downto 0);
+           DataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+           DataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+           WE : in STD_LOGIC;
+           RE : in STD_LOGIC;
+
+           -- connect to SRAM1 on board
+           SRAM1_EN : out  STD_LOGIC;
+           SRAM1_OE : out  STD_LOGIC;
+           SRAM1_WE : out  STD_LOGIC;
+           SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+           SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0));
+end component;
+
 --------------signal--------------------
 
 type InstMemState is (RD_INST, WR_INST);          -- for inst mem, 2 state: normally read / write user's program
 signal state_Inst : InstMemState := RD_INST;
 
+signal s_InstAddrRd : STD_LOGIC_VECTOR (17 downto 0);
+signal s_InstAddrWr : STD_LOGIC_VECTOR (17 downto 0);
+signal s_InstDataIn : STD_LOGIC_VECTOR (15 downto 0);
+signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
-signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
-signal s_InstData : STD_LOGIC_VECTOR (15 downto 0);
+signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);
+signal s_IODataIn : STD_LOGIC_VECTOR (15 downto 0);
+signal s_IODataOut : STD_LOGIC_VECTOR (15 downto 0);
 
-signal s_BUS_Addr : STD_LOGIC_VECTOR (17 downto 0);
-signal s_BUS_Data : STD_LOGIC_VECTOR (15 downto 0);
+-- data mem (SRAM1)
+signal s_DataMemWE : STD_LOGIC;   -- control bus: whether w/r dataMem (SRAM1)
+signal s_DataMemRE : STD_LOGIC;
+signal s_MemDataIn : STD_LOGIC_VECTOR (15 downto 0);
+signal s_MemDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
-
+signal s_InstMemWE : STD_LOGIC;   -- control bus: whether w/r dataMem (SRAM1)
+signal s_InstMemRE : STD_LOGIC;
 
 begin
 
 --------------linking-------------------
 
--- -- we won't use SRAM1
--- SRAM1_EN <= '1';
--- SRAM1_OE <= '1';
--- SRAM1_WE <= '1';
+    -- SRAM2 will always be enabled
+    SRAM2_EN <= '0';
 
--- SRAM2 will always be enabled
-SRAM2_EN <= '0';
+    -- extend addr
+    s_IOAddr <= "00" & IOAddr;
+    s_InstAddrRd <= "00" & InstAddr;
+    s_InstAddrWr <= "00" & IOAddr;
 
--- connect bus to SRAM1_ADDR/DATA
-SRAM1_ADDR <= s_BUS_Addr;
-SRAM2_DATA <= s_BUS_Data;
--- extend addr currently; may be changed when using VGAs
-s_BUS_Addr <= "00" & IOAddr;
+    -- signal for global IO data
+    InstOut <= s_InstDataOut;
+    IODataOut <= s_IODataOut
+    s_IODataIn <= IODataIn;
+    s_InstDataIn <= IODataIn;
 
--- inst
-s_InstAddr <= "00" & InstAddr;
-InstOut <= s_InstData;
+    -- DataMem
+    c_DataMem: DataMem port map (
+        Addr => s_IOAddr,
+        DataIn => s_MemDataIn,
+        DataOut => s_MemDataOut,
+        WE => s_DataMemWE,
+        RE => s_DataMemRE,
 
-with state_Inst select
-    clk_CPU <= '1' when RD_INST, '0' when others;   -- something wrong, need fix
+        -- connect to SRAM1 on board
+        SRAM1_EN => SRAM1_EN,
+        SRAM1_OE => SRAM1_OE,
+        SRAM1_WE => SRAM1_WE,
+        SRAM1_ADDR => SRAM1_ADDR,
+        SRAM1_DATA => SRAM1_DATA
+    );
+
 
 --------------process-------------------
-
-
-
-
-
-
 
 
 end Behavioral;

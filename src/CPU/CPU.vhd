@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company:
--- Engineer: ÀîÒÝ·É
+-- Engineer: Li Yifei, Qiao Yifan
 --
 -- Create Date:    20:54:56 11/21/2017
 -- Design Name:
@@ -32,14 +32,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity CPU is
     Port ( clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
+
            IO_WE : out  STD_LOGIC;
            IO_RE : out  STD_LOGIC;
-           Inst : in  STD_LOGIC_VECTOR (15 downto 0);
-           IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-           InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
-           IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
-           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0));
 
+           Inst : in  STD_LOGIC_VECTOR (15 downto 0);
+           InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
+
+           IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
+           IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0)
+    );
 end CPU;
 
 architecture Behavioral of CPU is
@@ -84,28 +87,28 @@ component Controller is
 end component;
 
 component ExMemRegisters is
-    --EX/MEM½×¶Î¼Ä´æÆ÷
+    --EX/MEMï¿½×¶Î¼Ä´ï¿½ï¿½ï¿½
     port(
         clk : in std_logic;
         rst : in std_logic;
         WE  : in std_logic;
         Clear : in std_logic;
 
-        --Êý¾ÝÊäÈë
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
-        RegDataB_i : in std_logic_vector(15 downto 0); --¹©SWÓï¾äÐ´ÄÚ´æ
-        --ÐÅºÅÊäÈë
+        RegDataB_i : in std_logic_vector(15 downto 0); --ï¿½ï¿½SWï¿½ï¿½ï¿½Ð´ï¿½Ú´ï¿½
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½
         RegWrEn_i : in std_logic;
         MemWr_i : in std_logic;
         MemRd_i : in std_logic;
         WBSrc_i : in std_logic;
 
-        --Êý¾ÝÊä³ö
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
-        RegDataB_o : out std_logic_vector(15 downto 0); --¹©SWÓï¾äÐ´ÄÚ´æ
-        --ÐÅºÅÊä³ö
+        RegDataB_o : out std_logic_vector(15 downto 0); --ï¿½ï¿½SWï¿½ï¿½ï¿½Ð´ï¿½Ú´ï¿½
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
         MemRd_o : out std_logic;
@@ -138,14 +141,14 @@ component HazardUnit is
 end component;
 
 component IdExRegisters is
-    --ID/EX½×¶Î¼Ä´æÆ÷
+    --ID/EXï¿½×¶Î¼Ä´ï¿½ï¿½ï¿½
     port(
         clk : in std_logic;
         rst : in std_logic;
         WE  : in std_logic;
         Clear : in std_logic;
 
-        --Êý¾ÝÊäÈë
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         RegSrcA_i : in std_logic_vector(3 downto 0);
         RegSrcB_i : in std_logic_vector(3 downto 0);
@@ -153,7 +156,7 @@ component IdExRegisters is
         ExRes_i : in std_logic_vector(2 downto 0);
         NPC_i : in std_logic_vector(15 downto 0);
         RPC_i : in std_logic_vector(15 downto 0);
-        --ÐÅºÅÊäÈë
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½
 
         TRegType_i : in std_logic;
         RegWrEn_i : in std_logic;
@@ -167,14 +170,14 @@ component IdExRegisters is
         RegDataB_i : in std_logic_vector(15 downto 0);
         Imme_i : in std_logic_vector(15 downto 0);
 
-        --Êý¾ÝÊä³ö
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         RegSrcA_o : out std_logic_vector(3 downto 0);
         RegSrcB_o : out std_logic_vector(3 downto 0);
         RegDst_o : out std_logic_vector(3 downto 0);
         ExRes_o : out std_logic_vector(2 downto 0);
         NPC_o : out std_logic_vector(15 downto 0);
         RPC_o : out std_logic_vector(15 downto 0);
-        --ÐÅºÅÊä³ö
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½
         TRegType_o : out std_logic;
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
@@ -190,48 +193,48 @@ component IdExRegisters is
 end component;
 
 component IfIdRegisters is
-    --EX/MEM½×¶Î¼Ä´æÆ÷
+    --EX/MEMï¿½×¶Î¼Ä´ï¿½ï¿½ï¿½
     port(
         clk : in std_logic;
         rst : in std_logic;
         WE  : in std_logic;
         Clear : in std_logic;
 
-        --Êý¾ÝÊäÈë
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         NPC_i : in std_logic_vector(15 downto 0);
         RPC_i : in std_logic_vector(15 downto 0);
-        --ÐÅºÅÊäÈë
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½
         Inst_i : in std_logic_vector(15 downto 0);
 
-        --Êý¾ÝÊä³ö
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         NPC_o : out std_logic_vector(15 downto 0);
         RPC_o : out std_logic_vector(15 downto 0);
-        --ÐÅºÅÊä³ö
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½
         Inst_o : out std_logic_vector(15 downto 0)
     );
 end component;
 
 component MemWbRegisters is
-    --EX/MEM½×¶Î¼Ä´æÆ÷
+    --EX/MEMï¿½×¶Î¼Ä´ï¿½ï¿½ï¿½
     port(
         clk : in std_logic;
         rst : in std_logic;
         WE  : in std_logic;
         Clear : in std_logic;
 
-        --Êý¾ÝÊäÈë
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
         MemData_i : in std_logic_vector(15 downto 0);
-        --ÐÅºÅÊäÈë
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½
         RegWrEn_i : in std_logic;
         WBSrc_i : in std_logic;
 
-        --Êý¾ÝÊä³ö
+        --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
         MemData_o : out std_logic_vector(15 downto 0);
-        --ÐÅºÅÊä³ö
+        --ï¿½Åºï¿½ï¿½ï¿½ï¿½
         RegWrEn_o : out std_logic;
         WBSrc_o : out std_logic
     );

@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company:
--- Engineer: 李逸飞
+-- Engineer: Li Yifei
 --
 -- Create Date:    21:26:09 11/21/2017
 -- Design Name:
@@ -32,8 +32,15 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity THINPAD_top is
     Port ( clk_top : in  STD_LOGIC;
            clk_PS2 : in  STD_LOGIC;
+           clk_VGA : in STD_LOGIC;
            rst : in  STD_LOGIC;
 
+           Switch : in  STD_LOGIC_VECTOR (15 downto 0);
+           Light : out  STD_LOGIC_VECTOR (15 downto 0);
+           DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
+           DYP2 : out  STD_LOGIC_VECTOR (6 downto 0);
+
+           -- connect to instruments on board; just connect without change
            SRAM1_EN : out  STD_LOGIC;
            SRAM1_OE : out  STD_LOGIC;
            SRAM1_WE : out  STD_LOGIC;
@@ -45,11 +52,6 @@ entity THINPAD_top is
            SRAM2_WE : out  STD_LOGIC;
            SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
            SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
-
-           Switch : in  STD_LOGIC_VECTOR (15 downto 0);
-           Light : out  STD_LOGIC_VECTOR (15 downto 0);
-           DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
-           DYP2 : out  STD_LOGIC_VECTOR (6 downto 0);
 
            COM_rdn : out  STD_LOGIC;
            COM_wrn : out  STD_LOGIC;
@@ -72,71 +74,72 @@ architecture Behavioral of THINPAD_top is
 --------------component-----------------
 
 component CPU
-    port (
-        clk : in  STD_LOGIC;
-        rst : in  STD_LOGIC;
-        IO_WE : out  STD_LOGIC;
-        IO_RE : out  STD_LOGIC;
-        Inst : in  STD_LOGIC_VECTOR (15 downto 0);
-        IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-        InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
-        IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
-        IODataOut : out  STD_LOGIC_VECTOR (15 downto 0)
+    Port ( clk : in  STD_LOGIC;
+           rst : in  STD_LOGIC;
+
+           IO_WE : out  STD_LOGIC;
+           IO_RE : out  STD_LOGIC;
+
+           Inst : in  STD_LOGIC_VECTOR (15 downto 0);
+           InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
+
+           IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
+           IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0)
     );
 end component;
 
 component IOBridge
-    port (
-        clk_Bridge : in  STD_LOGIC;
-        rst : in  STD_LOGIC;
-        clk_CPU : out  STD_LOGIC;
+    Port ( clk_PS2 : in STD_LOGIC;
+           clk_VGA : in STD_LOGIC;
 
-        IO_WE : in  STD_LOGIC;
-        IO_RE : in  STD_LOGIC;
+           IO_WE : in  STD_LOGIC;
+           IO_RE : in  STD_LOGIC;
 
-        InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-        InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
+           InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
+           InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-        IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-        IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-        IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+           IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
+           IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-        SRAM1_EN : out  STD_LOGIC;
-        SRAM1_OE : out  STD_LOGIC;
-        SRAM1_WE : out  STD_LOGIC;
-        SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-        SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
+           -- connect to instruments on board; just connect without change
+           SRAM1_EN : out  STD_LOGIC;
+           SRAM1_OE : out  STD_LOGIC;
+           SRAM1_WE : out  STD_LOGIC;
+           SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+           SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-        SRAM2_EN : out  STD_LOGIC;
-        SRAM2_OE : out  STD_LOGIC;
-        SRAM2_WE : out  STD_LOGIC;
-        SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-        SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
+           SRAM2_EN : out  STD_LOGIC;
+           SRAM2_OE : out  STD_LOGIC;
+           SRAM2_WE : out  STD_LOGIC;
+           SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+           SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-        COM_rdn : out  STD_LOGIC;
-        COM_wrn : out  STD_LOGIC;
-        COM_data_ready : in  STD_LOGIC;
-        COM_tbre : in  STD_LOGIC;
-        COM_tsre : in  STD_LOGIC;
+           COM_rdn : out  STD_LOGIC;
+           COM_wrn : out  STD_LOGIC;
+           COM_data_ready : in  STD_LOGIC;
+           COM_tbre : in  STD_LOGIC;
+           COM_tsre : in  STD_LOGIC;
 
-        VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
-        VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
-        VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
-        VGA_HS : out  STD_LOGIC;
-        VGA_VS : out  STD_LOGIC;
+           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_HS : out  STD_LOGIC;
+           VGA_VS : out  STD_LOGIC;
 
-        PS2_DATA : in  STD_LOGIC
-    );
+           PS2_DATA : in  STD_LOGIC);
 end component;
 
 --------------signal--------------------
 
-signal s_clk_CPU : STD_LOGIC;
 signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstAddr : STD_LOGIC_VECTOR (15 downto 0);
+
 signal s_IOAddr : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IODataCPU2Bridge : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
+
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
@@ -145,21 +148,23 @@ signal s_IO_RE : STD_LOGIC;
 begin
 
     c_CPU : CPU port map (
-        clk => s_clk_CPU,
+        clk => clk_top,
         rst => rst,
+
         IO_RE => s_IO_RE,
         IO_WE => s_IO_WE,
+
         Inst => s_Inst,
-        IODataIn => s_IODataBridge2CPU,
         InstAddr => s_InstAddr,
+
         IOAddr => s_IOAddr,
+        IODataIn => s_IODataBridge2CPU,
         IODataOut => s_IODataCPU2Bridge
     );
 
     c_IOBridge : IOBridge port map (
-        clk_Bridge => clk_top,
-        rst => rst,
-        clk_CPU => s_clk_CPU,
+        clk_PS2 => clk_PS2,
+        clk_VGA => clk_VGA,
 
         IO_WE => s_IO_WE,
         IO_RE => s_IO_RE,
