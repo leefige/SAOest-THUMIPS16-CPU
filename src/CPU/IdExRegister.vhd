@@ -11,7 +11,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity IdExRegister is
-    --ID/EX阶段寄存�
+    --ID/EX阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -98,16 +98,17 @@ begin
                 RPC_o <= (others => '0');
 
                 TRegType_o <= '0';
-					 RegWrEn_o <= '0';
-					 MemWr_o <= '0';
-					 MemRd_o <= '0';
-					 WBSrc_o <= '0';
-					 JumpType_o <= (others => '0');
-					 ALUOp_o <= (others => '0');
-					 ALUSrc_o <= '0';
-					 RegDataA_o <= (others => '0');
-					 RegDataB_o <= (others => '0');
-					 Imme_o <= (others => '0');
+                RegWrEn_o <= '0';
+                MemWr_o <= '0';
+                MemRd_o <= '0';
+                WBSrc_o <= '0';
+                JumpType_o <= (others => '0');
+                ALUOp_o <= (others => '0');
+                ALUSrc_o <= '0';
+                RegDataA_o <= (others => '0');
+                RegDataB_o <= (others => '0');
+                Imme_o <= (others => '0');
+
             elsif(WE = '1') then
                 RegSrcA_o <= RegSrcA_i;
                 RegSrcB_o <= RegSrcB_i;

@@ -143,8 +143,6 @@ begin
             RegDst <= '0' & Inst(10 downto 8);
             ExRes <= "011";
             ALUSrc <= '0'; -- regB
-
-
         -- 逻辑
         elsif (first5 = "11101" and last2 = "01100") then       -- AND
             TRegType  <= 'Z';

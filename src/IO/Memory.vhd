@@ -74,7 +74,6 @@ begin
             when "01" =>    -- read
                 s_DataOut <= SRAM_DATA;
             when others =>
-                SRAM_DATA <= (others=>'Z');
                 s_DataOut <= (others=>'Z');
         end case;
     end process;

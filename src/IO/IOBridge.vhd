@@ -120,6 +120,15 @@ signal s_InstMemEN : STD_LOGIC;
 signal s_InstDataIn : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
+-- com & PS2
+signal BF01 : STD_LOGIC_VECTOR (15 downto 0);
+signal BF03 : STD_LOGIC_VECTOR (15 downto 0);
+
+signal s_PS2_data_ready : std_logic;
+signal s_PS2_wrn : std_logic;
+
+--------------process-------------------
+
 begin
 
     -- DataMem, SRAM1
@@ -170,7 +179,7 @@ begin
 
     -- disable SRAM1 when visiting UART
     with IOType select
-        s_DataMemEN <=  '0' when "010" | "011", -- COM & ps2
+        s_DataMemEN <=  '0' when "001" | "010" | "011", -- inst & COM & ps2
                         '1' when others;
 
     -------------------------PORT CONTROL------------------------
@@ -181,12 +190,13 @@ begin
     s_IOAddr <= "00" & IOAddr;
 
     -- select io data out
-    with IOType select
-        s_IODataOut_buffer <=   s_InstDataOut when "001",   -- rd inst
-                                -- TODO
-                                (others=>'Z') when "010",   -- COM
-                                (others=>'Z') when "011",   -- PS2
-                                s_MemDataOut when others;   -- currently mem; will be extend
+    s_IODataOut_buffer <=   s_InstDataOut when (IOType = "001") else   -- rd inst
+                            "00000000" & SRAM1_DATA(7 downto 0) when (IOAddr = x"BF00") else
+                            BF01 when (IOAddr = x"BF01") else
+                            -- TODO
+                            (others=>'Z') when (IOAddr = x"BF02") else
+                            BF03 when (IOAddr = x"BF03") else
+                            s_MemDataOut;
     with IO_RE select
         s_IODataOut <=  s_IODataOut_buffer when '1',   -- rd
                         (others=>'Z') when others;
@@ -217,7 +227,7 @@ begin
     s_InstMemRE <= '0' when ((IOType = "001") and (IO_WE = '1')) else '1';
 
     -- select inst data WE, be 1 only when wr inst mem
-    s_InstMemWE <= not s_InstMemRE;
+    s_InstMemWE <= '1' when ((IOType = "001") and (IO_WE = '1')) else '0';
 
     ------------------------DATA MEM CONTROL-----------------------------
 
@@ -231,8 +241,20 @@ begin
     -- select DATA data WE
     s_DataMemWE <= IO_WE;
 
---------------process-------------------
+    ------------------------COM-----------------------------
 
+    BF01(0) <= COM_tsre and COM_tbre;
+	BF01(1) <= COM_data_ready;
+	BF01(15 downto 2) <= "00000000000000";
+
+    COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
+	COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
+
+    ------------------------PS2-----------------------------
+
+	BF03(0) <= s_PS2_data_ready;
+	BF03(15 downto 1) <= "000000000000000";
+	s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
 
 end Behavioral;
 
