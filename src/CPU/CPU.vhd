@@ -84,7 +84,7 @@ component Controller is
 end component;
 
 component ExMemRegisters is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -94,7 +94,7 @@ component ExMemRegisters is
         --数据输入
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
-        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
         --信号输入
         RegWrEn_i : in std_logic;
         MemWr_i : in std_logic;
@@ -104,7 +104,7 @@ component ExMemRegisters is
         --数据输出
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
-        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
         --信号输出
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
@@ -138,7 +138,7 @@ component HazardUnit is
 end component;
 
 component IdExRegisters is
-    --ID/EX阶段寄存�
+    --ID/EX阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -190,7 +190,7 @@ component IdExRegisters is
 end component;
 
 component IfIdRegisters is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -212,7 +212,7 @@ component IfIdRegisters is
 end component;
 
 component MemWbRegisters is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
