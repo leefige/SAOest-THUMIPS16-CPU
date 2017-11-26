@@ -57,7 +57,7 @@ begin
         else tmpInputA + tmpInputB when ALUOp = "0001"
         else tmpInputA - tmpInputB when ALUOp = "0010"
         else tmpInputA and tmpInputB when ALUOp = "0011"
-        else tmpInputA or tmpInputB when LUOp = "0100"
+        else tmpInputA or tmpInputB when ALUOp = "0100"
         else to_stdlogicvector(to_bitvector(tmpInputA) sll conv_integer(InputB)) when ALUOp = "0101"
         else '0' & to_stdlogicvector(to_bitvector(InputA) srl conv_integer(InputB)) when ALUOp = "0110"
         else to_stdlogicvector(to_bitvector(tmpInputA) sra conv_integer(InputB)) when ALUOp = "0111"
@@ -71,7 +71,7 @@ begin
     --     ALUFlag(0) <= '0';
     -- end if;
 
-    ALUFlag(0) <= '1' when result = (others => '0')
+    ALUFlag(0) <= '1' when result = (16 downto 0 => '0')
                       else '0';
     ALUFlag(1) <= result(16);
 

@@ -75,14 +75,14 @@ begin
             NPC_o <= (others => '0');
             RPC_o <= (others => '0');
 
-            TRegType_o <= (others => '0');
-            RegWrEn_o <= (others => '0');
-            MemWr_o <= (others => '0');
-            MemRd_o <= (others => '0');
-            WBSrc_o <= (others => '0');
+            TRegType_o <= '0';
+            RegWrEn_o <= '0';
+            MemWr_o <= '0';
+            MemRd_o <= '0';
+            WBSrc_o <= '0';
             JumpType_o <= (others => '0');
             ALUOp_o <= (others => '0');
-            ALUSrc_o <= (others => '0');
+            ALUSrc_o <= '0';
             RegDataA_o <= (others => '0');
             RegDataB_o <= (others => '0');
             Imme_o <= (others => '0');
@@ -97,17 +97,17 @@ begin
                 NPC_o <= (others => '0');
                 RPC_o <= (others => '0');
 
-                TRegType_o <= (others => '0');
-                RegWrEn_o <= (others => '0');
-                MemWr_o <= (others => '0');
-                MemRd_o <= (others => '0');
-                WBSrc_o <= (others => '0');
-                JumpType_o <= (others => '0');
-                ALUOp_o <= (others => '0');
-                ALUSrc_o <= (others => '0');
-                RegDataA_o <= (others => '0');
-                RegDataB_o <= (others => '0');
-                Imme_o <= (others => '0');
+                TRegType_o <= '0';
+					 RegWrEn_o <= '0';
+					 MemWr_o <= '0';
+					 MemRd_o <= '0';
+					 WBSrc_o <= '0';
+					 JumpType_o <= (others => '0');
+					 ALUOp_o <= (others => '0');
+					 ALUSrc_o <= '0';
+					 RegDataA_o <= (others => '0');
+					 RegDataB_o <= (others => '0');
+					 Imme_o <= (others => '0');
             elsif(WE = '1') then
                 RegSrcA_o <= RegSrcA_i;
                 RegSrcB_o <= RegSrcB_i;

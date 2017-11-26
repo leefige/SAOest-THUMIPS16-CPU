@@ -78,6 +78,5 @@ begin
     WE_EXMEM <= '0';
     WE_MEMWB <= '0';
     Clear_IFID <= '0';
-    Clear_IDEX <= '0';
 
 end Behavioral;

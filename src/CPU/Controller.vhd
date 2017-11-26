@@ -94,7 +94,7 @@ begin
             ALUOp <= "0001";
             RegSrcA <= '0' & Inst(10 downto 8);
             RegDst <= '0' & Inst(7 downto 5);
-            ExRes <= "11";
+            ExRes <= "011";
             ALUSrc <= '1';
 
         elsif (first8 = "01100011") then                        -- ADDSP
@@ -105,7 +105,7 @@ begin
             ALUOp <= "0001";
             RegSrcA <= "1010";
             RegDst <= "1010";
-            ExRes <= "11";
+            ExRes <= "011";
             ALUSrc <= '1';
 
         elsif (first5 = "11100" and last2 = "01") then          -- ADDU
@@ -117,7 +117,7 @@ begin
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= '0' & Inst(7 downto 5);
             RegDst <= '0' & Inst(4 downto 2);
-            ExRes <= "11";
+            ExRes <= "011";
             ALUSrc <= '0'; -- regB
 
         elsif (first5 = "11100" and last2 = "11") then          -- SUBU
@@ -129,7 +129,7 @@ begin
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= '0' & Inst(7 downto 5);
             RegDst <= '0' & Inst(4 downto 2);
-            ExRes <= "11";
+            ExRes <= "011";
             ALUSrc <= '0'; -- regB
 
         elsif (first5 = "11101" and last5 = "01011") then       -- NEG
@@ -141,7 +141,7 @@ begin
             RegSrcA <= "1100"; -- zero
             RegSrcB <= '0' & Inst(7 downto 5);
             RegDst <= '0' & Inst(10 downto 8);
-            ExRes <= "11";
+            ExRes <= "011";
             ALUSrc <= '0'; -- regB
 
 

@@ -32,6 +32,8 @@ use IEEE.numeric_std.all;
 
 entity RegisterFile is
     port(
+		  clk : in std_logic;
+		  rst : in std_logic;
         RegWrEn : in std_logic;
         RegSrcA  : in std_logic_vector(3 downto 0);
         RegSrcB  : in std_logic_vector(3 downto 0);
@@ -63,8 +65,8 @@ begin
     -- end if;
 
     -- Faster way, but may cause some conflict if controller's delay is not enough
-    RegDataA <= regs(RegSrcA);
-    RegDataB <= regs(RegSrcB);
+    RegDataA <= regs(to_integer(unsigned(RegSrcA)));
+    RegDataB <= regs(to_integer(unsigned(RegSrcB)));
 
     process(clk, rst)
     begin
@@ -72,7 +74,7 @@ begin
             regs <= (others => (others => '0'));
         elsif (clk'event and clk = '1') then
             if (RegWrEn = '1') then
-                regs(RegDst) <= RegWrData;
+                regs(to_integer(unsigned(RegDst))) <= RegWrData;
             end if;
         end if;
     end process;
