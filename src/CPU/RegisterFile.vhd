@@ -63,8 +63,8 @@ begin
     -- end if;
 
     -- Faster way, but may cause some conflict if controller's delay is not enough
-    RegDataA <= regs[RegSrcA];
-    RegDataB <= regs[RegSrcB];
+    RegDataA <= regs(to_integer(unsigned(RegSrcA)));
+    RegDataB <= regs(to_integer(unsigned(RegSrcB)));
 
     process(clk, rst)
     begin
