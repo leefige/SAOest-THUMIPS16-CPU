@@ -50,21 +50,21 @@ architecture Behavioral of RegisterFile is
 
 begin
     -- Consider read and write at the same time
-    if (RegDst = RegSrcA) then
-        RegDataA <= RegWrData;
-    else
-        RegDataA <= regs[RegSrcA];
-    end if;
+    -- if (RegDst = RegSrcA) then
+    --     RegDataA <= RegWrData;
+    -- else
+    --     RegDataA <= regs[RegSrcA];
+    -- end if;
 
-    if (RegDst = RegSrcB) then
-        RegDataB <= RegWrData;
-    else
-        RegDataB <= regs[RegSrcB];
-    end if;
+    -- if (RegDst = RegSrcB) then
+    --     RegDataB <= RegWrData;
+    -- else
+    --     RegDataB <= regs[RegSrcB];
+    -- end if;
 
     -- Faster way, but may cause some conflict if controller's delay is not enough
-    -- RegDataA <= regs[RegSrcA];
-    -- RegDataB <= regs[RegSrcB];
+    RegDataA <= regs[RegSrcA];
+    RegDataB <= regs[RegSrcB];
 
     process(clk, rst)
     begin

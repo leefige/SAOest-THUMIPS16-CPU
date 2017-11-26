@@ -38,34 +38,43 @@ end BranchController;
 
 architecture Behavioral of BranchController is
 begin
-    if JumpType = "000" then -- B
-        WillBranch <= '1';
-        PCSelect <= "10"; -- PCOffset
+    -- if JumpType = "000" then -- B
+    --     WillBranch <= '1';
+    --     PCSelect <= "10"; -- PCOffset
 
-    elsif (JumpType = "001" or JumpType = "011") and RegData = (others => '0') then -- BEQZ & BTEQZ
-        WillBranch <= '1';
-        PCSelect <= "10"; -- PCOffset
+    -- elsif (JumpType = "001" or JumpType = "011") and RegData = (others => '0') then -- BEQZ & BTEQZ
+    --     WillBranch <= '1';
+    --     PCSelect <= "10"; -- PCOffset
 
-    elsif JumpType = "010" and RegData != (others => '0') then -- BNEZ
-        WillBranch <= '1';
-        PCSelect <= "10"; -- PCOffset
+    -- elsif JumpType = "010" and RegData != (others => '0') then -- BNEZ
+    --     WillBranch <= '1';
+    --     PCSelect <= "10"; -- PCOffset
 
-    elsif JumpType = "100" then -- JR
-        WillBranch <= '1';
-        PCSelect <= "00"; -- FromReg
+    -- elsif JumpType = "100" then -- JR
+    --     WillBranch <= '1';
+    --     PCSelect <= "00"; -- FromReg
 
-    elsif JumpType = "101" then -- JALR
-        WillBranch <= '1';
-        PCSelect <= "00"; -- FromReg
+    -- elsif JumpType = "101" then -- JALR
+    --     WillBranch <= '1';
+    --     PCSelect <= "00"; -- FromReg
 
-    elsif JumpType = "110" then -- JRRA
-        WillBranch <= '1';
-        PCSelect <= "00"; -- FromReg
+    -- elsif JumpType = "110" then -- JRRA
+    --     WillBranch <= '1';
+    --     PCSelect <= "00"; -- FromReg
 
-    else
-        WillBranch <= '0';
-        PCSelect <= "01"; -- NPC
+    -- else
+    --     WillBranch <= '0';
+    --     PCSelect <= "01"; -- NPC
 
-    end if;
+    -- end if;
+
+    WillBranch <= '1' when JumpType = "000" or ((JumpType = "001" or JumpType = "011") and RegData = (others => '0'))
+                            or (JumpType = "010" and RegData != (others => '0'))
+                            or JumpType = "100" or JumpType = "101" or JumpType = "110"
+                      else '0';
+    PCSelect <= "10" when JumpType = "000" or ((JumpType = "001" or JumpType = "011") and RegData = (others => '0'))
+                            or (JumpType = "010" and RegData != (others => '0'))
+                      else "00" when JumpType = "100" or JumpType = "101" or JumpType = "110"
+                      else "01";
 
 end Behavioral;

@@ -46,31 +46,38 @@ end StallController;
 architecture Behavioral of StallController is
 begin
 
-    if WillHazard = '1' then
-        WE_PC <= '1'; -- hold
-        WE_IFID <= '1'; -- hold
-        WE_IDEX <= '0';
-        WE_EXMEM <= '0';
-        WE_MEMWB <= '0';
-        Clear_IFID <= '0';
-        Clear_IDEX <= '1'; -- clear
-    elsif WillBranch = '1' then
-        Clear_IDEX <= '0'; -- if there's no delay slot, need set clear to 1
-        WE_PC <= '0';
-        WE_IFID <= '0';
-        WE_EXMEM <= '0';
-        WE_MEMWB <= '0';
-        Clear_IFID <= '0';
-        Clear_IDEX <= '0';
-    else
-        Clear_IDEX <= '0';
-        WE_PC <= '0';
-        WE_IFID <= '0';
-        WE_EXMEM <= '0';
-        WE_MEMWB <= '0';
-        Clear_IFID <= '0';
-        Clear_IDEX <= '0';
+    -- if WillHazard = '1' then
+    --     WE_PC <= '1'; -- hold
+    --     WE_IFID <= '1'; -- hold
+    --     WE_IDEX <= '0';
+    --     WE_EXMEM <= '0';
+    --     WE_MEMWB <= '0';
+    --     Clear_IFID <= '0';
+    --     Clear_IDEX <= '1'; -- clear
+    -- elsif WillBranch = '1' then
+    --     Clear_IDEX <= '0'; -- if there's no delay slot, need set clear to 1
+    --     WE_PC <= '0';
+    --     WE_IFID <= '0';
+    --     WE_EXMEM <= '0';
+    --     WE_MEMWB <= '0';
+    --     Clear_IFID <= '0';
+    --     Clear_IDEX <= '0';
+    -- else
+    --     Clear_IDEX <= '0';
+    --     WE_PC <= '0';
+    --     WE_IFID <= '0';
+    --     WE_EXMEM <= '0';
+    --     WE_MEMWB <= '0';
+    --     Clear_IFID <= '0';
+    --     Clear_IDEX <= '0';
+    -- end if; -- There's no chance that WillHazard = 1 and WillBranch = 1 at the same time
 
-    end if; -- There's no chance that WillHazard = 1 and WillBranch = 1 at the same time
+    WE_PC <= '1' when WillHazard = '1' else '0';
+    WE_IFID <= '1' when WillHazard = '1' else '0';
+    Clear_IDEX <= '1' when WillHazard = '1' else '0';
+    WE_EXMEM <= '0';
+    WE_MEMWB <= '0';
+    Clear_IFID <= '0';
+    Clear_IDEX <= '0';
 
 end Behavioral;

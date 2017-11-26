@@ -38,12 +38,9 @@ entity HazardUnit is
 end HazardUnit;
 
 architecture Behavioral of HazardUnit is
-    begin
+begin
 
-        if LastMemRd = '1' and (LastRegDst = RegSrcA or LastRegDst = RegSrcB) then
-            WillHazard <= '1';
-        else
-            WillHazard <= '0';
-        end if;
+    WillHazard <= '1' when (LastMemRd = '1' and (LastRegDst = RegSrcA or LastRegDst = RegSrcB))
+    else '0';
 
-    end Behavioral;
+end Behavioral;

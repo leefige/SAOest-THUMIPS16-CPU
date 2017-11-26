@@ -41,20 +41,12 @@ end ForwardUnit;
 architecture Behavioral of ForwardUnit is
 begin
 
-    if EXMEMRegDst = RegSrcA then
-        SelectA <= "01";
-    elsif MEMWBRegDst = RegSrcA then
-        SelectA <= "10";
-    else
-        SelectA <= "00";
-    end if;
+    SelectA <= "01" when EXMEMRegDst = RegSrcA else
+               "10" when MEMWBRegDst = RegSrcA else
+               "00";
 
-    if EXMEMRegDst = RegSrcB then
-        SelectB <= "01";
-    elsif MEMWBRegDst = RegSrcB then
-        SelectB <= "10";
-    else
-        SelectB <= "00";
-    end if;
+    SelectB <= "01" when EXMEMRegDst = RegSrcA else
+               "10" when MEMWBRegDst = RegSrcA else
+               "00";
 
 end Behavioral;

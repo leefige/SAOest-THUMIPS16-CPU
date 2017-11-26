@@ -53,34 +53,26 @@ begin
     tmpInputA <= InputA(15) & InputA;
     tmpInputB <= InputB(15) & InputB;
 
-    if ALUOp = "0000" then  -- Z
-        result <= (others => 'Z');
-    elsif ALUOp = "0001" then  -- ADD
-        result <= tmpInputA + tmpInputB;
-    elsif ALUOp = "0010" then  -- SUB
-        result <= tmpInputA - tmpInputB;
-    elsif ALUOp = "0011" then  -- AND
-        result <= tmpInputA and tmpInputB;
-    elsif ALUOp = "0100" then  -- OR
-        result <= tmpInputA or tmpInputB;
-    elsif ALUOp = "0101" then  -- SLL
-        result <= to_stdlogicvector(to_bitvector(tmpInputA) sll conv_integer(InputB));
-    elsif ALUOp = "0110" then  -- SRL
-        result <= '0' & to_stdlogicvector(to_bitvector(InputA) srl conv_integer(InputB));
-    elsif ALUOp = "0111" then  -- SRA
-        result <= to_stdlogicvector(to_bitvector(tmpInputA) sra conv_integer(InputB));
-    else
-        result <= (others => '0');
-    end if;
+    result <= (others => 'Z') when ALUOp = "0000"
+        else tmpInputA + tmpInputB when ALUOp = "0001"
+        else tmpInputA - tmpInputB when ALUOp = "0010"
+        else tmpInputA and tmpInputB when ALUOp = "0011"
+        else tmpInputA or tmpInputB when LUOp = "0100"
+        else to_stdlogicvector(to_bitvector(tmpInputA) sll conv_integer(InputB)) when ALUOp = "0101"
+        else '0' & to_stdlogicvector(to_bitvector(InputA) srl conv_integer(InputB)) when ALUOp = "0110"
+        else to_stdlogicvector(to_bitvector(tmpInputA) sra conv_integer(InputB)) when ALUOp = "0111"
+        else (others => '0');
 
     ALURes <= result(15 downto 0);
 
-    if (result = "00000000000000000") then
-        ALUFlag(0) <= '1';
-    else
-        ALUFlag(0) <= '0';
-    end if;
+    -- if (result = "00000000000000000") then
+    --     ALUFlag(0) <= '1';
+    -- else
+    --     ALUFlag(0) <= '0';
+    -- end if;
 
+    ALUFlag(0) <= '1' when result = (others => '0')
+                      else '0';
     ALUFlag(1) <= result(16);
 
 end Behavioral;

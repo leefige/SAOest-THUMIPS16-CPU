@@ -38,12 +38,7 @@ end TSetter;
 architecture Behavioral of TSetter is
 begin
 
-    if (TRegType = '0' and Flag(0) = '1') then
-        TOut <= (others => '0');
-    elsif (TRegType = '1' and Flag(1) = '0') then
-        TOut <= (others => '0');
-    else
-        TOut <= (others => '1');
-    end if;
+    TOut <= (others => '0') when (TRegType = '0' and Flag(0) = '1') or (TRegType = '1' and Flag(1) = '0')
+        else (others => '1');
 
 end Behavioral;
