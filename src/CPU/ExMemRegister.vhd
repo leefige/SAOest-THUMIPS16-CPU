@@ -11,7 +11,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity ExMemRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -21,22 +21,26 @@ entity ExMemRegister is
         --数据输入
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
-        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
+
         --信号输入
         RegWrEn_i : in std_logic;
         MemWr_i : in std_logic;
         MemRd_i : in std_logic;
         WBSrc_i : in std_logic;
+        IOType_i : in STD_LOGIC_VECTOR (2 downto 0);
 
         --数据输出
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
-        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
+
         --信号输出
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
         MemRd_o : out std_logic;
-        WBSrc_o : out std_logic
+        WBSrc_o : out std_logic;
+        IOType_o : out STD_LOGIC_VECTOR (2 downto 0)
     );
 end ExMemRegister;
 
@@ -49,6 +53,7 @@ begin
             RegDst_o <= "0000";
             ExData_o <= (others => '0');
             RegDataB_o <= (others => '0');
+            IOType_o <= (others => '0');
 
             RegWrEn_o <= '0';
             MemWr_o <= '0';
@@ -60,6 +65,7 @@ begin
                 RegDst_o <= "0000";
                 ExData_o <= (others => '0');
                 RegDataB_o <= (others => '0');
+                IOType_o <= (others => '0');
 
                 RegWrEn_o <= '0';
                 MemWr_o <= '0';
@@ -69,6 +75,7 @@ begin
                 RegDst_o <= RegDst_i;
                 ExData_o <= ExData_i;
                 RegDataB_o <= RegDataB_i;
+                IOType_o <= IOType_i;
 
                 RegWrEn_o <= RegWrEn_i;
                 MemWr_o <= MemWr_i;

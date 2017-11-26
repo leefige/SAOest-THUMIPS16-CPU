@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company:
--- Engineer: 李逸飞
+-- Engineer: Li Yifei, Qiao Yifan
 --
 -- Create Date:    20:54:56 11/21/2017
 -- Design Name:
@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use ieee.std_logic_unsigned.all; 
+use ieee.std_logic_unsigned.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -34,6 +34,7 @@ entity CPU is
            rst : in  STD_LOGIC;
            IO_WE : out  STD_LOGIC;
            IO_RE : out  STD_LOGIC;
+           IOType : out  STD_LOGIC_VECTOR(2 downto 0);
            Inst : in  STD_LOGIC_VECTOR (15 downto 0);
            IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
            InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -84,7 +85,7 @@ component Controller is
 end component;
 
 component ExMemRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -94,22 +95,26 @@ component ExMemRegister is
         --数据输入
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
-        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
+
         --信号输入
         RegWrEn_i : in std_logic;
         MemWr_i : in std_logic;
         MemRd_i : in std_logic;
         WBSrc_i : in std_logic;
+        IOType_i : in STD_LOGIC_VECTOR (2 downto 0);
 
         --数据输出
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
-        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
+
         --信号输出
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
         MemRd_o : out std_logic;
-        WBSrc_o : out std_logic
+        WBSrc_o : out std_logic;
+        IOType_o : out STD_LOGIC_VECTOR (2 downto 0)
     );
 end component;
 
@@ -138,7 +143,7 @@ component HazardUnit is
 end component;
 
 component IdExRegister is
-    --ID/EX阶段寄存�
+    --ID/EX阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -190,7 +195,7 @@ component IdExRegister is
 end component;
 
 component IfIdRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -212,7 +217,7 @@ component IfIdRegister is
 end component;
 
 component MemWbRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -268,6 +273,7 @@ end component;
 component StallController is
     Port ( WillHazard : in STD_LOGIC;
     WillBranch : in STD_LOGIC;
+    WillWrInst : in STD_LOGIC;
 
     WE_PC : out STD_LOGIC;
     WE_IFID : out STD_LOGIC;
@@ -283,6 +289,14 @@ component TSetter is
     Port ( TRegType : in STD_LOGIC; -- 0 for cmp; 1 for slt
     Flag : in STD_LOGIC_VECTOR(1 downto 0); -- 0 for Z; 1 for S
     TOut : out STD_LOGIC_VECTOR(15 downto 0));
+end component;
+
+component IOMapper is
+    Port ( MemWr : in  STD_LOGIC;
+           MemRd : in  STD_LOGIC;
+           AddrIn : in  STD_LOGIC_VECTOR (15 downto 0);
+           WillWrInst : out  STD_LOGIC;
+           IOType : out  STD_LOGIC_VECTOR (2 downto 0));
 end component;
 
 component Mux2 is
@@ -325,7 +339,7 @@ end component Mux6;
 -- Stall & Hazard & Forward --
 signal WE_PC, WE_IFID, WE_IDEX, WE_EXMEM, WE_MEMWB : STD_LOGIC;
 signal Clear_IFPC, Clear_IFID, Clear_IDEX, Clear_EXMEM, Clear_MEMWB : STD_LOGIC;
-signal WillHazard, WillBranch : STD_LOGIC;
+signal WillHazard, WillBranch, WillWrInst : STD_LOGIC;
 signal ForwardSelectA, ForwardSelectB : STD_LOGIC_VECTOR(1 downto 0);
 
 -- IF --
@@ -352,10 +366,13 @@ signal ex_ALURes, ex_TOut, ex_DataOut : STD_LOGIC_VECTOR(15 downto 0);
 signal ex_PCOffset : STD_LOGIC_VECTOR(15 downto 0);
 signal ex_PCSelect : STD_LOGIC_VECTOR(1 downto 0);
 
+signal ex_IOType : STD_LOGIC_VECTOR(2 downto 0);
+
 -- MEM --
 signal mem_RegWrEn, mem_MemWr, mem_MemRd, mem_WBSrc : STD_LOGIC;
 signal mem_RegDst : STD_LOGIC_VECTOR(3 downto 0);
 signal mem_ExData, mem_RegDataB, mem_Data : STD_LOGIC_VECTOR(15 downto 0);
+signal mem_IOType : STD_LOGIC_VECTOR(2 downto 0);
 
 -- WB --
 signal wb_RegWrEn, wb_WBSrc : STD_LOGIC;
@@ -371,6 +388,7 @@ begin
     Stall: StallController port map (
         WillHazard => WillHazard,
         WillBranch => WillBranch,
+        WillWrInst => WillWrInst,
         WE_PC => WE_PC,
         WE_IFID => WE_IFID,
         WE_IDEX => WE_IDEX,
@@ -556,6 +574,14 @@ begin
         TOut => ex_TOut
     );
 
+    EX_IOMapper: IOMapper port map (
+        MemWr => ex_MemWr,
+        MemRd => ex_MemRd,
+        AddrIn => ex_DataOut,
+        WillWrInst => WillWrInst,
+        IOType => ex_IOType
+    );
+
     EX_MUX: Mux6 port map (
         selector => ex_ExRes,
         inputA => ex_TOut,
@@ -580,7 +606,7 @@ begin
         clk => clk,
         rst => rst,
         WE => WE_EXMEM,
-		  Clear => Clear_EXMEM,
+		Clear => Clear_EXMEM,
         RegDst_i => ex_RegDst,
         ExData_i => ex_DataOut,
         RegDataB_i => ex_DataBTemp,
@@ -588,17 +614,20 @@ begin
         MemWr_i => ex_MemWr,
         MemRd_i => ex_MemRd,
         WBSrc_i => ex_WBSrc,
+        IOType_i => ex_IOType,
         RegDst_o => mem_RegDst,
         ExData_o => mem_ExData,
         RegDataB_o => mem_RegDataB,
         RegWrEn_o => mem_RegWrEn,
         MemWr_o => mem_MemWr,
         MemRd_o => mem_MemRd,
-        WBSrc_o => mem_WBSrc
+        WBSrc_o => mem_WBSrc,
+        IOType_o => mem_IOType
     );
 
     --------------- MEM ------------------
 
+    IOType <= mem_IOType;
     IO_WE <= mem_MemWr;
     IO_RE <= mem_MemRd;
     IOAddr <= mem_ExData;
@@ -611,7 +640,7 @@ begin
         clk => clk,
         rst => rst,
         WE => WE_MEMWB,
-		  Clear => Clear_MEMWB,
+		Clear => Clear_MEMWB,
         RegDst_i => mem_RegDst,
         ExData_i => mem_ExData,
         MemData_i => mem_Data,

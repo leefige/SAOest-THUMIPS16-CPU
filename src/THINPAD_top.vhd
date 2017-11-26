@@ -79,6 +79,7 @@ component CPU
 
            IO_WE : out  STD_LOGIC;
            IO_RE : out  STD_LOGIC;
+           IOType : out  STD_LOGIC_VECTOR(2 downto 0);
 
            Inst : in  STD_LOGIC_VECTOR (15 downto 0);
            InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -90,8 +91,10 @@ component CPU
 end component;
 
 component IOBridge
-    Port ( clk_PS2 : in STD_LOGIC;
-           clk_VGA : in STD_LOGIC;
+    Port ( clk_PS2 : in  STD_LOGIC;
+           clk_VGA : in  STD_LOGIC;
+
+           IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
            IO_WE : in  STD_LOGIC;
            IO_RE : in  STD_LOGIC;
@@ -135,6 +138,7 @@ end component;
 
 signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstAddr : STD_LOGIC_VECTOR (15 downto 0);
+signal s_IOType : STD_LOGIC_VECTOR (2 downto 0);
 
 signal s_IOAddr : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IODataCPU2Bridge : STD_LOGIC_VECTOR (15 downto 0);
@@ -153,6 +157,7 @@ begin
 
         IO_RE => s_IO_RE,
         IO_WE => s_IO_WE,
+        IOType => s_IOType,
 
         Inst => s_Inst,
         InstAddr => s_InstAddr,
@@ -166,6 +171,7 @@ begin
         clk_PS2 => clk_PS2,
         clk_VGA => clk_VGA,
 
+        IOType => s_IOType,
         IO_WE => s_IO_WE,
         IO_RE => s_IO_RE,
 

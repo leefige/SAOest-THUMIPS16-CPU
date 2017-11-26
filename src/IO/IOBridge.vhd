@@ -30,8 +30,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity IOBridge is
-    Port ( clk_PS2 : in STD_LOGIC;
-           clk_VGA : in STD_LOGIC;
+    Port ( clk_PS2 : in  STD_LOGIC;
+           clk_VGA : in  STD_LOGIC;
+
+           IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
            IO_WE : in  STD_LOGIC;
            IO_RE : in  STD_LOGIC;

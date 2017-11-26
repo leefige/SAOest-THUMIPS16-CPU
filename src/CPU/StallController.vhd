@@ -32,6 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity StallController is
     Port ( WillHazard : in STD_LOGIC;
            WillBranch : in STD_LOGIC;
+           WillWrInst : in STD_LOGIC;
 
            WE_PC : out STD_LOGIC;
            WE_IFID : out STD_LOGIC;
