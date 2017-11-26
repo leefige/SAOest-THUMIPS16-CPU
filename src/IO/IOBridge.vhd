@@ -19,6 +19,8 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -83,8 +85,9 @@ component Memory is
            DataOut : out  STD_LOGIC_VECTOR (15 downto 0);
            WE : in STD_LOGIC;
            RE : in STD_LOGIC;
+           EN : in STD_LOGIC;
 
-           -- connect to SRAM1 on board
+           -- connect to SRAM on board
            SRAM_EN : out  STD_LOGIC;
            SRAM_OE : out  STD_LOGIC;
            SRAM_WE : out  STD_LOGIC;
@@ -94,42 +97,30 @@ end component;
 
 --------------signal--------------------
 
-type InstMemState is (RD_INST, WR_INST);          -- for inst mem, 2 state: normally read / write user's program
-signal state_Inst : InstMemState := RD_INST;
+signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);       -- extended addr
+signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
 
-signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);
+signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
+
 signal s_IODataIn : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IODataOut : STD_LOGIC_VECTOR (15 downto 0);
+signal s_IODataOut_buffer : STD_LOGIC_VECTOR (15 downto 0);
 
 -- data mem (SRAM1)
 signal s_DataMemWE : STD_LOGIC;   -- control bus: whether w/r dataMem (SRAM1)
 signal s_DataMemRE : STD_LOGIC;
+signal s_DataMemEN : STD_LOGIC;
 signal s_MemDataIn : STD_LOGIC_VECTOR (15 downto 0);
 signal s_MemDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
 -- instruction mem (SRAM2)
-signal s_InstAddrRd : STD_LOGIC_VECTOR (17 downto 0);
-signal s_InstAddrWr : STD_LOGIC_VECTOR (17 downto 0);
-signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
-signal s_InstDataIn : STD_LOGIC_VECTOR (15 downto 0);
-signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstMemWE : STD_LOGIC;   -- control whether w/r instMem (SRAM2)
 signal s_InstMemRE : STD_LOGIC;
+signal s_InstMemEN : STD_LOGIC;
+signal s_InstDataIn : STD_LOGIC_VECTOR (15 downto 0);
+signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
 
 begin
-
---------------linking-------------------
-
-    -- extend addr
-    s_IOAddr <= "00" & IOAddr;
-    s_InstAddrRd <= "00" & InstAddr;
-    s_InstAddrWr <= "00" & IOAddr;
-
-    -- signal for global IO data
-    InstOut <= s_InstDataOut;
-    IODataOut <= s_IODataOut;
-    s_IODataIn <= IODataIn;
-    s_InstDataIn <= IODataIn;
 
     -- DataMem, SRAM1
     c_DataMem: Memory port map (
@@ -138,6 +129,7 @@ begin
         DataOut => s_MemDataOut,
         WE => s_DataMemWE,
         RE => s_DataMemRE,
+        EN => s_DataMemEN,
 
         -- connect to SRAM1 on board
         SRAM_EN => SRAM1_EN,
@@ -154,6 +146,7 @@ begin
         DataOut => s_InstDataOut,
         WE => s_InstMemWE,
         RE => s_InstMemRE,
+        EN => s_InstMemEN,
 
         -- connect to SRAM1 on board
         SRAM_EN => SRAM2_EN,
@@ -163,6 +156,80 @@ begin
         SRAM_DATA => SRAM2_DATA
     );
 
+    -----------------------------------------------
+
+    -- signals for global IO data
+    InstOut <= s_Inst;
+    IODataOut <= s_IODataOut;
+    s_IODataIn <= IODataIn;
+
+    --------------------SRAM EN--------------------
+
+    -- SRAM2 will always be enabled
+    s_InstMemEN <= '1';
+
+    -- disable SRAM1 when visiting UART
+    with IOType select
+        s_DataMemEN <=  '0' when "010" | "011", -- COM & ps2
+                        '1' when others;
+
+    -------------------------PORT CONTROL------------------------
+
+    --------------------------IO OUT------------------------
+
+    -- extend io addr
+    s_IOAddr <= "00" & IOAddr;
+
+    -- select io data out
+    with IOType select
+        s_IODataOut_buffer <=   s_InstDataOut when "001",   -- rd inst
+                                -- TODO
+                                (others=>'Z') when "010",   -- COM
+                                (others=>'Z') when "011",   -- PS2
+                                s_MemDataOut when others;   -- currently mem; will be extend
+    with IO_RE select
+        s_IODataOut <=  s_IODataOut_buffer when '1',   -- rd
+                        (others=>'Z') when others;
+
+    ------------------------INST OUT-----------------------------
+
+    -- select inst out
+    with IOType select
+        s_Inst <=   "0000100000000000" when "001",   -- nop
+                    s_InstDataOut when others;    -- normally IF
+
+    --==================================================================---
+
+
+    ------------------------INST MEM CONTROL-----------------------------
+
+    -- select inst addr
+    with IOType select
+        s_InstAddr <=   "00" & IOAddr when "001",   -- IO will visit inst mem
+                        "00" & InstAddr when others;    -- normally IF
+
+    -- select inst data in
+    with IOType select
+        s_InstDataIn <= s_IODataIn when "001",   -- IO will visit inst mem
+                        (others=>'Z') when others;    -- normally IF
+
+    -- select inst data RE, be 0 only when wr inst mem
+    s_InstMemRE <= '0' when ((IOType = "001") and (IO_WE = '1')) else '1';
+
+    -- select inst data WE, be 1 only when wr inst mem
+    s_InstMemWE <= not s_InstMemRE;
+
+    ------------------------DATA MEM CONTROL-----------------------------
+
+    -- select data mem data in
+    s_MemDataIn <= s_IODataIn;
+
+    -- select DATA data RE, let it be io_re
+    -- since en has been controlled
+    s_DataMemRE <= IO_RE;
+
+    -- select DATA data WE
+    s_DataMemWE <= IO_WE;
 
 --------------process-------------------
 

@@ -273,7 +273,7 @@ end component;
 component StallController is
     Port ( WillHazard : in STD_LOGIC;
     WillBranch : in STD_LOGIC;
-    WillWrInst : in STD_LOGIC;
+    WillVisitInst : in STD_LOGIC;
 
     WE_PC : out STD_LOGIC;
     WE_IFID : out STD_LOGIC;
@@ -295,7 +295,7 @@ component IOMapper is
     Port ( MemWr : in  STD_LOGIC;
            MemRd : in  STD_LOGIC;
            AddrIn : in  STD_LOGIC_VECTOR (15 downto 0);
-           WillWrInst : out  STD_LOGIC;
+           WillVisitInst : out  STD_LOGIC;
            IOType : out  STD_LOGIC_VECTOR (2 downto 0));
 end component;
 
@@ -339,7 +339,7 @@ end component Mux6;
 -- Stall & Hazard & Forward --
 signal WE_PC, WE_IFID, WE_IDEX, WE_EXMEM, WE_MEMWB : STD_LOGIC;
 signal Clear_IFPC, Clear_IFID, Clear_IDEX, Clear_EXMEM, Clear_MEMWB : STD_LOGIC;
-signal WillHazard, WillBranch, WillWrInst : STD_LOGIC;
+signal WillHazard, WillBranch, WillVisitInst : STD_LOGIC;
 signal ForwardSelectA, ForwardSelectB : STD_LOGIC_VECTOR(1 downto 0);
 
 -- IF --
@@ -388,7 +388,7 @@ begin
     Stall: StallController port map (
         WillHazard => WillHazard,
         WillBranch => WillBranch,
-        WillWrInst => WillWrInst,
+        WillVisitInst => WillVisitInst,
         WE_PC => WE_PC,
         WE_IFID => WE_IFID,
         WE_IDEX => WE_IDEX,
@@ -578,7 +578,7 @@ begin
         MemWr => ex_MemWr,
         MemRd => ex_MemRd,
         AddrIn => ex_DataOut,
-        WillWrInst => WillWrInst,
+        WillVisitInst => WillVisitInst,
         IOType => ex_IOType
     );
 

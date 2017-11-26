@@ -35,6 +35,7 @@ entity Memory is
            DataOut : out  STD_LOGIC_VECTOR (15 downto 0);
            WE : in STD_LOGIC;
            RE : in STD_LOGIC;
+           EN : in STD_LOGIC;
 
            -- connect to SRAM on board
            SRAM_EN : out  STD_LOGIC;
@@ -46,34 +47,36 @@ end Memory;
 
 architecture Behavioral of Memory is
 
-signal s_EN : STD_LOGIC;
 signal s_Addr : STD_LOGIC_VECTOR (17 downto 0);
 signal s_DataIn : STD_LOGIC_VECTOR (15 downto 0);
 signal s_DataOut : STD_LOGIC_VECTOR (15 downto 0);
+signal MemState : STD_LOGIC_VECTOR (1 downto 0);
 
 begin
-    s_EN <= WE or RE;
     s_Addr <= Addr;
     DataOut <= s_DataOut;
     s_DataIn <= DataIn;
 
     -- control SRAM1 on board
-    SRAM_EN <= not s_EN;
+    SRAM_EN <= not EN;
     SRAM_OE <= not RE;
     SRAM_WE <= not WE;
     SRAM_ADDR <= s_Addr;
 
-    process (WE, RE)
+    MemState <= (EN and WE) & (EN and RE);  -- w & r
+
+    process (MemState)
     begin
-        if (RE = '1') then  -- read
-            s_DataOut <= SRAM_DATA;
-        elsif (WE = '1') then   -- write
-            SRAM_DATA <= s_DataIn;
-            s_DataOut <= (others=>'Z');
-        else    -- idle
-            SRAM_DATA <= (others=>'Z');
-            s_DataOut <= (others=>'Z');
-        end if;
+        case MemState is
+            when "10" =>    -- write
+                SRAM_DATA <= s_DataIn;
+                s_DataOut <= (others=>'Z');
+            when "01" =>    -- read
+                s_DataOut <= SRAM_DATA;
+            when others =>
+                SRAM_DATA <= (others=>'Z');
+                s_DataOut <= (others=>'Z');
+        end case;
     end process;
 
 end Behavioral;
