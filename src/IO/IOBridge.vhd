@@ -124,6 +124,9 @@ signal s_InstDataOut : STD_LOGIC_VECTOR (15 downto 0);
 signal BF01 : STD_LOGIC_VECTOR (15 downto 0);
 signal BF03 : STD_LOGIC_VECTOR (15 downto 0);
 
+signal BF00 : STD_LOGIC_VECTOR (15 downto 0);
+signal BF02 : STD_LOGIC_VECTOR (15 downto 0);
+
 signal s_PS2_data_ready : std_logic;
 signal s_PS2_wrn : std_logic;
 
@@ -190,13 +193,12 @@ begin
     s_IOAddr <= "00" & IOAddr;
 
     -- select io data out
-    s_IODataOut_buffer <=   s_InstDataOut when (IOType = "001") else   -- rd inst
-                            "00000000" & SRAM1_DATA(7 downto 0) when (IOAddr = x"BF00") else
-                            BF01 when (IOAddr = x"BF01") else
-                            -- TODO
-                            (others=>'Z') when (IOAddr = x"BF02") else
-                            BF03 when (IOAddr = x"BF03") else
-                            s_MemDataOut;
+    s_IODataOut_buffer <=   s_InstDataOut when (IOType = "001") else   -- inst MEM
+                            BF00 when (IOAddr = x"BF00") else   -- COM DATA
+                            BF01 when (IOAddr = x"BF01") else   -- COM FLAG
+                            BF02 when (IOAddr = x"BF02") else   -- PS2 DATA
+                            BF03 when (IOAddr = x"BF03") else   -- PS2 FLAG
+                            s_MemDataOut;   -- DATA MEM
     with IO_RE select
         s_IODataOut <=  s_IODataOut_buffer when '1',   -- rd
                         (others=>'Z') when others;
@@ -205,22 +207,22 @@ begin
 
     -- select inst out
     with IOType select
-        s_Inst <=   "0000100000000000" when "001",   -- nop
-                    s_InstDataOut when others;    -- normally IF
+        s_Inst <=   "0000100000000000" when "001",      -- nop
+                    s_InstDataOut when others;          -- normally IF
 
-    --==================================================================---
+    --==================================================================--
 
 
     ------------------------INST MEM CONTROL-----------------------------
 
     -- select inst addr
     with IOType select
-        s_InstAddr <=   "00" & IOAddr when "001",   -- IO will visit inst mem
+        s_InstAddr <=   "00" & IOAddr when "001",       -- IO will visit inst mem
                         "00" & InstAddr when others;    -- normally IF
 
     -- select inst data in
     with IOType select
-        s_InstDataIn <= s_IODataIn when "001",   -- IO will visit inst mem
+        s_InstDataIn <= s_IODataIn when "001",        -- IO will visit inst mem
                         (others=>'Z') when others;    -- normally IF
 
     -- select inst data RE, be 0 only when wr inst mem
@@ -232,29 +234,40 @@ begin
     ------------------------DATA MEM CONTROL-----------------------------
 
     -- select data mem data in
-    s_MemDataIn <= s_IODataIn;
+    with IOType select
+        s_MemDataIn <=  (others=>'Z') when "001" | "010" | "011", -- inst & COM & ps2
+                        s_IODataIn when others;
 
     -- select DATA data RE, let it be io_re
-    -- since en has been controlled
-    s_DataMemRE <= IO_RE;
+    with IOType select
+        s_DataMemRE <=  '0' when "001" | "010" | "011", -- inst & COM & ps2
+                        IO_RE when others;
 
     -- select DATA data WE
-    s_DataMemWE <= IO_WE;
+    with IOType select
+        s_DataMemWE <=  '0' when "001" | "010" | "011", -- inst & COM & ps2
+                        IO_WE when others;
 
     ------------------------COM-----------------------------
 
     BF01(0) <= COM_tsre and COM_tbre;
 	BF01(1) <= COM_data_ready;
-	BF01(15 downto 2) <= "00000000000000";
+	BF01(15 downto 2) <= (others=>'0');
 
     COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
 	COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
 
+    BF00 <= "00000000" & SRAM1_DATA(7 downto 0);    -- DATA BUS
+
     ------------------------PS2-----------------------------
 
 	BF03(0) <= s_PS2_data_ready;
-	BF03(15 downto 1) <= "000000000000000";
+	BF03(15 downto 1) <= (others=>'0');
+
 	s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
+
+    -- TODO
+    BF02 <= (others=>'0');
 
 end Behavioral;
 
