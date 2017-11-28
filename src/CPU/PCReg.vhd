@@ -52,7 +52,7 @@ begin
 
     process(clk, rst)
     begin
-        if (rst = '1') then
+        if (rst = '0') then
             pc <= (others => '0');
         elsif (clk'event and clk = '1') then
             if (clear = '1') then

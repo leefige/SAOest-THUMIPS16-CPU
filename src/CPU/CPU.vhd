@@ -364,7 +364,7 @@ signal ex_ALUFlag : STD_LOGIC_VECTOR(1 downto 0) := (others => '0');
 signal ex_ALURes, ex_TOut, ex_DataOut : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
 signal ex_PCOffset : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
-signal ex_PCSelect : STD_LOGIC_VECTOR(1 downto 0) := (others => '0');
+signal ex_PCSelect : STD_LOGIC_VECTOR(1 downto 0) := "01";
 
 signal ex_IOType : STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
 
