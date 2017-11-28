@@ -1,8 +1,8 @@
 #-----------------------------------------------------------
 # PlanAhead v14.2
 # Build 194362 by xbuild on Fri Jul 20 18:52:36 MDT 2012
-# Start of session at: Tue Nov 28 09:18:10 2017
-# Process ID: 6032
+# Start of session at: Tue Nov 28 19:33:21 2017
+# Process ID: 7256
 # Log file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_3/planAhead.log
 # Journal file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_3/planAhead.jou
 #-----------------------------------------------------------
@@ -43,7 +43,7 @@ Processing design ...
    Preping design's macros ...
   finished :Prep
 Writing EDIF netlist file THINPAD_top.edif ...
-ngc2edif: Total memory usage is 114684 kilobytes
+ngc2edif: Total memory usage is 115516 kilobytes
 
 Parsing EDIF File [./planAhead_run_3/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
 Finished Parsing EDIF File [./planAhead_run_3/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
@@ -61,10 +61,30 @@ INFO: [Timing 38-34] Done reading timing library C:/Develop/Xilinx/14.2/ISE_DS/P
 Parsing UCF File [C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ucf]
 Finished Parsing UCF File [C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ucf]
 INFO: [Project 1-111] Unisim Transformation Summary:
-No Unisim elements were transformed.
+  A total of 1 instances were transformed.
+  BUFGP => BUFGP (HD_IBUFG, HD_BUFG): 1 instances
 
-Phase 0 | Netlist Checksum: ccdb1e9d
-link_design: Time (s): elapsed = 00:00:13 . Memory (MB): peak = 484.590 ; gain = 114.172
+Phase 0 | Netlist Checksum: 8dcf9a36
+link_design: Time (s): elapsed = 00:00:08 . Memory (MB): peak = 465.211 ; gain = 91.730
+startgroup
+set_property package_pin C7 [get_ports {DYP1[0]}]
+endgroup
+startgroup
+set_property package_pin U9 [get_ports clk_top]
+endgroup
+startgroup
+set_property package_pin U9 [get_ports clk_top]
+endgroup
+startgroup
+set_property package_pin B8 [get_ports clk_PS2]
+endgroup
+startgroup
+set_property package_pin U6 [get_ports clk_PS2]
+endgroup
+startgroup
+set_property package_pin D14 [get_ports COM_tbre]
+endgroup
+save_design
 exit
 INFO: [Common 17-206] Exiting PlanAhead...
 INFO: [Common 17-83] Releasing license: PlanAhead

@@ -53,10 +53,10 @@ begin
     process(clk, rst)
     begin
         if (rst = '0') then
-            pc <= (others => '0');
+            pc <= "0000000000000000";
         elsif (clk'event and clk = '1') then
             if (clear = '1') then
-                pc <= (others => '0');
+                pc <= "0000000000000000";
             elsif (WE = '1') then
                 pc <= PC_i;
             end if;

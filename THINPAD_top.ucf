@@ -33,7 +33,6 @@ NET "SRAM2_DATA[13]" LOC = P10;
 NET "SRAM2_DATA[14]" LOC = N12;
 NET "SRAM2_DATA[15]" LOC = N11;
 
-# PlanAhead Generated physical constraints 
 
 NET "DYP1[6]" LOC = F8;
 NET "DYP1[5]" LOC = E8;
@@ -134,8 +133,8 @@ NET "SRAM2_WE" LOC = M9;
 NET "VGA_HS" LOC = D6;
 NET "VGA_VS" LOC = E6;
 NET "SRAM2_EN" LOC = N10;
-NET "clk_PS2" LOC = V7;
-NET "clk_top" LOC = B8;
+NET "clk_PS2" LOC = U6;
+NET "clk_top" LOC = U9;
 NET "PS2_DATA" LOC = V6;
 NET "rst" LOC = U10;
 NET "COM_data_ready" LOC = A16;

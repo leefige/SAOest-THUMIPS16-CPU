@@ -50,7 +50,7 @@ begin
     process(rst, clk)
     begin
         if (rst = '0') then
-            RegDst_o <= "0000";
+            RegDst_o <= (others => '0');
             ExData_o <= (others => '0');
             RegDataB_o <= (others => '0');
             IOType_o <= (others => '0');
