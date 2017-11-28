@@ -68,9 +68,9 @@ begin
     process(rst, clk)
     begin
         if (rst = '0') then
-            RegSrcA_o <= (others => '0');
-            RegSrcB_o <= (others => '0');
-            RegDst_o <= (others => '0');
+            RegSrcA_o <= (others => '1');
+            RegSrcB_o <= (others => '1');
+            RegDst_o <= (others => '1');
             ExRes_o <= (others => '0');
             NPC_o <= "0000000000000001";
             RPC_o <= "0000000000000010";
