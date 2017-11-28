@@ -80,8 +80,10 @@ begin
             MemWr <= '0';
             MemRd <= '0';
             WBSrc <= '1';
+            JumpType <= "111";
             ALUop <= "0001"; -- plus
             RegSrcA <= '0' & Inst(10 downto 8);
+            RegSrcB <= (others => '1');
             RegDst <= '0' & Inst(10 downto 8);
             ExRes <= "011"; -- 3 stands for ExData get data from ALURes
             ALUSrc <= '1'; -- imme
@@ -91,8 +93,10 @@ begin
             MemWr <= '0';
             MemRd <= '0';
             WBSrc <= '1';
+            JumpType <= "111";
             ALUOp <= "0001";
             RegSrcA <= '0' & Inst(10 downto 8);
+            RegSrcB <= (others => '1');
             RegDst <= '0' & Inst(7 downto 5);
             ExRes <= "011";
             ALUSrc <= '1';
@@ -102,8 +106,10 @@ begin
             MemWr <= '0';
             MemRd <= '0';
             WBSrc <= '1';
+            JumpType <= "111";
             ALUOp <= "0001";
             RegSrcA <= "1010";
+            RegSrcB <= (others => '1');
             RegDst <= "1010";
             ExRes <= "011";
             ALUSrc <= '1';
@@ -113,6 +119,7 @@ begin
             MemWr <= '0';
             MemRd <= '0';
             WBSrc <= '1';
+            JumpType <= "111";
             ALUOp <= "0001";
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= '0' & Inst(7 downto 5);
@@ -125,6 +132,7 @@ begin
             MemWr <= '0';
             MemRd <= '0';
             WBSrc <= '1';
+            JumpType <= "111";
             ALUOp <= "0010";
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= '0' & Inst(7 downto 5);
@@ -137,6 +145,7 @@ begin
             MemWr <= '0';
             MemRd <= '0';
             WBSrc <= '1';
+            JumpType <= "111";
             ALUOp <= "0010";
             RegSrcA <= "1100"; -- zero
             RegSrcB <= '0' & Inst(7 downto 5);
@@ -145,12 +154,11 @@ begin
             ALUSrc <= '0'; -- regB
         -- 逻辑
         elsif (first5 = "11101" and last2 = "01100") then       -- AND
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0011";
             RegSrcA   <= '0' & rx;
             RegSrcB   <= '0' & ry;
@@ -158,12 +166,11 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '0';
         elsif (first5 = "11101" and last5 = "01101") then       -- OR
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0100";
             RegSrcA   <= '0' & rx;
             RegSrcB   <= '0' & ry;
@@ -173,41 +180,38 @@ begin
 
         -- 移位
         elsif (first5 = "00110" and last2 = "00") then          -- SLL
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0101";
             RegSrcA   <= '0' & ry;
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "00110" and last2 = "11") then          -- SRA
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0111";
             RegSrcA   <= '0' & ry;
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "00110" and last2 = "10") then          -- SRL
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0110";
             RegSrcA   <= '0' & ry;
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "011";
             ALUSrc    <= '1';
@@ -217,53 +221,66 @@ begin
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "000";
             ALUOp <= "0000";
+            RegSrcA <= "1111";
+            RegSrcB <= "1111";
             RegDst <= "1111"; -- No use
 
         elsif (first5 = "00100") then                           -- BEQZ
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "001";
             ALUOp <= "0000";
             RegSrcA <= '0' & Inst(10 downto 8);
+            RegSrcB <= "1111";
             RegDst <= "1111";
 
         elsif (first5 = "00101") then                           -- BNEZ
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "010";
             ALUOp <= "0000";
             RegSrcA <= '0' & Inst(10 downto 8);
+            RegSrcB <= "1111";
             RegDst <= "1111";
 
         elsif (first8 = "01100000") then                        -- BTEQZ
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "011";
             ALUOp <= "0000";
             RegSrcA <= "1000"; -- T
+            RegSrcB <= "1111";
             RegDst <= "1111";
 
         elsif (first5 = "11101" and last8 = "00000000") then    -- JR
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "100";
             ALUOp <= "0000";
             RegSrcA <= '0' & Inst(10 downto 8);
+            RegSrcB <= "1111";
             RegDst <= "1111";
 
         elsif (first5 = "11101" and last8 = "11000000") then    -- JALR
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "101";
             ALUOp <= "0000";
             RegSrcA <= '0' & Inst(10 downto 8);
+            RegSrcB <= "1111";
             RegDst <= "1011"; -- RA
             ExRes <= "010"; -- RPC
 
@@ -271,9 +288,11 @@ begin
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
+            WBSrc <= '1';
             JumpType <= "110";
             ALUOp <= "0000";
             RegSrcA <= "1011"; -- RA
+            RegSrcB <= "1111";
             RegDst <= "1111";
 
         -- 比较
@@ -283,20 +302,21 @@ begin
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0010";
             RegSrcA   <= '0' & rx;
             RegSrcB   <= '0' & ry;
             RegDst    <= "1000";
             ExRes     <= "000";
             ALUSrc    <= '0';
+
         elsif (first5 = "11101" and last5 = "00010") then       -- SLT
             TRegType  <= '1';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0010";
             RegSrcA   <= '0' & rx;
             RegSrcB   <= '0' & ry;
@@ -306,105 +326,97 @@ begin
 
         -- 特殊寄存器取/赋�
         elsif (first5 = "11110" and last8 = "00000000") then    -- MFIH
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0000";
             RegSrcA   <= "1001";
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "100";
-            ALUSrc    <= 'Z';
+
         elsif (first5 = "11101" and last8 = "01000000") then    -- MFPC
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0000";
-            RegSrcA   <= (others => 'Z');
-            RegSrcB   <= (others => 'Z');
+            RegSrcA   <= (others => '1');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "001";
-            ALUSrc    <= 'Z';
+
         elsif (first5 = "11110" and last8 = "00000001") then    -- MTIH
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0000";
             RegSrcA   <= '0' & rx;
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= "1001";
             ExRes     <= "100";
-            ALUSrc    <= 'Z';
+
         elsif (first8 = "01100100" and last5 = "00000") then    -- MTSP
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0000";
             RegSrcA   <= '0' & rx;
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= "1010";
             ExRes     <= "100";
-            ALUSrc    <= 'Z';
 
         -- 访存
         elsif (first5 = "01101") then                           -- LI
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0000";
-            RegSrcA   <= (others => 'Z');
-            RegSrcB   <= (others => 'Z');
+            RegSrcA   <= (others => '1');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "101";
             ALUSrc    <= '1';
+
         elsif (first5 = "10011") then                           -- LW
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '1';
             WBSrc     <= '0';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0001";
             RegSrcA   <= '0' & rx;
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & ry;
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "10010") then                           -- LW_SP
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '1';
             WBSrc     <= '0';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0001";
             RegSrcA   <= "1010";
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "11011") then                           -- SW
-            TRegType  <= 'Z';
             RegWrEn   <= '0';
             MemWr     <= '1';
             MemRd     <= '0';
-            WBSrc     <= 'Z';
-            JumpType  <= (others => 'Z');
+            WBSrc     <= '1';
+            JumpType  <= "111";
             ALUOp     <= "0001";
             RegSrcA   <= '0' & rx;
             RegSrcB   <= '0' & ry;
@@ -412,12 +424,11 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first8 = "01100010") then                        -- SW_RS
-            TRegType  <= 'Z';
             RegWrEn   <= '0';
             MemWr     <= '1';
             MemRd     <= '0';
-            WBSrc     <= 'Z';
-            JumpType  <= (others => 'Z');
+            WBSrc     <= '1';
+            JumpType  <= "111";
             ALUOp     <= "0001";
             RegSrcA   <= "1010";
             RegSrcB   <= "1011";
@@ -425,12 +436,11 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "11010") then                           -- SW_SP
-            TRegType  <= 'Z';
             RegWrEn   <= '0';
             MemWr     <= '1';
             MemRd     <= '0';
-            WBSrc     <= 'Z';
-            JumpType  <= (others => 'Z');
+            WBSrc     <= '1';
+            JumpType  <= "111";
             ALUOp     <= "0001";
             RegSrcA   <= "1010";
             RegSrcB   <= '0' & rx;
@@ -440,19 +450,19 @@ begin
 
         -- �
         elsif (Inst = "0000100000000000") then                  -- NOP
-            TRegType  <= 'Z';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
             WBSrc     <= '1';
-            JumpType  <= (others => 'Z');
+            JumpType  <= "111";
             ALUOp     <= "0101";
             RegSrcA   <= "1100";
-            RegSrcB   <= (others => 'Z');
+            RegSrcB   <= (others => '1');
             RegDst    <= "1100";
             ExRes     <= "011";
             ALUSrc    <= '1';
         else
+            JumpType <= "111";
             RegDst <= "1111";
         end if;
     end process;
