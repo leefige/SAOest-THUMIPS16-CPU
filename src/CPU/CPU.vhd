@@ -88,7 +88,7 @@ component Controller is
 end component;
 
 component ExMemRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -146,7 +146,7 @@ component HazardUnit is
 end component;
 
 component IdExRegister is
-    --ID/EX阶段寄存�
+    --ID/EX阶段寄存
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -198,7 +198,7 @@ component IdExRegister is
 end component;
 
 component IfIdRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -220,7 +220,7 @@ component IfIdRegister is
 end component;
 
 component MemWbRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存
     port(
         clk : in std_logic;
         rst : in std_logic;
@@ -387,7 +387,7 @@ signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others
 begin
 
     Logger1 <= "0" & ex_IOType;
-    Logger2 <= id_JumpType;
+    Logger2 <= "0" & id_JumpType;
     Logger16 <= mem_ExData;
 
     ----- Stall & Hazard & Forward ----
