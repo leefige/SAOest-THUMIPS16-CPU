@@ -68,10 +68,10 @@ begin
     process(rst, clk)
     begin
         if (rst = '0') then
-            RegSrcA_o <= (others => '1');
-            RegSrcB_o <= (others => '1');
-            RegDst_o <= (others => '1');
-            ExRes_o <= (others => '0');
+            RegSrcA_o <= "1100";
+            RegSrcB_o <= "1111";
+            RegDst_o <= "1100";
+            ExRes_o <= "11";
             NPC_o <= "0000000000000001";
             RPC_o <= "0000000000000010";
 
@@ -80,7 +80,7 @@ begin
             MemWr_o <= '0';
             MemRd_o <= '0';
             WBSrc_o <= '1';
-            JumpType_o <= (others => '1');
+            JumpType_o <= "111";
             ALUOp_o <= "0101";
             ALUSrc_o <= '1';
             RegDataA_o <= (others => '0');
@@ -90,10 +90,10 @@ begin
 
         elsif (clk'event and clk = '1') then
             if(Clear = '1') then
-                RegSrcA_o <= (others => '0');
-                RegSrcB_o <= (others => '0');
-                RegDst_o <= (others => '0');
-                ExRes_o <= (others => '0');
+                RegSrcA_o <= "1100";
+                RegSrcB_o <= "1111";
+                RegDst_o <= "1100";
+                ExRes_o <= "11";
                 NPC_o <= "0000000000000001";
                 RPC_o <= "0000000000000010";
 
@@ -102,7 +102,7 @@ begin
                 MemWr_o <= '0';
                 MemRd_o <= '0';
                 WBSrc_o <= '1';
-                JumpType_o <= (others => '1');
+                JumpType_o <= "111";
                 ALUOp_o <= "0101";
                 ALUSrc_o <= '1';
                 RegDataA_o <= (others => '0');

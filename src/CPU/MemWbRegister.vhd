@@ -42,21 +42,22 @@ begin
     process(rst, clk)
     begin
         if (rst = '0') then
-            RegDst_o <= "0000";
+            RegDst_o <= "1100";
             ExData_o <= (others => '0');
             MemData_o <= (others => '0');
 
-            RegWrEn_o <= '0';
-            WBSrc_o <= '0';
+            RegWrEn_o <= '1';
+            WBSrc_o <= '1';
 
         elsif (clk'event and clk = '1') then
             if(Clear = '1') then
-                RegDst_o <= "0000";
+                RegDst_o <= "1100";
                 ExData_o <= (others => '0');
                 MemData_o <= (others => '0');
 
-                RegWrEn_o <= '0';
-                WBSrc_o <= '0';
+                RegWrEn_o <= '1';
+                WBSrc_o <= '1';
+
             elsif(WE = '1') then
                 RegDst_o <= RegDst_i;
                 ExData_o <= ExData_i;

@@ -40,13 +40,13 @@ begin
         if (rst = '0') then
             NPC_o <= "0000000000000001";
             RPC_o <= "0000000000000010";
-            Inst_o <= "0000100000000000";
+            Inst_o <= "0000100000000000";   -- nop
 
         elsif (clk'event and clk = '1') then
             if(Clear = '1') then
                 NPC_o <= (others => '0');
                 RPC_o <= (others => '0');
-                Inst_o <= "0000100000000000";
+                Inst_o <= "0000100000000000";   -- nop
             elsif(WE = '1') then
                 NPC_o <= NPC_i;
                 RPC_o <= RPC_i;

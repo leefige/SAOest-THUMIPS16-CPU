@@ -70,7 +70,7 @@ begin
 
     process(clk, rst)
     begin
-        if (rst = '1') then
+        if (rst = '0') then
             regs <= (others => (others => '0'));
         elsif (clk'event and clk = '1') then
             if (RegWrEn = '1') then
