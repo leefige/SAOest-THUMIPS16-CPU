@@ -87,7 +87,8 @@ component CPU
            IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
            IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
            IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
-           Logger : out  STD_LOGIC_VECTOR (3 downto 0);
+           Logger1 : out  STD_LOGIC_VECTOR (3 downto 0);
+           Logger2 : out  STD_LOGIC_VECTOR (3 downto 0);
            Logger16 : out  STD_LOGIC_VECTOR (15 downto 0)
     );
 end component;
@@ -146,7 +147,8 @@ end component;
 signal s_DebugNum1 : STD_LOGIC_VECTOR (3 downto 0);
 signal s_DebugNum2 : STD_LOGIC_VECTOR (3 downto 0);
 
-signal s_Logger : STD_LOGIC_VECTOR (3 downto 0);
+signal s_Logger1 : STD_LOGIC_VECTOR (3 downto 0);
+signal s_Logger2 : STD_LOGIC_VECTOR (3 downto 0);
 signal s_Logger16 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
@@ -234,12 +236,13 @@ begin
         PS2_DATA => PS2_DATA
     );
 
-	DYP2 <= (others=>'0');
+	-- DYP2 <= (others=>'0');
 
-	Light <= s_InstAddr;
+	-- Light <= s_InstAddr;
+	Light <= s_Logger16;
 
-    s_DebugNum1 <= s_Logger;
-    s_DebugNum2 <= s_Logger16;
+    s_DebugNum1 <= s_Logger1;
+    s_DebugNum2 <= s_Logger2;
 
 end Behavioral;
 

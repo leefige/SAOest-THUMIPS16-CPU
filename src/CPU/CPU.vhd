@@ -40,7 +40,8 @@ entity CPU is
            InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
            IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
            IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
-           Logger : out  STD_LOGIC_VECTOR (3 downto 0);
+           Logger1 : out  STD_LOGIC_VECTOR (3 downto 0);
+           Logger2 : out  STD_LOGIC_VECTOR (3 downto 0);
            Logger16 : out  STD_LOGIC_VECTOR (15 downto 0));
 
 end CPU;
@@ -385,8 +386,9 @@ signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others
 
 begin
 
-    Logger <= "0" & ex_IOType;
-    Logger16 <= id_JumpType;
+    Logger1 <= "0" & ex_IOType;
+    Logger2 <= id_JumpType;
+    Logger16 <= mem_ExData;
 
     ----- Stall & Hazard & Forward ----
 
