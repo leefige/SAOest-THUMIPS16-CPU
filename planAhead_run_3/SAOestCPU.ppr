@@ -6,7 +6,7 @@
 	<DefaultLaunch Dir="$PRUNDIR"/>
 	<DefaultPromote Dir="$PROMOTEDIR"/>
 	<Config>
-		<Option Name="Id" Val="97b106b52f0a406d87329e616c87651e"/>
+		<Option Name="Id" Val="b33e2f3638234b32a2d8bbf565b77aed"/>
 		<Option Name="Part" Val="xc3s1200efg320-4"/>
 		<Option Name="CompiledLibDir" Val="$PCACHEDIR/compxlib"/>
 		<Option Name="TargetLanguage" Val="Verilog"/>

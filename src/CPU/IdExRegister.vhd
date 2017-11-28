@@ -11,8 +11,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity IdExRegister is
-    --ID/EX阶段寄存�
-    port(
+    --ID/EX阶段寄存�    
+	port(
         clk : in std_logic;
         rst : in std_logic;
         WE  : in std_logic;
@@ -71,7 +71,7 @@ begin
             RegSrcA_o <= "1100";
             RegSrcB_o <= "1111";
             RegDst_o <= "1100";
-            ExRes_o <= "11";
+            ExRes_o <= "011";
             NPC_o <= "0000000000000001";
             RPC_o <= "0000000000000010";
 
@@ -93,7 +93,7 @@ begin
                 RegSrcA_o <= "1100";
                 RegSrcB_o <= "1111";
                 RegDst_o <= "1100";
-                ExRes_o <= "11";
+                ExRes_o <= "011";
                 NPC_o <= "0000000000000001";
                 RPC_o <= "0000000000000010";
 

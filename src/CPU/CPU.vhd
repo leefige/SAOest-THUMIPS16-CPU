@@ -39,7 +39,9 @@ entity CPU is
            IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
            InstAddr : out  STD_LOGIC_VECTOR (15 downto 0);
            IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
-           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0));
+           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger : out  STD_LOGIC_VECTOR (3 downto 0);
+           Logger16 : out  STD_LOGIC_VECTOR (15 downto 0));
 
 end CPU;
 
@@ -383,6 +385,8 @@ signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others
 
 begin
 
+    Logger <= "0" & ex_IOType;
+
     ----- Stall & Hazard & Forward ----
 
     Stall: StallController port map (
@@ -437,8 +441,8 @@ begin
         selector => ex_PCSelect
     );
 
-    if_NPC <= if_PC + 1;
-    if_RPC <= if_PC + 2;
+    if_NPC <= if_InstAddr + 1;
+    if_RPC <= if_InstAddr + 2;
 
     ----------------- IFID ----------------------
 
@@ -599,6 +603,7 @@ begin
         WillBranch => WillBranch,
         PCSelect => ex_PCSelect
     );
+
 
     ---------------- EXMEM -----------------
 

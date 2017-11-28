@@ -40,7 +40,7 @@ Processing design ...
    Preping design's macros ...
   finished :Prep
 Writing EDIF netlist file THINPAD_top.edif ...
-ngc2edif: Total memory usage is 115516 kilobytes
+ngc2edif: Total memory usage is 114556 kilobytes
 
 Parsing EDIF File [./planAhead_run_3/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
 Finished Parsing EDIF File [./planAhead_run_3/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
@@ -61,27 +61,8 @@ INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 1 instances were transformed.
   BUFGP => BUFGP (HD_IBUFG, HD_BUFG): 1 instances
 
-Phase 0 | Netlist Checksum: 8dcf9a36
-link_design: Time (s): elapsed = 00:00:08 . Memory (MB): peak = 465.211 ; gain = 91.730
-startgroup
-set_property package_pin C7 [get_ports {DYP1[0]}]
-endgroup
-startgroup
-set_property package_pin U9 [get_ports clk_top]
-endgroup
-startgroup
-set_property package_pin U9 [get_ports clk_top]
-endgroup
-startgroup
-set_property package_pin B8 [get_ports clk_PS2]
-endgroup
-startgroup
-set_property package_pin U6 [get_ports clk_PS2]
-endgroup
-startgroup
-set_property package_pin D14 [get_ports COM_tbre]
-endgroup
-save_design
+Phase 0 | Netlist Checksum: 02e900cd
+link_design: Time (s): elapsed = 00:00:08 . Memory (MB): peak = 457.898 ; gain = 91.191
 exit
 INFO: [Common 17-206] Exiting PlanAhead...
 INFO: [Common 17-83] Releasing license: PlanAhead

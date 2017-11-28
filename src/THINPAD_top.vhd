@@ -86,7 +86,9 @@ component CPU
 
            IOAddr : out  STD_LOGIC_VECTOR (15 downto 0);
            IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0)
+           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger : out  STD_LOGIC_VECTOR (3 downto 0);
+           Logger16 : out  STD_LOGIC_VECTOR (15 downto 0)
     );
 end component;
 
@@ -134,7 +136,17 @@ component IOBridge
            PS2_DATA : in  STD_LOGIC);
 end component;
 
+component Digit7 is
+    Port ( num : in  STD_LOGIC_VECTOR (3 downto 0);
+           seg : out  STD_LOGIC_VECTOR (6 downto 0));
+end component;
+
 --------------signal--------------------
+
+signal s_DebugNum1 : STD_LOGIC_VECTOR (3 downto 0);
+
+signal s_Logger : STD_LOGIC_VECTOR (3 downto 0);
+signal s_Logger16 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstAddr : STD_LOGIC_VECTOR (15 downto 0);
@@ -151,6 +163,11 @@ signal s_IO_RE : STD_LOGIC;
 
 begin
 
+	c_DYP1 : Digit7 port map (
+		num => s_DebugNum1,
+        seg => DYP1
+	);
+
     c_CPU : CPU port map (
         clk => clk_top,
         rst => rst,
@@ -164,7 +181,9 @@ begin
 
         IOAddr => s_IOAddr,
         IODataIn => s_IODataBridge2CPU,
-        IODataOut => s_IODataCPU2Bridge
+        IODataOut => s_IODataCPU2Bridge,
+        Logger => s_Logger,
+        Logger16 => s_Logger16
     );
 
     c_IOBridge : IOBridge port map (
@@ -208,12 +227,12 @@ begin
 
         PS2_DATA => PS2_DATA
     );
-	
-	DYP1 <= (others=>'0');
-	DYP2 <= (others=>'0');
-	
-	Light <= s_Inst;
 
+	DYP2 <= (others=>'0');
+
+	Light <= s_InstAddr;
+
+    s_DebugNum1 <= s_Logger;
 
 end Behavioral;
 

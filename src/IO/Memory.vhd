@@ -72,6 +72,7 @@ begin
                 SRAM_DATA <= s_DataIn;
                 s_DataOut <= (others=>'Z');
             when "01" =>    -- read
+                SRAM_DATA <= (others=>'Z');
                 s_DataOut <= SRAM_DATA;
             when others =>
                 s_DataOut <= (others=>'Z');
