@@ -386,6 +386,7 @@ signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others
 begin
 
     Logger <= "0" & ex_IOType;
+    Logger16 <= id_JumpType;
 
     ----- Stall & Hazard & Forward ----
 

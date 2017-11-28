@@ -144,6 +144,7 @@ end component;
 --------------signal--------------------
 
 signal s_DebugNum1 : STD_LOGIC_VECTOR (3 downto 0);
+signal s_DebugNum2 : STD_LOGIC_VECTOR (3 downto 0);
 
 signal s_Logger : STD_LOGIC_VECTOR (3 downto 0);
 signal s_Logger16 : STD_LOGIC_VECTOR (15 downto 0);
@@ -166,6 +167,11 @@ begin
 	c_DYP1 : Digit7 port map (
 		num => s_DebugNum1,
         seg => DYP1
+    );
+
+    c_DYP2: Digit7 port map (
+		num => s_DebugNum2,
+        seg => DYP2
 	);
 
     c_CPU : CPU port map (
@@ -233,6 +239,7 @@ begin
 	Light <= s_InstAddr;
 
     s_DebugNum1 <= s_Logger;
+    s_DebugNum2 <= s_Logger16;
 
 end Behavioral;
 
