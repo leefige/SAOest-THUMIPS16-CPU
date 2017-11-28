@@ -257,8 +257,8 @@ end component;
 
 component RegisterFile is
     port(
-		  clk : in std_logic;
-		  rst : in std_logic;
+        clk : in std_logic;
+        rst : in std_logic;
         RegWrEn : in std_logic;
         RegSrcA  : in std_logic_vector(3 downto 0);
         RegSrcB  : in std_logic_vector(3 downto 0);
@@ -300,7 +300,7 @@ component IOMapper is
 end component;
 
 component Mux2 is
-	Port ( selector : in std_logic;
+    Port ( selector : in std_logic;
         inputA   : in std_logic_vector (15 downto 0);
         inputB   : in std_logic_vector (15 downto 0);
         res   : out std_logic_vector (15 downto 0));
@@ -420,7 +420,7 @@ begin
     IF_PCReg: PCReg port map (
         clk => clk,
         rst => rst,
-		  clear => Clear_IFPC,
+        clear => Clear_IFPC,
         WE => WE_PC,
         PC_i => if_PC,
         PC_o => if_InstAddr
@@ -474,8 +474,8 @@ begin
     );
 
     ID_RegisterFile: RegisterFile port map (
-		  clk => clk,
-		  rst => rst,
+        clk => clk,
+        rst => rst,
         RegWrEn => wb_RegWrEn,
         RegSrcA => id_RegSrcA,
         RegSrcB => id_RegSrcB,
@@ -606,7 +606,7 @@ begin
         clk => clk,
         rst => rst,
         WE => WE_EXMEM,
-		Clear => Clear_EXMEM,
+        Clear => Clear_EXMEM,
         RegDst_i => ex_RegDst,
         ExData_i => ex_DataOut,
         RegDataB_i => ex_DataBTemp,
@@ -640,7 +640,7 @@ begin
         clk => clk,
         rst => rst,
         WE => WE_MEMWB,
-		Clear => Clear_MEMWB,
+        Clear => Clear_MEMWB,
         RegDst_i => mem_RegDst,
         ExData_i => mem_ExData,
         MemData_i => mem_Data,

@@ -11,7 +11,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity IfIdRegister is
-    --EX/MEM阶段寄存�
+    --EX/MEM阶段寄存�
     port(
         clk : in std_logic;
         rst : in std_logic;

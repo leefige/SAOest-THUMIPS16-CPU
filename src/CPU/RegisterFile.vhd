@@ -32,8 +32,8 @@ use IEEE.numeric_std.all;
 
 entity RegisterFile is
     port(
-		  clk : in std_logic;
-		  rst : in std_logic;
+        clk : in std_logic;
+        rst : in std_logic;
         RegWrEn : in std_logic;
         RegSrcA  : in std_logic_vector(3 downto 0);
         RegSrcB  : in std_logic_vector(3 downto 0);

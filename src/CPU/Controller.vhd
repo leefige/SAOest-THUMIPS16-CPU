@@ -304,7 +304,7 @@ begin
             ExRes     <= "000";
             ALUSrc    <= '0';
 
-        -- 特殊寄存器取/赋�
+        -- 特殊寄存器取/赋�
         elsif (first5 = "11110" and last8 = "00000000") then    -- MFIH
             TRegType  <= 'Z';
             RegWrEn   <= '1';
@@ -438,7 +438,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
 
-        -- �
+        -- �
         elsif (Inst = "0000100000000000") then                  -- NOP
             TRegType  <= 'Z';
             RegWrEn   <= '1';
