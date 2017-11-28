@@ -190,7 +190,8 @@ begin
         IOAddr => s_IOAddr,
         IODataIn => s_IODataBridge2CPU,
         IODataOut => s_IODataCPU2Bridge,
-        Logger => s_Logger,
+        Logger1 => s_Logger1,
+        Logger2 => s_Logger2,
         Logger16 => s_Logger16
     );
 
