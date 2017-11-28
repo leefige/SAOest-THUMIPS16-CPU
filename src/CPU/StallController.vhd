@@ -79,5 +79,6 @@ begin
     WE_EXMEM <= '1';
     WE_MEMWB <= '1';
     Clear_IFID <= '1' when WillBranch = '1' else '0';
+    WE_IDEX <= '1';
 
 end Behavioral;
