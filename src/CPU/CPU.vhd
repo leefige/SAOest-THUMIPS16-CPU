@@ -337,47 +337,47 @@ end component Mux6;
 --------------signal--------------------
 
 -- Stall & Hazard & Forward --
-signal WE_PC, WE_IFID, WE_IDEX, WE_EXMEM, WE_MEMWB : STD_LOGIC;
-signal Clear_IFPC, Clear_IFID, Clear_IDEX, Clear_EXMEM, Clear_MEMWB : STD_LOGIC;
-signal WillHazard, WillBranch, WillVisitInst : STD_LOGIC;
-signal ForwardSelectA, ForwardSelectB : STD_LOGIC_VECTOR(1 downto 0);
+signal WE_PC, WE_IFID, WE_IDEX, WE_EXMEM, WE_MEMWB : STD_LOGIC := '1';
+signal Clear_IFPC, Clear_IFID, Clear_IDEX, Clear_EXMEM, Clear_MEMWB : STD_LOGIC := '0';
+signal WillHazard, WillBranch, WillVisitInst : STD_LOGIC := '0';
+signal ForwardSelectA, ForwardSelectB : STD_LOGIC_VECTOR(1 downto 0) := (others => '0');
 
 -- IF --
-signal if_PC, if_NPC, if_RPC, if_Inst, if_InstAddr : STD_LOGIC_VECTOR(15 downto 0);
+signal if_PC, if_NPC, if_RPC, if_Inst, if_InstAddr : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
 -- ID --
-signal id_NPC, id_RPC, id_Inst, id_Imme : STD_LOGIC_VECTOR(15 downto 0);
-signal id_TRegType, id_RegWrEn, id_MemWr, id_MemRd, id_WBSrc, id_ALUSrc : STD_LOGIC;
-signal id_JumpType, id_ExRes : STD_LOGIC_VECTOR(2 downto 0);
-signal id_ALUOp, id_RegSrcA, id_RegSrcB, id_RegDst : STD_LOGIC_VECTOR(3 downto 0);
-signal id_RegDataA, id_RegDataB : STD_LOGIC_VECTOR(15 downto 0);
+signal id_NPC, id_RPC, id_Inst, id_Imme : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+signal id_TRegType, id_RegWrEn, id_MemWr, id_MemRd, id_WBSrc, id_ALUSrc : STD_LOGIC := '0';
+signal id_JumpType, id_ExRes : STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
+signal id_ALUOp, id_RegSrcA, id_RegSrcB, id_RegDst : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+signal id_RegDataA, id_RegDataB : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
 -- EX --
-signal ex_TRegType, ex_RegWrEn, ex_MemWr, ex_MemRd, ex_WBSrc, ex_ALUSrc : STD_LOGIC;
-signal ex_JumpType, ex_ExRes : STD_LOGIC_VECTOR(2 downto 0);
-signal ex_ALUOp, ex_RegSrcA, ex_RegSrcB, ex_RegDst : STD_LOGIC_VECTOR(3 downto 0);
-signal ex_NPC, ex_RPC, ex_RegDataA, ex_RegDataB, ex_Imme : STD_LOGIC_VECTOR(15 downto 0);
+signal ex_TRegType, ex_RegWrEn, ex_MemWr, ex_MemRd, ex_WBSrc, ex_ALUSrc : STD_LOGIC := '0';
+signal ex_JumpType, ex_ExRes : STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
+signal ex_ALUOp, ex_RegSrcA, ex_RegSrcB, ex_RegDst : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+signal ex_NPC, ex_RPC, ex_RegDataA, ex_RegDataB, ex_Imme : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
-signal ex_DataA, ex_DataBTemp, ex_DataB : STD_LOGIC_VECTOR(15 downto 0);
+signal ex_DataA, ex_DataBTemp, ex_DataB : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
-signal ex_ALUFlag : STD_LOGIC_VECTOR(1 downto 0);
-signal ex_ALURes, ex_TOut, ex_DataOut : STD_LOGIC_VECTOR(15 downto 0);
+signal ex_ALUFlag : STD_LOGIC_VECTOR(1 downto 0) := (others => '0');
+signal ex_ALURes, ex_TOut, ex_DataOut : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
-signal ex_PCOffset : STD_LOGIC_VECTOR(15 downto 0);
-signal ex_PCSelect : STD_LOGIC_VECTOR(1 downto 0);
+signal ex_PCOffset : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+signal ex_PCSelect : STD_LOGIC_VECTOR(1 downto 0) := (others => '0');
 
-signal ex_IOType : STD_LOGIC_VECTOR(2 downto 0);
+signal ex_IOType : STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
 
 -- MEM --
-signal mem_RegWrEn, mem_MemWr, mem_MemRd, mem_WBSrc : STD_LOGIC;
-signal mem_RegDst : STD_LOGIC_VECTOR(3 downto 0);
-signal mem_ExData, mem_RegDataB, mem_Data : STD_LOGIC_VECTOR(15 downto 0);
-signal mem_IOType : STD_LOGIC_VECTOR(2 downto 0);
+signal mem_RegWrEn, mem_MemWr, mem_MemRd, mem_WBSrc : STD_LOGIC := '0';
+signal mem_RegDst : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+signal mem_ExData, mem_RegDataB, mem_Data : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+signal mem_IOType : STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
 
 -- WB --
-signal wb_RegWrEn, wb_WBSrc : STD_LOGIC;
-signal wb_RegDst : STD_LOGIC_VECTOR(3 downto 0);
-signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0);
+signal wb_RegWrEn, wb_WBSrc : STD_LOGIC := '0';
+signal wb_RegDst : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
 --------------process-------------------
 
