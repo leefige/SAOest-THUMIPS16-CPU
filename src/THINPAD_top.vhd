@@ -208,6 +208,11 @@ begin
 
         PS2_DATA => PS2_DATA
     );
+	
+	DYP1 <= (others=>'0');
+	DYP2 <= (others=>'0');
+	
+	Light <= s_Inst;
 
 
 end Behavioral;
