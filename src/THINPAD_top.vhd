@@ -89,7 +89,17 @@ component CPU
            IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
            Logger1 : out  STD_LOGIC_VECTOR (3 downto 0);
            Logger2 : out  STD_LOGIC_VECTOR (3 downto 0);
-           Logger16 : out  STD_LOGIC_VECTOR (15 downto 0)
+           Logger16_1 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_2 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_3 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_4 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_5 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_6 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_7 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_8 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_9 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_10 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_11 : out  STD_LOGIC_VECTOR (15 downto 0)
     );
 end component;
 
@@ -149,7 +159,17 @@ signal s_DebugNum2 : STD_LOGIC_VECTOR (3 downto 0);
 
 signal s_Logger1 : STD_LOGIC_VECTOR (3 downto 0);
 signal s_Logger2 : STD_LOGIC_VECTOR (3 downto 0);
-signal s_Logger16 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_1 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_2 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_3 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_4 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_5 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_6 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_7 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_8 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_9 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_10 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_11 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstAddr : STD_LOGIC_VECTOR (15 downto 0);
@@ -192,7 +212,17 @@ begin
         IODataOut => s_IODataCPU2Bridge,
         Logger1 => s_Logger1,
         Logger2 => s_Logger2,
-        Logger16 => s_Logger16
+        Logger16_1 => s_Logger16_1,
+        Logger16_2 => s_Logger16_2,
+        Logger16_3 => s_Logger16_3,
+        Logger16_4 => s_Logger16_4,
+        Logger16_5 => s_Logger16_5,
+        Logger16_6 => s_Logger16_6,
+        Logger16_7 => s_Logger16_7,
+        Logger16_8 => s_Logger16_8,
+        Logger16_9 => s_Logger16_9,
+        Logger16_10 => s_Logger16_10,
+        Logger16_11 => s_Logger16_11
     );
 
     c_IOBridge : IOBridge port map (
@@ -239,8 +269,19 @@ begin
 
 	-- DYP2 <= (others=>'0');
 
-	-- Light <= s_InstAddr;
-	Light <= s_Logger16;
+    -- Light <= s_InstAddr;
+    with Switch (3 downto 0) select
+    Light <= s_Logger16_1 when "0001",
+             s_Logger16_2 when "0010",
+             s_Logger16_3 when "0011",
+             s_Logger16_4 when "0100",
+             s_Logger16_5 when "0101",
+             s_Logger16_6 when "0110",
+             s_Logger16_7 when "0111",
+             s_Logger16_8 when "1000",
+             s_Logger16_9 when "1001",
+             s_Logger16_10 when "1010",
+             s_Logger16_11 when "1011";
 
     s_DebugNum1 <= s_Logger1;
     s_DebugNum2 <= s_Logger2;

@@ -42,7 +42,17 @@ entity CPU is
            IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
            Logger1 : out  STD_LOGIC_VECTOR (3 downto 0);
            Logger2 : out  STD_LOGIC_VECTOR (3 downto 0);
-           Logger16 : out  STD_LOGIC_VECTOR (15 downto 0));
+           Logger16_1 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_2 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_3 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_4 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_5 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_6 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_7 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_8 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_9 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_10 : out  STD_LOGIC_VECTOR (15 downto 0);
+           Logger16_11 : out  STD_LOGIC_VECTOR (15 downto 0));
 
 end CPU;
 
