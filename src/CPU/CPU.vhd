@@ -398,7 +398,17 @@ begin
 
     Logger1 <= "0" & ex_IOType;
     Logger2 <= "0" & id_JumpType;
-    Logger16 <= mem_ExData;
+    Logger16_1 <= mem_ExData;
+    Logger16_2 <= (others => '0');
+    Logger16_3 <= (others => '0');
+    Logger16_4 <= (others => '0');
+    Logger16_5 <= (others => '0');
+    Logger16_6 <= (others => '0');
+    Logger16_7 <= (others => '0');
+    Logger16_8 <= (others => '0');
+    Logger16_9 <= (others => '0');
+    Logger16_10 <= (others => '0');
+    Logger16_11 <= (others => '0');
 
     ----- Stall & Hazard & Forward ----
 
