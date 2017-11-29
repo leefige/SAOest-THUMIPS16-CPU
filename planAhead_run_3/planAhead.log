@@ -1,8 +1,8 @@
 #-----------------------------------------------------------
 # PlanAhead v14.2
 # Build 194362 by xbuild on Fri Jul 20 18:52:36 MDT 2012
-# Start of session at: Wed Nov 29 12:00:39 2017
-# Process ID: 15984
+# Start of session at: Wed Nov 29 23:59:22 2017
+# Process ID: 16032
 # Log file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_3/planAhead.log
 # Journal file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_3/planAhead.jou
 #-----------------------------------------------------------
@@ -41,9 +41,11 @@ WARNING:NetListWriters:298 - No output is written to THINPAD_top.xncf, ignored.
 Processing design ...
    Preping design's networks ...
    Preping design's macros ...
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_DataA<14 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
   finished :Prep
 Writing EDIF netlist file THINPAD_top.edif ...
-ngc2edif: Total memory usage is 117628 kilobytes
+ngc2edif: Total memory usage is 116924 kilobytes
 
 Parsing EDIF File [./planAhead_run_3/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
 Finished Parsing EDIF File [./planAhead_run_3/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
@@ -66,15 +68,8 @@ INFO: [Designutils 20-20] Invalid constraints found, use command 'write_ucf -con
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Phase 0 | Netlist Checksum: 11726acb
-link_design: Time (s): elapsed = 00:00:13 . Memory (MB): peak = 446.957 ; gain = 88.664
-startgroup
-set_property package_pin U9 [get_ports clk_manual]
-endgroup
-startgroup
-set_property package_pin B8 [get_ports clk_50M]
-endgroup
-save_design
+Phase 0 | Netlist Checksum: 80ef06c1
+link_design: Time (s): elapsed = 00:00:12 . Memory (MB): peak = 457.055 ; gain = 93.805
 exit
 INFO: [Common 17-206] Exiting PlanAhead...
 INFO: [Common 17-83] Releasing license: PlanAhead

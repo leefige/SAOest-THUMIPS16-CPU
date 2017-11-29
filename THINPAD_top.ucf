@@ -134,7 +134,6 @@ NET "VGA_HS" LOC = D6;
 NET "VGA_VS" LOC = E6;
 NET "SRAM2_EN" LOC = N10;
 NET "clk_PS2" LOC = U6;
-NET "clk_top" LOC = U9;
 NET "PS2_DATA" LOC = V6;
 NET "rst" LOC = U10;
 NET "COM_data_ready" LOC = A16;
@@ -144,7 +143,7 @@ NET "COM_tsre" LOC = N9;
 NET "COM_wrn" LOC = U5;
 NET "clk_VGA" LOC = B9;
 
-# PlanAhead Generated physical constraints 
+# PlanAhead Generated physical constraints
 
 NET "clk_manual" LOC = U9;
 NET "clk_50M" LOC = B8;
