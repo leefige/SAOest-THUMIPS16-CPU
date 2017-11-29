@@ -54,8 +54,8 @@ begin
             inputB when "001",
             inputC when "010",
             inputD when "011",
-            inputD when "100",
-            inputD when "101",
+            inputE when "100",
+            inputF when "101",
             (others => '0') when others;
 
 end Behavioral;
