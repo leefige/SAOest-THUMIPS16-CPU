@@ -284,9 +284,11 @@ begin
              s_Logger16_2 when "0110",
              s_Logger16_3 when "0111",
              s_Logger16_4 when "1000",
-             (others=>'0') when "1001",
-             (others=>'0') when "1010",
-             (others=>'0') when "1011",
+             s_Logger16_5 when "1001",
+             s_Logger16_6 when "1010",
+             s_Logger16_7 when "1011",
+             s_Logger16_8 when "1100",
+             s_Logger16_9 when "1101",
 			 (others=>'0') when others;
 
     with Switch (15) select

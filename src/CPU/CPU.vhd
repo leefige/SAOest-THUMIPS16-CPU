@@ -401,12 +401,12 @@ begin
     Logger16_1 <= ex_DataOut;
     Logger16_2 <= ex_DataBTemp;
     Logger16_3 <= if_PC;
-    Logger16_4 <= (others => '0');
-    Logger16_5 <= (others => '0');
-    Logger16_6 <= (others => '0');
-    Logger16_7 <= (others => '0');
-    Logger16_8 <= (others => '0');
-    Logger16_9 <= (others => '0');
+    Logger16_4 <= "000000000000" & id_RegSrcA;
+    Logger16_5 <= id_RegDataA;
+    Logger16_6 <= "000000000000" & id_RegSrcB;
+    Logger16_7 <= id_RegDataB;
+    Logger16_8 <= "000000000000" & wb_RegDst;
+    Logger16_9 <= wb_Data;
     Logger16_10 <= (others => '0');
     Logger16_11 <= (others => '0');
 
