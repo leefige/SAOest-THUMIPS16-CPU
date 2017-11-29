@@ -274,21 +274,24 @@ begin
 	-- DYP2 <= (others=>'0');
 
     -- Light <= s_InstAddr;
-    with Switch (3 downto 0) select
-    Light <= s_InstAddr when "0000",
-             s_Inst when "0001",
-             s_IOAddr when "0010",
-             s_IODataCPU2Bridge when "0011",
-             s_IODataBridge2CPU when "0100",
-             s_Logger16_1 when "0101",
-             s_Logger16_2 when "0110",
-             s_Logger16_3 when "0111",
-             s_Logger16_4 when "1000",
-             s_Logger16_5 when "1001",
-             s_Logger16_6 when "1010",
-             s_Logger16_7 when "1011",
-             s_Logger16_8 when "1100",
-             s_Logger16_9 when "1101",
+    with Switch (7 downto 0) select
+    Light <= s_InstAddr when "00000000",
+             s_Inst when "00000001",
+             s_IOAddr when "00000010",
+             s_IODataCPU2Bridge when "00000011",
+             s_IODataBridge2CPU when "00000100",
+             s_Logger16_1 when "00000101",
+             s_Logger16_2 when "00000110",
+             s_Logger16_3 when "00000111",
+             s_Logger16_4 when "00001000",
+             s_Logger16_5 when "00001001",
+             s_Logger16_6 when "00001010",
+             s_Logger16_7 when "00001011",
+             s_Logger16_8 when "00001100",
+             s_Logger16_9 when "00001101",
+             s_Logger16_10 when "00001110",
+             s_Logger16_11 when "00001111",
+
 			 (others=>'0') when others;
 
     with Switch (15) select

@@ -407,8 +407,8 @@ begin
     Logger16_7 <= id_RegDataB;
     Logger16_8 <= "000000000000" & wb_RegDst;
     Logger16_9 <= wb_Data;
-    Logger16_10 <= (others => '0');
-    Logger16_11 <= (others => '0');
+    Logger16_10 <= ex_Imme;
+    Logger16_11 <= ex_PCOffset;
 
     ----- Stall & Hazard & Forward ----
 
