@@ -425,6 +425,10 @@ begin
         Clear_IDEX => Clear_IDEX
     );
 
+    Clear_EXMEM <= '0';
+    Clear_MEMWB <= '0';
+    Clear_IFPC <= '0';
+
     Hazard: HazardUnit port map (
         LastMemRd => ex_MemRd,
         LastRegDst => ex_RegDst,
