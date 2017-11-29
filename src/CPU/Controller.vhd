@@ -76,6 +76,7 @@ begin
         -------------------------------------------------------------------
         -- 算术
         if (first5 = "01001") then                           -- ADDIU
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -89,6 +90,7 @@ begin
             ALUSrc <= '1'; -- imme
 
         elsif (first5 = "01000") then                           -- ADDIU3
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -102,6 +104,7 @@ begin
             ALUSrc <= '1';
 
         elsif (first8 = "01100011") then                        -- ADDSP
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -115,6 +118,7 @@ begin
             ALUSrc <= '1';
 
         elsif (first5 = "11100" and last2 = "01") then          -- ADDU
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -128,6 +132,7 @@ begin
             ALUSrc <= '0'; -- regB
 
         elsif (first5 = "11100" and last2 = "11") then          -- SUBU
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -141,6 +146,7 @@ begin
             ALUSrc <= '0'; -- regB
 
         elsif (first5 = "11101" and last5 = "01011") then       -- NEG
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -154,6 +160,7 @@ begin
             ALUSrc <= '0'; -- regB
         -- 逻辑
         elsif (first5 = "11101" and last2 = "01100") then       -- AND
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -166,6 +173,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '0';
         elsif (first5 = "11101" and last5 = "01101") then       -- OR
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -180,6 +188,7 @@ begin
 
         -- 移位
         elsif (first5 = "00110" and last2 = "00") then          -- SLL
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -192,6 +201,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "00110" and last2 = "11") then          -- SRA
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -204,6 +214,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "00110" and last2 = "10") then          -- SRL
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -218,6 +229,7 @@ begin
 
         -- 分支跳转
         elsif (first5 = "00010") then                           -- B
+            TRegType  <= '0';
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
@@ -227,8 +239,11 @@ begin
             RegSrcA <= "1111";
             RegSrcB <= "1111";
             RegDst <= "1111"; -- No use
+            ExRes     <= "011";
+            ALUSrc    <= '1';
 
         elsif (first5 = "00100") then                           -- BEQZ
+            TRegType  <= '0';
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
@@ -238,8 +253,11 @@ begin
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= "1111";
             RegDst <= "1111";
+            ExRes     <= "011";
+            ALUSrc    <= '1';
 
         elsif (first5 = "00101") then                           -- BNEZ
+            TRegType  <= '0';
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
@@ -249,8 +267,11 @@ begin
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= "1111";
             RegDst <= "1111";
+            ExRes     <= "011";
+            ALUSrc    <= '1';
 
         elsif (first8 = "01100000") then                        -- BTEQZ
+            TRegType  <= '0';
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
@@ -260,8 +281,11 @@ begin
             RegSrcA <= "1000"; -- T
             RegSrcB <= "1111";
             RegDst <= "1111";
+            ExRes     <= "011";
+            ALUSrc    <= '1';
 
         elsif (first5 = "11101" and last8 = "00000000") then    -- JR
+            TRegType  <= '0';
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
@@ -271,8 +295,11 @@ begin
             RegSrcA <= '0' & Inst(10 downto 8);
             RegSrcB <= "1111";
             RegDst <= "1111";
+            ExRes     <= "011";
+            ALUSrc    <= '1';
 
         elsif (first5 = "11101" and last8 = "11000000") then    -- JALR
+            TRegType  <= '0';
             RegWrEn <= '1';
             MemWr <= '0';
             MemRd <= '0';
@@ -283,8 +310,10 @@ begin
             RegSrcB <= "1111";
             RegDst <= "1011"; -- RA
             ExRes <= "010"; -- RPC
+            ALUSrc    <= '1';
 
         elsif (Inst = "1110100000100000") then                  -- JRRA
+            TRegType  <= '0';
             RegWrEn <= '0';
             MemWr <= '0';
             MemRd <= '0';
@@ -294,6 +323,8 @@ begin
             RegSrcA <= "1011"; -- RA
             RegSrcB <= "1111";
             RegDst <= "1111";
+            ExRes     <= "011";
+            ALUSrc    <= '1';
 
         -- 比较
         elsif (first5 = "11101" and last5 = "01010") then       -- CMP
@@ -326,6 +357,7 @@ begin
 
         -- 特殊寄存器取/赋�
         elsif (first5 = "11110" and last8 = "00000000") then    -- MFIH
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -336,8 +368,10 @@ begin
             RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "100";
+            ALUSrc    <= '1';
 
         elsif (first5 = "11101" and last8 = "01000000") then    -- MFPC
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -348,8 +382,10 @@ begin
             RegSrcB   <= (others => '1');
             RegDst    <= '0' & rx;
             ExRes     <= "001";
+            ALUSrc    <= '1';
 
         elsif (first5 = "11110" and last8 = "00000001") then    -- MTIH
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -360,8 +396,10 @@ begin
             RegSrcB   <= (others => '1');
             RegDst    <= "1001";
             ExRes     <= "100";
+            ALUSrc    <= '1';
 
         elsif (first8 = "01100100" and last5 = "00000") then    -- MTSP
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -372,9 +410,11 @@ begin
             RegSrcB   <= (others => '1');
             RegDst    <= "1010";
             ExRes     <= "100";
+            ALUSrc    <= '1';
 
         -- 访存
         elsif (first5 = "01101") then                           -- LI
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -388,6 +428,7 @@ begin
             ALUSrc    <= '1';
 
         elsif (first5 = "10011") then                           -- LW
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '1';
@@ -400,6 +441,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "10010") then                           -- LW_SP
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '1';
@@ -412,6 +454,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "11011") then                           -- SW
+            TRegType  <= '0';
             RegWrEn   <= '0';
             MemWr     <= '1';
             MemRd     <= '0';
@@ -424,6 +467,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first8 = "01100010") then                        -- SW_RS
+            TRegType  <= '0';
             RegWrEn   <= '0';
             MemWr     <= '1';
             MemRd     <= '0';
@@ -436,6 +480,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
         elsif (first5 = "11010") then                           -- SW_SP
+            TRegType  <= '0';
             RegWrEn   <= '0';
             MemWr     <= '1';
             MemRd     <= '0';
@@ -450,6 +495,7 @@ begin
 
         -- �
         elsif (Inst = "0000100000000000") then                  -- NOP
+            TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
             MemRd     <= '0';
@@ -461,9 +507,19 @@ begin
             RegDst    <= "1100";
             ExRes     <= "011";
             ALUSrc    <= '1';
-        else
-            JumpType <= "111";
-            RegDst <= "1111";
+        else                                    -- want it to be nop, but changed regdst to 1111(no use)
+            TRegType  <= '0';
+            RegWrEn   <= '1';
+            MemWr     <= '0';
+            MemRd     <= '0';
+            WBSrc     <= '1';
+            JumpType  <= "111";
+            ALUOp     <= "0101";
+            RegSrcA   <= "1100";
+            RegSrcB   <= (others => '1');
+            RegDst    <= "1111";
+            ExRes     <= "011";
+            ALUSrc    <= '1';
         end if;
     end process;
 
