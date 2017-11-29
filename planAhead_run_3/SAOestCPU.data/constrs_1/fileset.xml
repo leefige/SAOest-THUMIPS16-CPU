@@ -9,6 +9,20 @@
         <Attr Name="UsedInSimulation" Val="1"/>
       </FileInfo>
     </File>
+    <File Path="$PDATADIR/constrs_1/designprops.xml">
+      <FileInfo SFType="CompatPartsDb">
+        <Attr Name="UsedInSynthesis" Val="1"/>
+        <Attr Name="UsedInImplementation" Val="1"/>
+        <Attr Name="UsedInSimulation" Val="1"/>
+      </FileInfo>
+    </File>
+    <File Path="$PDATADIR/constrs_1/usercols.xml">
+      <FileInfo SFType="UserColsDb">
+        <Attr Name="UsedInSynthesis" Val="1"/>
+        <Attr Name="UsedInImplementation" Val="1"/>
+        <Attr Name="UsedInSimulation" Val="1"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="TargetConstrsFile" Val="$PPRDIR/../THINPAD_top.ucf"/>
       <Option Name="ConstrsType" Val="UCF"/>

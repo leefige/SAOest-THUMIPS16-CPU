@@ -285,11 +285,13 @@ begin
              s_Logger16_8 when "1000",
              s_Logger16_9 when "1001",
              s_Logger16_10 when "1010",
-             s_Logger16_11 when "1011";
+             s_Logger16_11 when "1011",
+			 (others=>'0') when others;
 
     with Switch (15) select
     clk_top <= clk_50M when '1',
-               clk_manual when '0';
+               clk_manual when '0',
+			   '0' when others;
 
     s_DebugNum1 <= s_Logger1;
     s_DebugNum2 <= s_Logger2;
