@@ -294,7 +294,7 @@ begin
                 clk_manual when '0',
                 '0' when others;
 
-    s_DebugNum1 <= s_Logger1;
+    s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
 end Behavioral;
