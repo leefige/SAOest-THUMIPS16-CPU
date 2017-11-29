@@ -275,23 +275,24 @@ begin
 
     -- Light <= s_InstAddr;
     with Switch (3 downto 0) select
-    Light <= s_Logger16_1 when "0001",
-             s_Logger16_2 when "0010",
-             s_Logger16_3 when "0011",
-             s_Logger16_4 when "0100",
-             s_Logger16_5 when "0101",
-             s_Logger16_6 when "0110",
-             s_Logger16_7 when "0111",
-             s_Logger16_8 when "1000",
-             s_Logger16_9 when "1001",
-             s_Logger16_10 when "1010",
-             s_Logger16_11 when "1011",
+    Light <= s_InstAddr when "0000",
+             s_Inst when "0001",
+             s_IOAddr when "0010",
+             s_IODataCPU2Bridge when "0011",
+             s_IODataBridge2CPU when "0100",
+             s_Logger16_1 when "0101",
+             s_Logger16_2 when "0110",
+             s_Logger16_3 when "0111",
+             s_Logger16_4 when "1000",
+             (others=>'0') when "1001",
+             (others=>'0') when "1010",
+             (others=>'0') when "1011",
 			 (others=>'0') when others;
 
     with Switch (15) select
-    clk_top <= clk_50M when '1',
-               clk_manual when '0',
-			   '0' when others;
+    clk_top <=  clk_50M when '1',
+                clk_manual when '0',
+                '0' when others;
 
     s_DebugNum1 <= s_Logger1;
     s_DebugNum2 <= s_Logger2;

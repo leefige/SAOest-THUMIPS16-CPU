@@ -398,9 +398,9 @@ begin
 
     Logger1 <= "0" & ex_IOType;
     Logger2 <= "0" & id_JumpType;
-    Logger16_1 <= mem_ExData;
-    Logger16_2 <= (others => '0');
-    Logger16_3 <= (others => '0');
+    Logger16_1 <= ex_DataOut;
+    Logger16_2 <= ex_DataBTemp;
+    Logger16_3 <= if_PC;
     Logger16_4 <= (others => '0');
     Logger16_5 <= (others => '0');
     Logger16_6 <= (others => '0');
