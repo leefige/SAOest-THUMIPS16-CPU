@@ -1,6 +1,6 @@
 # SAOest的THCO MIPS CPU
 
-（还没）写完软工的SAOest又要开始造CPU啦！
+写完软工的SAOest又要开始造CPU啦！
 
 ## 目标
 
@@ -17,6 +17,7 @@
 ```bash
 .
 ├── common
+│   ├── Digit7.vhd
 │   ├── Mux2.vhd
 │   ├── Mux3.vhd
 │   ├── Mux4.vhd
@@ -42,6 +43,8 @@
 │   ├── IOBridge.vhd
 │   └── Memory.vhd
 └── THINPAD_top.vhd
+
+3 directories, 24 files
 ```
 
 ***
