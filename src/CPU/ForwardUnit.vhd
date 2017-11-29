@@ -45,8 +45,8 @@ begin
                "10" when MEMWBRegDst = RegSrcA else
                "00";
 
-    SelectB <= "01" when EXMEMRegDst = RegSrcA else
-               "10" when MEMWBRegDst = RegSrcA else
+    SelectB <= "01" when EXMEMRegDst = RegSrcB else
+               "10" when MEMWBRegDst = RegSrcB else
                "00";
 
 end Behavioral;
