@@ -30,7 +30,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity THINPAD_top is
-    Port ( clk_top : in  STD_LOGIC;
+    Port ( clk_manual : in STD_LOGIC;
+           clk_50M : in  STD_LOGIC;
+
            clk_PS2 : in  STD_LOGIC;
            clk_VGA : in STD_LOGIC;
            rst : in  STD_LOGIC;
@@ -182,6 +184,8 @@ signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
+signal clk_top : STD_LOGIC;
+
 --------------process-------------------
 
 begin
@@ -282,6 +286,10 @@ begin
              s_Logger16_9 when "1001",
              s_Logger16_10 when "1010",
              s_Logger16_11 when "1011";
+
+    with Switch (15) select
+    clk_top <= clk_50M when '1',
+               clk_manual when '0';
 
     s_DebugNum1 <= s_Logger1;
     s_DebugNum2 <= s_Logger2;
