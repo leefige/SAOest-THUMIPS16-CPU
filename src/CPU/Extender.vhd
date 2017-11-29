@@ -61,7 +61,7 @@ begin
 
     ImmeOut <=
         SXT(from7to0, ImmeOut'length) when first5 = "01001"     -- ADDIU
-                                        or first5 = "00101"     -- BEQZ
+                                        or first5 = "00100"     -- BEQZ
                                         or first5 = "00101"     -- BNEZ
                                         or first5 = "11010"     -- SW_SP
                                       else
