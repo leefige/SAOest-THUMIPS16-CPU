@@ -69,3 +69,4 @@ _xmsgs/
 # misc
 .vscode/
 doc/~*
+tmp/
