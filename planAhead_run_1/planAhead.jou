@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# PlanAhead v14.7
+# Build 321239 by xbuild on Fri Sep 27 19:31:35 MDT 2013
+# Start of session at: Mon Nov 27 23:26:14 2017
+# Process ID: 3708
+# Log file: D:/jjj/SAOestCPU/planAhead_run_1/planAhead.log
+# Journal file: D:/jjj/SAOestCPU/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+start_gui
+source D:/jjj/SAOestCPU/pa.fromNetlist.tcl
+set_property package_pin "" [get_ports [list  {DYP1[6]}]]
+set_property package_pin "" [get_ports [list  {DYP1[4]}]]
+set_property iostandard LVCMOS25 [get_ports [list {DYP1[6]}]]

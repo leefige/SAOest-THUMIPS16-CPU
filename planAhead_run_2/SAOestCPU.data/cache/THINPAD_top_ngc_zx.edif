@@ -1,0 +1,1144 @@
+(edif THINPAD_top
+  (edifVersion 2 0 0)
+  (edifLevel 0)
+  (keywordMap (keywordLevel 0))
+  (status
+    (written
+      (timestamp 2017 11 27 23 28 40)
+      (program "Xilinx ngc2edif" (version "P.20131013"))
+      (author "Xilinx. Inc ")
+      (comment "This EDIF netlist is to be used within supported synthesis tools")
+      (comment "for determining resource/timing estimates of the design component")
+      (comment "represented by this netlist.")
+      (comment "Command line: -mdp2sp -w -secure THINPAD_top.ngc THINPAD_top.edif ")))
+  (external UNISIMS
+    (edifLevel 0)
+    (technology (numberDefinition))
+    (cell GND
+      (cellType GENERIC)
+        (view view_1
+          (viewType NETLIST)
+          (interface
+            (port G
+              (direction OUTPUT)
+            )
+          )
+      )
+    )
+    (cell VCC
+      (cellType GENERIC)
+        (view view_1
+          (viewType NETLIST)
+          (interface
+            (port P
+              (direction OUTPUT)
+            )
+          )
+      )
+    )
+    (cell OBUF
+      (cellType GENERIC)
+        (view view_1
+          (viewType NETLIST)
+          (interface
+            (port I
+              (direction INPUT)
+            )
+            (port O
+              (direction OUTPUT)
+            )
+          )
+      )
+    )
+  )
+
+  (library THINPAD_top_lib
+    (edifLevel 0)
+    (technology (numberDefinition))
+    (cell THINPAD_top
+      (cellType GENERIC)
+        (view view_1
+          (viewType NETLIST)
+          (interface
+            (port COM_rdn
+              (direction OUTPUT)
+            )
+            (port COM_wrn
+              (direction OUTPUT)
+            )
+            (port SRAM2_EN
+              (direction OUTPUT)
+            )
+            (port VGA_HS
+              (direction OUTPUT)
+            )
+            (port PS2_DATA
+              (direction INPUT)
+            )
+            (port rst
+              (direction INPUT)
+            )
+            (port SRAM2_OE
+              (direction OUTPUT)
+            )
+            (port SRAM1_EN
+              (direction OUTPUT)
+            )
+            (port VGA_VS
+              (direction OUTPUT)
+            )
+            (port clk_VGA
+              (direction INPUT)
+            )
+            (port SRAM2_WE
+              (direction OUTPUT)
+            )
+            (port clk_top
+              (direction INPUT)
+            )
+            (port SRAM1_OE
+              (direction OUTPUT)
+            )
+            (port COM_tbre
+              (direction INPUT)
+            )
+            (port SRAM1_WE
+              (direction OUTPUT)
+            )
+            (port COM_tsre
+              (direction INPUT)
+            )
+            (port COM_data_ready
+              (direction INPUT)
+            )
+            (port clk_PS2
+              (direction INPUT)
+            )
+            (port (array (rename SRAM1_DATA "SRAM1_DATA<15:0>") 16)
+              (direction INOUT))
+            (port (array (rename SRAM2_DATA "SRAM2_DATA<15:0>") 16)
+              (direction INOUT))
+            (port (array (rename SRAM1_ADDR "SRAM1_ADDR<17:0>") 18)
+              (direction OUTPUT))
+            (port (array (rename SRAM2_ADDR "SRAM2_ADDR<17:0>") 18)
+              (direction OUTPUT))
+            (port (array (rename VGA_B "VGA_B<2:0>") 3)
+              (direction OUTPUT))
+            (port (array (rename VGA_G "VGA_G<2:0>") 3)
+              (direction OUTPUT))
+            (port (array (rename VGA_R "VGA_R<2:0>") 3)
+              (direction OUTPUT))
+            (port (array (rename Light "Light<15:0>") 16)
+              (direction OUTPUT))
+            (port (array (rename DYP1 "DYP1<6:0>") 7)
+              (direction OUTPUT))
+            (port (array (rename DYP2 "DYP2<6:0>") 7)
+              (direction OUTPUT))
+            (port (array (rename Switch "Switch<15:0>") 16)
+              (direction INPUT))
+            (designator "xc3s1200e-4-fg320")
+            (property TYPE (string "THINPAD_top") (owner "Xilinx"))
+            (property BUS_INFO (string "16:INOUT:SRAM1_DATA<15:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "16:INOUT:SRAM2_DATA<15:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "18:OUTPUT:SRAM1_ADDR<17:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "18:OUTPUT:SRAM2_ADDR<17:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "3:OUTPUT:VGA_B<2:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "3:OUTPUT:VGA_G<2:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "3:OUTPUT:VGA_R<2:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "16:OUTPUT:Light<15:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "7:OUTPUT:DYP1<6:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "7:OUTPUT:DYP2<6:0>") (owner "Xilinx"))
+            (property BUS_INFO (string "16:INPUT:Switch<15:0>") (owner "Xilinx"))
+            (property NLW_UNIQUE_ID (integer 0) (owner "Xilinx"))
+            (property NLW_MACRO_TAG (integer 0) (owner "Xilinx"))
+            (property NLW_MACRO_ALIAS (string "THINPAD_top_THINPAD_top") (owner "Xilinx"))
+          )
+          (contents
+            (instance XST_GND
+              (viewRef view_1 (cellRef GND (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance XST_VCC
+              (viewRef view_1 (cellRef VCC (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_15_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_14_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_13_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_12_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_11_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_10_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_9_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_8_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_7_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_6_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_5_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_4_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_3_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_DATA_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_15_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_14_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_13_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_12_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_11_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_10_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_9_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_8_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_7_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_6_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_5_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_4_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_3_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_DATA_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance COM_rdn_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance COM_wrn_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_EN_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_HS_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_OE_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_EN_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_VS_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_WE_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_OE_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_WE_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_17_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_16_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_15_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_14_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_13_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_12_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_11_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_10_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_9_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_8_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_7_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_6_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_5_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_4_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_3_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM1_ADDR_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_17_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_16_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_15_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_14_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_13_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_12_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_11_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_10_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_9_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_8_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_7_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_6_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_5_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_4_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_3_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance SRAM2_ADDR_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_B_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_B_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_B_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_G_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_G_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_G_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_R_2_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_R_1_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (instance VGA_R_0_OBUF
+              (viewRef view_1 (cellRef OBUF (libraryRef UNISIMS)))
+              (property XSTLIB (boolean (true)) (owner "Xilinx"))
+            )
+            (net COM_rdn
+              (joined
+                (portRef COM_rdn)
+                (portRef O (instanceRef COM_rdn_OBUF))
+              )
+            )
+            (net COM_wrn
+              (joined
+                (portRef COM_wrn)
+                (portRef O (instanceRef COM_wrn_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_0_ "SRAM1_ADDR<0>")
+              (joined
+                (portRef (member SRAM1_ADDR 17))
+                (portRef O (instanceRef SRAM1_ADDR_0_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_10_ "SRAM1_ADDR<10>")
+              (joined
+                (portRef (member SRAM1_ADDR 7))
+                (portRef O (instanceRef SRAM1_ADDR_10_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_11_ "SRAM1_ADDR<11>")
+              (joined
+                (portRef (member SRAM1_ADDR 6))
+                (portRef O (instanceRef SRAM1_ADDR_11_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_12_ "SRAM1_ADDR<12>")
+              (joined
+                (portRef (member SRAM1_ADDR 5))
+                (portRef O (instanceRef SRAM1_ADDR_12_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_13_ "SRAM1_ADDR<13>")
+              (joined
+                (portRef (member SRAM1_ADDR 4))
+                (portRef O (instanceRef SRAM1_ADDR_13_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_14_ "SRAM1_ADDR<14>")
+              (joined
+                (portRef (member SRAM1_ADDR 3))
+                (portRef O (instanceRef SRAM1_ADDR_14_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_15_ "SRAM1_ADDR<15>")
+              (joined
+                (portRef (member SRAM1_ADDR 2))
+                (portRef O (instanceRef SRAM1_ADDR_15_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_16_ "SRAM1_ADDR<16>")
+              (joined
+                (portRef (member SRAM1_ADDR 1))
+                (portRef O (instanceRef SRAM1_ADDR_16_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_17_ "SRAM1_ADDR<17>")
+              (joined
+                (portRef (member SRAM1_ADDR 0))
+                (portRef O (instanceRef SRAM1_ADDR_17_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_1_ "SRAM1_ADDR<1>")
+              (joined
+                (portRef (member SRAM1_ADDR 16))
+                (portRef O (instanceRef SRAM1_ADDR_1_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_2_ "SRAM1_ADDR<2>")
+              (joined
+                (portRef (member SRAM1_ADDR 15))
+                (portRef O (instanceRef SRAM1_ADDR_2_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_3_ "SRAM1_ADDR<3>")
+              (joined
+                (portRef (member SRAM1_ADDR 14))
+                (portRef O (instanceRef SRAM1_ADDR_3_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_4_ "SRAM1_ADDR<4>")
+              (joined
+                (portRef (member SRAM1_ADDR 13))
+                (portRef O (instanceRef SRAM1_ADDR_4_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_5_ "SRAM1_ADDR<5>")
+              (joined
+                (portRef (member SRAM1_ADDR 12))
+                (portRef O (instanceRef SRAM1_ADDR_5_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_6_ "SRAM1_ADDR<6>")
+              (joined
+                (portRef (member SRAM1_ADDR 11))
+                (portRef O (instanceRef SRAM1_ADDR_6_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_7_ "SRAM1_ADDR<7>")
+              (joined
+                (portRef (member SRAM1_ADDR 10))
+                (portRef O (instanceRef SRAM1_ADDR_7_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_8_ "SRAM1_ADDR<8>")
+              (joined
+                (portRef (member SRAM1_ADDR 9))
+                (portRef O (instanceRef SRAM1_ADDR_8_OBUF))
+              )
+            )
+            (net (rename SRAM1_ADDR_9_ "SRAM1_ADDR<9>")
+              (joined
+                (portRef (member SRAM1_ADDR 8))
+                (portRef O (instanceRef SRAM1_ADDR_9_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_0_ "SRAM1_DATA<0>")
+              (joined
+                (portRef (member SRAM1_DATA 15))
+                (portRef O (instanceRef SRAM1_DATA_0_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_10_ "SRAM1_DATA<10>")
+              (joined
+                (portRef (member SRAM1_DATA 5))
+                (portRef O (instanceRef SRAM1_DATA_10_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_11_ "SRAM1_DATA<11>")
+              (joined
+                (portRef (member SRAM1_DATA 4))
+                (portRef O (instanceRef SRAM1_DATA_11_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_12_ "SRAM1_DATA<12>")
+              (joined
+                (portRef (member SRAM1_DATA 3))
+                (portRef O (instanceRef SRAM1_DATA_12_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_13_ "SRAM1_DATA<13>")
+              (joined
+                (portRef (member SRAM1_DATA 2))
+                (portRef O (instanceRef SRAM1_DATA_13_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_14_ "SRAM1_DATA<14>")
+              (joined
+                (portRef (member SRAM1_DATA 1))
+                (portRef O (instanceRef SRAM1_DATA_14_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_15_ "SRAM1_DATA<15>")
+              (joined
+                (portRef (member SRAM1_DATA 0))
+                (portRef O (instanceRef SRAM1_DATA_15_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_1_ "SRAM1_DATA<1>")
+              (joined
+                (portRef (member SRAM1_DATA 14))
+                (portRef O (instanceRef SRAM1_DATA_1_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_2_ "SRAM1_DATA<2>")
+              (joined
+                (portRef (member SRAM1_DATA 13))
+                (portRef O (instanceRef SRAM1_DATA_2_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_3_ "SRAM1_DATA<3>")
+              (joined
+                (portRef (member SRAM1_DATA 12))
+                (portRef O (instanceRef SRAM1_DATA_3_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_4_ "SRAM1_DATA<4>")
+              (joined
+                (portRef (member SRAM1_DATA 11))
+                (portRef O (instanceRef SRAM1_DATA_4_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_5_ "SRAM1_DATA<5>")
+              (joined
+                (portRef (member SRAM1_DATA 10))
+                (portRef O (instanceRef SRAM1_DATA_5_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_6_ "SRAM1_DATA<6>")
+              (joined
+                (portRef (member SRAM1_DATA 9))
+                (portRef O (instanceRef SRAM1_DATA_6_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_7_ "SRAM1_DATA<7>")
+              (joined
+                (portRef (member SRAM1_DATA 8))
+                (portRef O (instanceRef SRAM1_DATA_7_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_8_ "SRAM1_DATA<8>")
+              (joined
+                (portRef (member SRAM1_DATA 7))
+                (portRef O (instanceRef SRAM1_DATA_8_OBUF))
+              )
+            )
+            (net (rename SRAM1_DATA_9_ "SRAM1_DATA<9>")
+              (joined
+                (portRef (member SRAM1_DATA 6))
+                (portRef O (instanceRef SRAM1_DATA_9_OBUF))
+              )
+            )
+            (net SRAM1_EN
+              (joined
+                (portRef SRAM1_EN)
+                (portRef O (instanceRef SRAM1_EN_OBUF))
+              )
+            )
+            (net SRAM1_OE
+              (joined
+                (portRef SRAM1_OE)
+                (portRef O (instanceRef SRAM1_OE_OBUF))
+              )
+            )
+            (net SRAM1_WE
+              (joined
+                (portRef SRAM1_WE)
+                (portRef O (instanceRef SRAM1_WE_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_0_ "SRAM2_ADDR<0>")
+              (joined
+                (portRef (member SRAM2_ADDR 17))
+                (portRef O (instanceRef SRAM2_ADDR_0_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_10_ "SRAM2_ADDR<10>")
+              (joined
+                (portRef (member SRAM2_ADDR 7))
+                (portRef O (instanceRef SRAM2_ADDR_10_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_11_ "SRAM2_ADDR<11>")
+              (joined
+                (portRef (member SRAM2_ADDR 6))
+                (portRef O (instanceRef SRAM2_ADDR_11_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_12_ "SRAM2_ADDR<12>")
+              (joined
+                (portRef (member SRAM2_ADDR 5))
+                (portRef O (instanceRef SRAM2_ADDR_12_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_13_ "SRAM2_ADDR<13>")
+              (joined
+                (portRef (member SRAM2_ADDR 4))
+                (portRef O (instanceRef SRAM2_ADDR_13_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_14_ "SRAM2_ADDR<14>")
+              (joined
+                (portRef (member SRAM2_ADDR 3))
+                (portRef O (instanceRef SRAM2_ADDR_14_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_15_ "SRAM2_ADDR<15>")
+              (joined
+                (portRef (member SRAM2_ADDR 2))
+                (portRef O (instanceRef SRAM2_ADDR_15_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_16_ "SRAM2_ADDR<16>")
+              (joined
+                (portRef (member SRAM2_ADDR 1))
+                (portRef O (instanceRef SRAM2_ADDR_16_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_17_ "SRAM2_ADDR<17>")
+              (joined
+                (portRef (member SRAM2_ADDR 0))
+                (portRef O (instanceRef SRAM2_ADDR_17_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_1_ "SRAM2_ADDR<1>")
+              (joined
+                (portRef (member SRAM2_ADDR 16))
+                (portRef O (instanceRef SRAM2_ADDR_1_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_2_ "SRAM2_ADDR<2>")
+              (joined
+                (portRef (member SRAM2_ADDR 15))
+                (portRef O (instanceRef SRAM2_ADDR_2_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_3_ "SRAM2_ADDR<3>")
+              (joined
+                (portRef (member SRAM2_ADDR 14))
+                (portRef O (instanceRef SRAM2_ADDR_3_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_4_ "SRAM2_ADDR<4>")
+              (joined
+                (portRef (member SRAM2_ADDR 13))
+                (portRef O (instanceRef SRAM2_ADDR_4_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_5_ "SRAM2_ADDR<5>")
+              (joined
+                (portRef (member SRAM2_ADDR 12))
+                (portRef O (instanceRef SRAM2_ADDR_5_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_6_ "SRAM2_ADDR<6>")
+              (joined
+                (portRef (member SRAM2_ADDR 11))
+                (portRef O (instanceRef SRAM2_ADDR_6_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_7_ "SRAM2_ADDR<7>")
+              (joined
+                (portRef (member SRAM2_ADDR 10))
+                (portRef O (instanceRef SRAM2_ADDR_7_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_8_ "SRAM2_ADDR<8>")
+              (joined
+                (portRef (member SRAM2_ADDR 9))
+                (portRef O (instanceRef SRAM2_ADDR_8_OBUF))
+              )
+            )
+            (net (rename SRAM2_ADDR_9_ "SRAM2_ADDR<9>")
+              (joined
+                (portRef (member SRAM2_ADDR 8))
+                (portRef O (instanceRef SRAM2_ADDR_9_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_0_ "SRAM2_DATA<0>")
+              (joined
+                (portRef (member SRAM2_DATA 15))
+                (portRef O (instanceRef SRAM2_DATA_0_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_10_ "SRAM2_DATA<10>")
+              (joined
+                (portRef (member SRAM2_DATA 5))
+                (portRef O (instanceRef SRAM2_DATA_10_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_11_ "SRAM2_DATA<11>")
+              (joined
+                (portRef (member SRAM2_DATA 4))
+                (portRef O (instanceRef SRAM2_DATA_11_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_12_ "SRAM2_DATA<12>")
+              (joined
+                (portRef (member SRAM2_DATA 3))
+                (portRef O (instanceRef SRAM2_DATA_12_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_13_ "SRAM2_DATA<13>")
+              (joined
+                (portRef (member SRAM2_DATA 2))
+                (portRef O (instanceRef SRAM2_DATA_13_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_14_ "SRAM2_DATA<14>")
+              (joined
+                (portRef (member SRAM2_DATA 1))
+                (portRef O (instanceRef SRAM2_DATA_14_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_15_ "SRAM2_DATA<15>")
+              (joined
+                (portRef (member SRAM2_DATA 0))
+                (portRef O (instanceRef SRAM2_DATA_15_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_1_ "SRAM2_DATA<1>")
+              (joined
+                (portRef (member SRAM2_DATA 14))
+                (portRef O (instanceRef SRAM2_DATA_1_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_2_ "SRAM2_DATA<2>")
+              (joined
+                (portRef (member SRAM2_DATA 13))
+                (portRef O (instanceRef SRAM2_DATA_2_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_3_ "SRAM2_DATA<3>")
+              (joined
+                (portRef (member SRAM2_DATA 12))
+                (portRef O (instanceRef SRAM2_DATA_3_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_4_ "SRAM2_DATA<4>")
+              (joined
+                (portRef (member SRAM2_DATA 11))
+                (portRef O (instanceRef SRAM2_DATA_4_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_5_ "SRAM2_DATA<5>")
+              (joined
+                (portRef (member SRAM2_DATA 10))
+                (portRef O (instanceRef SRAM2_DATA_5_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_6_ "SRAM2_DATA<6>")
+              (joined
+                (portRef (member SRAM2_DATA 9))
+                (portRef O (instanceRef SRAM2_DATA_6_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_7_ "SRAM2_DATA<7>")
+              (joined
+                (portRef (member SRAM2_DATA 8))
+                (portRef O (instanceRef SRAM2_DATA_7_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_8_ "SRAM2_DATA<8>")
+              (joined
+                (portRef (member SRAM2_DATA 7))
+                (portRef O (instanceRef SRAM2_DATA_8_OBUF))
+              )
+            )
+            (net (rename SRAM2_DATA_9_ "SRAM2_DATA<9>")
+              (joined
+                (portRef (member SRAM2_DATA 6))
+                (portRef O (instanceRef SRAM2_DATA_9_OBUF))
+              )
+            )
+            (net SRAM2_EN
+              (joined
+                (portRef SRAM2_EN)
+                (portRef O (instanceRef SRAM2_EN_OBUF))
+              )
+            )
+            (net SRAM2_OE
+              (joined
+                (portRef SRAM2_OE)
+                (portRef O (instanceRef SRAM2_OE_OBUF))
+              )
+            )
+            (net SRAM2_WE
+              (joined
+                (portRef SRAM2_WE)
+                (portRef O (instanceRef SRAM2_WE_OBUF))
+              )
+            )
+            (net (rename VGA_B_0_ "VGA_B<0>")
+              (joined
+                (portRef (member VGA_B 2))
+                (portRef O (instanceRef VGA_B_0_OBUF))
+              )
+            )
+            (net (rename VGA_B_1_ "VGA_B<1>")
+              (joined
+                (portRef (member VGA_B 1))
+                (portRef O (instanceRef VGA_B_1_OBUF))
+              )
+            )
+            (net (rename VGA_B_2_ "VGA_B<2>")
+              (joined
+                (portRef (member VGA_B 0))
+                (portRef O (instanceRef VGA_B_2_OBUF))
+              )
+            )
+            (net (rename VGA_G_0_ "VGA_G<0>")
+              (joined
+                (portRef (member VGA_G 2))
+                (portRef O (instanceRef VGA_G_0_OBUF))
+              )
+            )
+            (net (rename VGA_G_1_ "VGA_G<1>")
+              (joined
+                (portRef (member VGA_G 1))
+                (portRef O (instanceRef VGA_G_1_OBUF))
+              )
+            )
+            (net (rename VGA_G_2_ "VGA_G<2>")
+              (joined
+                (portRef (member VGA_G 0))
+                (portRef O (instanceRef VGA_G_2_OBUF))
+              )
+            )
+            (net VGA_HS
+              (joined
+                (portRef VGA_HS)
+                (portRef O (instanceRef VGA_HS_OBUF))
+              )
+            )
+            (net (rename VGA_R_0_ "VGA_R<0>")
+              (joined
+                (portRef (member VGA_R 2))
+                (portRef O (instanceRef VGA_R_0_OBUF))
+              )
+            )
+            (net (rename VGA_R_1_ "VGA_R<1>")
+              (joined
+                (portRef (member VGA_R 1))
+                (portRef O (instanceRef VGA_R_1_OBUF))
+              )
+            )
+            (net (rename VGA_R_2_ "VGA_R<2>")
+              (joined
+                (portRef (member VGA_R 0))
+                (portRef O (instanceRef VGA_R_2_OBUF))
+              )
+            )
+            (net VGA_VS
+              (joined
+                (portRef VGA_VS)
+                (portRef O (instanceRef VGA_VS_OBUF))
+              )
+            )
+            (net (rename c_CPU_ID_Controller_Mtridata_ALUSrc "c_CPU/ID_Controller/Mtridata_ALUSrc")
+              (joined
+                (portRef G (instanceRef XST_GND))
+                (portRef I (instanceRef SRAM1_DATA_15_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_14_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_13_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_12_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_11_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_10_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_9_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_8_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_7_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_6_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_5_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_4_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_3_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_2_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_1_OBUF))
+                (portRef I (instanceRef SRAM1_DATA_0_OBUF))
+                (portRef I (instanceRef SRAM2_EN_OBUF))
+                (portRef I (instanceRef VGA_HS_OBUF))
+                (portRef I (instanceRef SRAM2_OE_OBUF))
+                (portRef I (instanceRef SRAM1_EN_OBUF))
+                (portRef I (instanceRef VGA_VS_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_17_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_16_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_15_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_14_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_13_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_12_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_11_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_10_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_9_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_8_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_7_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_6_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_5_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_4_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_3_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_2_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_1_OBUF))
+                (portRef I (instanceRef SRAM1_ADDR_0_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_17_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_16_OBUF))
+                (portRef I (instanceRef VGA_B_2_OBUF))
+                (portRef I (instanceRef VGA_B_1_OBUF))
+                (portRef I (instanceRef VGA_B_0_OBUF))
+                (portRef I (instanceRef VGA_G_2_OBUF))
+                (portRef I (instanceRef VGA_G_1_OBUF))
+                (portRef I (instanceRef VGA_G_0_OBUF))
+                (portRef I (instanceRef VGA_R_2_OBUF))
+                (portRef I (instanceRef VGA_R_1_OBUF))
+                (portRef I (instanceRef VGA_R_0_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_0_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_1_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_10_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_11_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_12_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_13_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_14_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_15_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_2_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_3_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_4_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_5_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_6_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_7_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_8_OBUF))
+                (portRef I (instanceRef SRAM2_ADDR_9_OBUF))
+              )
+            )
+            (net (rename c_CPU_ID_Controller_Mtridata_WBSrc "c_CPU/ID_Controller/Mtridata_WBSrc")
+              (joined
+                (portRef P (instanceRef XST_VCC))
+                (portRef I (instanceRef SRAM2_DATA_15_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_14_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_13_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_12_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_11_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_10_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_9_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_8_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_7_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_6_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_5_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_4_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_3_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_2_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_1_OBUF))
+                (portRef I (instanceRef SRAM2_DATA_0_OBUF))
+                (portRef I (instanceRef COM_rdn_OBUF))
+                (portRef I (instanceRef COM_wrn_OBUF))
+                (portRef I (instanceRef SRAM2_WE_OBUF))
+                (portRef I (instanceRef SRAM1_OE_OBUF))
+                (portRef I (instanceRef SRAM1_WE_OBUF))
+              )
+            )
+          )
+      )
+    )
+  )
+
+  (design THINPAD_top
+    (cellRef THINPAD_top
+      (libraryRef THINPAD_top_lib)
+    )
+    (property PART (string "xc3s1200e-4-fg320") (owner "Xilinx"))
+  )
+)
+

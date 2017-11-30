@@ -1,7 +1,7 @@
 
 # PlanAhead Launch Script for Post-Synthesis pin planning, created by Project Navigator
 
-create_project -name SAOestCPU -dir "C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_3" -part xc3s1200efg320-4
+create_project -name SAOestCPU -dir "C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_4" -part xc3s1200efg320-4
 set_property design_mode GateLvl [get_property srcset [current_run -impl]]
 set_property edif_top_file "C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ngc" [ get_property srcset [ current_run ] ]
 add_files -norecurse { {C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU} {ipcore_dir} }

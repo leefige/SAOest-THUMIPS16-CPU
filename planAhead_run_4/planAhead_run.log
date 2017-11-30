@@ -1,0 +1,98 @@
+
+****** PlanAhead v14.2
+  **** Build 194362 by xbuild on Fri Jul 20 18:52:36 MDT 2012
+    ** Copyright 1986-1999, 2001-2012 Xilinx, Inc. All Rights Reserved.
+
+INFO: [Common 17-78] Attempting to get a license: PlanAhead
+INFO: [Common 17-290] Got license for PlanAhead
+INFO: [Device 21-36] Loading parts and site information from C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data/parts/arch.xml
+Parsing RTL primitives file [C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data/parts/xilinx/rtl/prims/rtl_prims.xml]
+Finished parsing RTL primitives file [C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data/parts/xilinx/rtl/prims/rtl_prims.xml]
+start_gui
+source C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/pa.fromNetlist.tcl
+# create_project -name SAOestCPU -dir "C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_4" -part xc3s1200efg320-4
+Parsing template File [C:/Develop/Xilinx/14.2/ISE_DS/ISE/data/projnav/templates/verilog.xml].
+Finished parsing template File [C:/Develop/Xilinx/14.2/ISE_DS/ISE/data/projnav/templates/verilog.xml].
+Parsing template File [C:/Develop/Xilinx/14.2/ISE_DS/ISE/data/projnav/templates/vhdl.xml].
+Finished parsing template File [C:/Develop/Xilinx/14.2/ISE_DS/ISE/data/projnav/templates/vhdl.xml].
+Parsing template File [C:/Develop/Xilinx/14.2/ISE_DS/ISE/data/projnav/templates/ucf.xml].
+Finished parsing template File [C:/Develop/Xilinx/14.2/ISE_DS/ISE/data/projnav/templates/ucf.xml].
+# set_property design_mode GateLvl [get_property srcset [current_run -impl]]
+# set_property edif_top_file "C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ngc" [ get_property srcset [ current_run ] ]
+# add_files -norecurse { {C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU} {ipcore_dir} }
+# add_files [list {ipcore_dir/DualRAM.ncf}] -fileset [get_property constrset [current_run]]
+# set_param project.pinAheadLayout  yes
+# set_property target_constrs_file "THINPAD_top.ucf" [current_fileset -constrset]
+Adding file 'C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ucf' to fileset 'constrs_1'
+# add_files [list {THINPAD_top.ucf}] -fileset [get_property constrset [current_run]]
+# link_design
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+Design is defaulting to project part: xc3s1200efg320-4
+Release 14.2 - ngc2edif P.28xd (nt)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+Release 14.2 - ngc2edif P.28xd (nt)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+Reading design THINPAD_top.ngc ...
+WARNING:NetListWriters:298 - No output is written to THINPAD_top.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_DataA<14 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus c_IOBridge/IOState<4 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus
+   c_IOBridge/Msub_s_GraphicMemAddr_16_addsub0000_Madd_cy<10 : 7> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus s_Inst<15 : 11> on block THINPAD_top is
+   not reconstructed, because there are some missing bus signals.
+  finished :Prep
+Writing EDIF netlist file THINPAD_top.edif ...
+ngc2edif: Total memory usage is 116348 kilobytes
+
+Parsing EDIF File [./planAhead_run_4/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
+Finished Parsing EDIF File [./planAhead_run_4/SAOestCPU.data/cache/THINPAD_top_ngc_d5e40a96.edif]
+Release 14.2 - ngc2edif P.28xd (nt)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+Release 14.2 - ngc2edif P.28xd (nt)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+Reading design DualRAM.ngc ...
+WARNING:NetListWriters:298 - No output is written to DualRAM.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+  finished :Prep
+Writing EDIF netlist file DualRAM.edif ...
+ngc2edif: Total memory usage is 114492 kilobytes
+
+Reading core file 'C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/ipcore_dir/DualRAM.ngc' for (cell view 'DualRAM', library 'THINPAD_top_lib', file 'THINPAD_top.ngc')
+Parsing EDIF File [./planAhead_run_4/SAOestCPU.data/cache/DualRAM_ngc_27b7dcad.edif]
+Finished Parsing EDIF File [./planAhead_run_4/SAOestCPU.data/cache/DualRAM_ngc_27b7dcad.edif]
+INFO: [Designutils 20-910] Reading macro library C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\./parts/xilinx/spartan3e/spartan3e/hd_int_macros.edn
+Parsing EDIF File [C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\./parts/xilinx/spartan3e/spartan3e/hd_int_macros.edn]
+Finished Parsing EDIF File [C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\./parts/xilinx/spartan3e/spartan3e/hd_int_macros.edn]
+WARNING: [Netlist 29-43] Netlist 'THINPAD_top' is not ideal for floorplanning, since the cellview 'THINPAD_top' defined in file 'THINPAD_top.ngc' contains large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+Loading clock regions from C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\parts/xilinx/spartan3e/spartan3e/xc3s1200e/ClockRegion.xml
+Loading clock buffers from C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\parts/xilinx/spartan3e/spartan3e/xc3s1200e/ClockBuffers.xml
+Loading package from C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\parts/xilinx/spartan3e/spartan3e/xc3s1200e/fg320/Package.xml
+Loading io standards from C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\./parts/xilinx/spartan3e/IOStandards.xml
+INFO: [Device 21-19] Loading pkg sso from C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\parts/xilinx/spartan3e/spartan3e/xc3s1200e/fg320/SSORules.xml
+Loading list of drcs for the architecture : C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\./parts/xilinx/spartan3e/spartan3e/drc.xml
+INFO: [Timing 38-77] Reading timing library C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\parts/xilinx/spartan3e/spartan3e/spartan3e-4.lib.
+INFO: [Timing 38-34] Done reading timing library C:/Develop/Xilinx/14.2/ISE_DS/PlanAhead/data\parts/xilinx/spartan3e/spartan3e/spartan3e-4.lib.
+Parsing UCF File [C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/ipcore_dir/DualRAM.ncf]
+Finished Parsing UCF File [C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/ipcore_dir/DualRAM.ncf]
+Parsing UCF File [C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ucf]
+Finished Parsing UCF File [C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/THINPAD_top.ucf]
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1 instances were transformed.
+  BUFGP => BUFGP (HD_IBUFG, HD_BUFG): 1 instances
+
+Phase 0 | Netlist Checksum: 3832d95a
+link_design: Time (s): elapsed = 00:00:08 . Memory (MB): peak = 469.320 ; gain = 72.770
+exit
+INFO: [Common 17-206] Exiting PlanAhead...
+INFO: [Common 17-83] Releasing license: PlanAhead
