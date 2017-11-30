@@ -44,22 +44,25 @@ architecture Behavioral of IOMapper is
 signal IsCOM : STD_LOGIC;
 signal IsPS2 : STD_LOGIC;
 signal IsInstMem : STD_LOGIC;
-signal Slct : STD_LOGIC_VECTOR (2 downto 0); -- select
+signal IsGraphicMem : STD_LOGIC;
+signal Slct : STD_LOGIC_VECTOR (3 downto 0); -- select
 
 begin
 
-    IsCOM <= '1' when ((AddrIn = x"BF00") or (AddrIn = x"BF01")) else '0';
-    IsPS2 <= '1' when ((AddrIn = x"BF02") or (AddrIn = x"BF03")) else '0';
-    IsInstMem <= '1' when ((AddrIn >= x"4000") and (AddrIn < x"8000")) else '0';
+    IsCOM <= '1' when ((AddrIn = x"BF00") or (AddrIn = x"BF01")) else '0';    -- 0XBF01 | 0XBF00
+    IsPS2 <= '1' when ((AddrIn = x"BF02") or (AddrIn = x"BF03")) else '0';    -- 0XBF03 | 0XBF02
+    IsInstMem <= '1' when ((AddrIn >= x"4000") and (AddrIn < x"8000")) else '0';    -- [0X4000, 0X7FFF]
+    IsGraphicMem <= '1' when ((AddrIn >= x"ED40") and (AddrIn < x"10000")) else '0';    -- [0XED40, 0XFFFF]
 
     WillVisitInst <= IsInstMem;
 
-    Slct <= IsInstMem & IsCOM & IsPS2;  -- mem will be at most one of them, 000 | 001 | 010 | 100
+    Slct <= IsGraphicMem & IsInstMem & IsCOM & IsPS2;  -- mem will be at most one of them, 0000 | 0001 | 0010 | 0100 | 1000
 
     with Slct select
-        IOType <=   "001" when "100",  -- inst mem, special case
-                    "010" when "010",  -- com
-                    "011" when "001",  -- ps2
+        IOType <=   "001" when "0100",  -- inst mem, special case
+                    "010" when "0010",  -- com
+                    "011" when "0001",  -- ps2
+                    "100" when "1000",  -- graphic mem
                     "000" when others;   -- don't need to disable sram1
 
 end Behavioral;

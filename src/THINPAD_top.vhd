@@ -31,10 +31,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity THINPAD_top is
     Port ( clk_manual : in STD_LOGIC;
-           clk_50M : in  STD_LOGIC;
-
+           clk_11M : in  STD_LOGIC;
            clk_PS2 : in  STD_LOGIC;
-           clk_VGA : in STD_LOGIC;
+           clk_50M : in STD_LOGIC;
            rst : in  STD_LOGIC;
 
            Switch : in  STD_LOGIC_VECTOR (15 downto 0);
@@ -108,6 +107,7 @@ end component;
 component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
            clk_VGA : in  STD_LOGIC;
+           rst : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
@@ -184,7 +184,8 @@ signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
-signal clk_top : STD_LOGIC;
+signal s_clk_CPU : STD_LOGIC;
+signal s_clk_VGA : STD_LOGIC;
 
 --------------process-------------------
 
@@ -201,7 +202,7 @@ begin
 	);
 
     c_CPU : CPU port map (
-        clk => clk_top,
+        clk => s_clk_CPU,
         rst => rst,
 
         IO_RE => s_IO_RE,
@@ -231,7 +232,8 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-        clk_VGA => clk_VGA,
+        clk_VGA => s_clk_VGA,
+        rst => rst,
 
         IOType => s_IOType,
         IO_WE => s_IO_WE,
@@ -271,9 +273,6 @@ begin
         PS2_DATA => PS2_DATA
     );
 
-	-- DYP2 <= (others=>'0');
-
-    -- Light <= s_InstAddr;
     with Switch (7 downto 0) select
     Light <= s_InstAddr when "00000000",
              s_Inst when "00000001",
@@ -295,9 +294,11 @@ begin
 			 (others=>'0') when others;
 
     with Switch (15) select
-    clk_top <=  clk_50M when '1',
+    s_clk_CPU <=  clk_11M when '1',
                 clk_manual when '0',
                 '0' when others;
+	
+	s_clk_VGA <= clk_50M; -- TODO: need 25M
 
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;

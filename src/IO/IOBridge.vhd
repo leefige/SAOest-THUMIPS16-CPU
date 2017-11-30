@@ -32,47 +32,50 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity IOBridge is
-    Port ( clk_PS2 : in  STD_LOGIC;
-           clk_VGA : in  STD_LOGIC;
+    Port (
+        clk_PS2 : in  STD_LOGIC;
+        clk_VGA : in  STD_LOGIC;
+        rst : in  STD_LOGIC;
 
-           IOType : in  STD_LOGIC_VECTOR (2 downto 0);
+        IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
-           IO_WE : in  STD_LOGIC;
-           IO_RE : in  STD_LOGIC;
+        IO_WE : in  STD_LOGIC;
+        IO_RE : in  STD_LOGIC;
 
-           InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-           InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
+        InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
+        InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-           IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-           IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+        IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
+        IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+        IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-           -- connect to instruments on board; just connect without change
-           SRAM1_EN : out  STD_LOGIC;
-           SRAM1_OE : out  STD_LOGIC;
-           SRAM1_WE : out  STD_LOGIC;
-           SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
+        -- connect to instruments on board; just connect without change
+        SRAM1_EN : out  STD_LOGIC;
+        SRAM1_OE : out  STD_LOGIC;
+        SRAM1_WE : out  STD_LOGIC;
+        SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+        SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-           SRAM2_EN : out  STD_LOGIC;
-           SRAM2_OE : out  STD_LOGIC;
-           SRAM2_WE : out  STD_LOGIC;
-           SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
+        SRAM2_EN : out  STD_LOGIC;
+        SRAM2_OE : out  STD_LOGIC;
+        SRAM2_WE : out  STD_LOGIC;
+        SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+        SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-           COM_rdn : out  STD_LOGIC;
-           COM_wrn : out  STD_LOGIC;
-           COM_data_ready : in  STD_LOGIC;
-           COM_tbre : in  STD_LOGIC;
-           COM_tsre : in  STD_LOGIC;
+        COM_rdn : out  STD_LOGIC;
+        COM_wrn : out  STD_LOGIC;
+        COM_data_ready : in  STD_LOGIC;
+        COM_tbre : in  STD_LOGIC;
+        COM_tsre : in  STD_LOGIC;
 
-           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_HS : out  STD_LOGIC;
-           VGA_VS : out  STD_LOGIC;
+        VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_HS : out  STD_LOGIC;
+        VGA_VS : out  STD_LOGIC;
 
-           PS2_DATA : in  STD_LOGIC);
+        PS2_DATA : in  STD_LOGIC
+    );
 end IOBridge;
 
 architecture Behavioral of IOBridge is
@@ -80,22 +83,53 @@ architecture Behavioral of IOBridge is
 --------------component-----------------
 
 component Memory is
-    Port ( Addr : in  STD_LOGIC_VECTOR (17 downto 0);
-           DataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-           DataOut : out  STD_LOGIC_VECTOR (15 downto 0);
-           WE : in STD_LOGIC;
-           RE : in STD_LOGIC;
-           EN : in STD_LOGIC;
+    Port (
+        Addr : in  STD_LOGIC_VECTOR (17 downto 0);
+        DataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+        DataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+        WE : in STD_LOGIC;
+        RE : in STD_LOGIC;
+        EN : in STD_LOGIC;
 
-           -- connect to SRAM on board
-           SRAM_EN : out  STD_LOGIC;
-           SRAM_OE : out  STD_LOGIC;
-           SRAM_WE : out  STD_LOGIC;
-           SRAM_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           SRAM_DATA : inout  STD_LOGIC_VECTOR (15 downto 0));
+        -- connect to SRAM on board
+        SRAM_EN : out  STD_LOGIC;
+        SRAM_OE : out  STD_LOGIC;
+        SRAM_WE : out  STD_LOGIC;
+        SRAM_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+        SRAM_DATA : inout  STD_LOGIC_VECTOR (15 downto 0)
+    );
+end component;
+
+component DualRAM is
+    port (
+        clka : in STD_LOGIC;
+        ena : in STD_LOGIC;
+        wea : in STD_LOGIC_VECTOR(0 downto 0);
+        addra : in STD_LOGIC_VECTOR(12 downto 0);
+        dina : in STD_LOGIC_VECTOR(15 downto 0);
+        clkb : in STD_LOGIC;
+        enb : in STD_LOGIC;
+        addrb : in STD_LOGIC_VECTOR(12 downto 0);
+        doutb : out STD_LOGIC_VECTOR(15 downto 0)
+    );
+end component;
+
+component VGA_640480 is
+	 port(
+        rst :  in  STD_LOGIC;
+        clk :  in std_logic; --25M clk
+        VGA_Data :  in STD_LOGIC_VECTOR(8 downto 0);
+        VGA_Addr :  out STD_LOGIC_VECTOR(12 downto 0);
+
+        VGA_HS :  out STD_LOGIC;
+        VGA_VS :  out STD_LOGIC;
+        VGA_R,VGA_G,VGA_B :  out STD_LOGIC_vector(2 downto 0)
+	);
 end component;
 
 --------------signal--------------------
+type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO);
+signal IOState : IOStateType := Data_IO;
 
 signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);       -- extended addr
 signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
@@ -129,6 +163,17 @@ signal BF02 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_PS2_data_ready : std_logic;
 signal s_PS2_wrn : std_logic;
+
+-- VGA
+signal s_VGA_Addr : STD_LOGIC_VECTOR(12 downto 0);
+signal s_VGA_Data : STD_LOGIC_VECTOR(8 downto 0);
+
+signal s_GraphicMemWE : STD_LOGIC_VECTOR(0 downto 0);
+signal s_GraphicMemAddr_16 : STD_LOGIC_VECTOR(15 downto 0);
+signal s_GraphicMemAddrIn : STD_LOGIC_VECTOR(12 downto 0);
+signal s_GraphicMemDataIn : STD_LOGIC_VECTOR(15 downto 0);
+signal s_GraphicMemDataOut : STD_LOGIC_VECTOR(15 downto 0);
+
 
 --------------process-------------------
 
@@ -168,7 +213,49 @@ begin
         SRAM_DATA => SRAM2_DATA
     );
 
+    c_GraphicMem: DualRAM port map (
+        clka => clk_VGA,
+        ena => '1',     -- 1 means enabled
+        wea => s_GraphicMemWE,     -- write port
+        addra => s_GraphicMemAddrIn,    -- wr addr
+        dina => s_GraphicMemDataIn,     -- wr data
+
+        clkb => clk_VGA,
+        enb => '1',     -- 1 means enabled
+        addrb => s_VGA_Addr,    -- vga read addr
+        doutb => s_GraphicMemDataOut
+    );
+
+    c_VGA: VGA_640480 port map (
+        rst => rst,
+        clk => clk_VGA,
+        VGA_Data => s_VGA_Data,
+        VGA_Addr => s_VGA_Addr,
+
+        VGA_HS => VGA_HS,
+        VGA_VS => VGA_VS,
+        VGA_R => VGA_R,
+        VGA_G => VGA_G,
+        VGA_B => VGA_B
+    );
+
     -----------------------------------------------
+
+    -- state
+    io_state_ctrl: process (rst, IOType)
+    begin
+        if (rst = '0') then
+            IOState <= Data_IO;
+        else
+            case IOType is
+                when "001" => IOState <= Inst_IO;
+                when "010" => IOState <= COM_IO;
+                when "011" => IOState <= PS2_IO;
+                when "100" => IOState <= Graphic_IO;
+                when others => IOState <= Data_IO;
+            end case;
+        end if;
+    end process;
 
     -- signals for global IO data
     InstOut <= s_Inst;
@@ -181,8 +268,8 @@ begin
     s_InstMemEN <= '1';
 
     -- disable SRAM1 when visiting UART
-    with IOType select
-        s_DataMemEN <=  '0' when "001" | "010" | "011", -- inst & COM & ps2
+    with IOState select
+        s_DataMemEN <=  '0' when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2
                         '1' when others;
 
     -------------------------PORT CONTROL------------------------
@@ -193,7 +280,8 @@ begin
     s_IOAddr <= "00" & IOAddr;
 
     -- select io data out
-    s_IODataOut_buffer <=   s_InstDataOut when (IOType = "001") else   -- inst MEM
+    s_IODataOut_buffer <=   s_InstDataOut when (IOState = Inst_IO) else   -- inst MEM
+                            (others=>'1') when (IOState = Graphic_IO) else  -- NOTE: DISABLE to read from Graphic MEM !
                             BF00 when (IOAddr = x"BF00") else   -- COM DATA
                             BF01 when (IOAddr = x"BF01") else   -- COM FLAG
                             BF02 when (IOAddr = x"BF02") else   -- PS2 DATA
@@ -206,8 +294,8 @@ begin
     ------------------------INST OUT-----------------------------
 
     -- select inst out
-    with IOType select
-        s_Inst <=   "0000100000000000" when "001",      -- nop
+    with IOState select
+        s_Inst <=   "0000100000000000" when Inst_IO,      -- nop
                     s_InstDataOut when others;          -- normally IF
 
     --==================================================================--
@@ -216,36 +304,36 @@ begin
     ------------------------INST MEM CONTROL-----------------------------
 
     -- select inst addr
-    with IOType select
-        s_InstAddr <=   "00" & IOAddr when "001",       -- IO will visit inst mem
+    with IOState select
+        s_InstAddr <=   "00" & IOAddr when Inst_IO,       -- IO will visit inst mem
                         "00" & InstAddr when others;    -- normally IF
 
     -- select inst data in
-    with IOType select
-        s_InstDataIn <= s_IODataIn when "001",        -- IO will visit inst mem
+    with IOState select
+        s_InstDataIn <= s_IODataIn when Inst_IO,        -- IO will visit inst mem
                         (others=>'Z') when others;    -- normally IF
 
     -- select inst data RE, be 0 only when wr inst mem
-    s_InstMemRE <= '0' when ((IOType = "001") and (IO_WE = '1')) else '1';
+    s_InstMemRE <= '0' when ((IOState = Inst_IO) and (IO_WE = '1')) else '1';
 
     -- select inst data WE, be 1 only when wr inst mem
-    s_InstMemWE <= '1' when ((IOType = "001") and (IO_WE = '1')) else '0';
+    s_InstMemWE <= '1' when ((IOState = Inst_IO) and (IO_WE = '1')) else '0';
 
     ------------------------DATA MEM CONTROL-----------------------------
 
     -- select data mem data in
-    with IOType select
-        s_MemDataIn <=  (others=>'Z') when "001" | "010" | "011", -- inst & COM & ps2
+    with IOState select
+        s_MemDataIn <=  (others=>'Z') when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2 & graphic
                         s_IODataIn when others;
 
     -- select DATA data RE, let it be io_re
-    with IOType select
-        s_DataMemRE <=  '0' when "001" | "010" | "011", -- inst & COM & ps2
+    with IOState select
+        s_DataMemRE <=  '0' when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2 & graphic
                         IO_RE when others;
 
     -- select DATA data WE
-    with IOType select
-        s_DataMemWE <=  '0' when "001" | "010" | "011", -- inst & COM & ps2
+    with IOState select
+        s_DataMemWE <=  '0' when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2 & graphic
                         IO_WE when others;
 
     ------------------------COM-----------------------------
@@ -268,6 +356,29 @@ begin
 
     -- TODO
     BF02 <= (others=>'0');
+
+    ------------------------VGA-----------------------------
+
+    s_VGA_Data <= s_GraphicMemDataOut(8 downto 0);  -- lower 9 bits
+
+    ------------------------Graphic MEM-----------------------------
+
+    -- NOTE: DISABLE to read from Graphic MEM !
+
+    -- graphic mem we, strange since it's [0:0]
+    s_GraphicMemWE <= (others=>IO_WE) when (IOState = Graphic_IO) else "0";
+
+    -- graphic mem addr
+    with IOState select
+        s_GraphicMemAddr_16 <=  IOAddr - x"ED40" when Graphic_IO,
+                                x"1FFF" when others;    -- MAX of 12 : 0
+    s_GraphicMemAddrIn <= s_GraphicMemAddr_16(12 downto 0);
+
+    -- graphic mem data in
+    with IOState select
+        s_GraphicMemDataIn <=   s_IODataIn when Graphic_IO,
+                                (others=>'Z') when others;    -- MAX of 12 : 0
+
 
 end Behavioral;
 

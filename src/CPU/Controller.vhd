@@ -75,6 +75,7 @@ begin
         -- Controll Outputs For Each Instruction
         -------------------------------------------------------------------
         -- 算术
+
         if (first5 = "01001") then                           -- ADDIU
             TRegType  <= '0';
             RegWrEn <= '1';
@@ -158,7 +159,9 @@ begin
             RegDst <= '0' & Inst(10 downto 8);
             ExRes <= "011";
             ALUSrc <= '0'; -- regB
+
         -- 逻辑
+
         elsif (first5 = "11101" and last2 = "01100") then       -- AND
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -187,6 +190,7 @@ begin
             ALUSrc    <= '0';
 
         -- 移位
+
         elsif (first5 = "00110" and last2 = "00") then          -- SLL
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -228,6 +232,7 @@ begin
             ALUSrc    <= '1';
 
         -- 分支跳转
+
         elsif (first5 = "00010") then                           -- B
             TRegType  <= '0';
             RegWrEn <= '0';
@@ -327,6 +332,7 @@ begin
             ALUSrc    <= '1';
 
         -- 比较
+
         elsif (first5 = "11101" and last5 = "01010") then       -- CMP
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -356,6 +362,7 @@ begin
             ALUSrc    <= '0';
 
         -- 特殊寄存器取/赋�
+
         elsif (first5 = "11110" and last8 = "00000000") then    -- MFIH
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -413,6 +420,7 @@ begin
             ALUSrc    <= '1';
 
         -- 访存
+
         elsif (first5 = "01101") then                           -- LI
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -440,6 +448,7 @@ begin
             RegDst    <= '0' & ry;
             ExRes     <= "011";
             ALUSrc    <= '1';
+
         elsif (first5 = "10010") then                           -- LW_SP
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -453,6 +462,7 @@ begin
             RegDst    <= '0' & rx;
             ExRes     <= "011";
             ALUSrc    <= '1';
+
         elsif (first5 = "11011") then                           -- SW
             TRegType  <= '0';
             RegWrEn   <= '0';
@@ -466,6 +476,7 @@ begin
             RegDst    <= "1111";
             ExRes     <= "011";
             ALUSrc    <= '1';
+
         elsif (first8 = "01100010") then                        -- SW_RS
             TRegType  <= '0';
             RegWrEn   <= '0';
@@ -479,6 +490,7 @@ begin
             RegDst   <= "1111";
             ExRes     <= "011";
             ALUSrc    <= '1';
+
         elsif (first5 = "11010") then                           -- SW_SP
             TRegType  <= '0';
             RegWrEn   <= '0';
@@ -493,7 +505,6 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '1';
 
-        -- �
         elsif (Inst = "0000100000000000") then                  -- NOP
             TRegType  <= '0';
             RegWrEn   <= '1';
@@ -507,6 +518,7 @@ begin
             RegDst    <= "1100";
             ExRes     <= "011";
             ALUSrc    <= '1';
+
         else                                    -- want it to be nop, but changed regdst to 1111(no use)
             TRegType  <= '0';
             RegWrEn   <= '1';
