@@ -70,3 +70,4 @@ _xmsgs/
 .vscode/
 doc/~*
 tmp/
+.Xil/
