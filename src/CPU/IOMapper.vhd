@@ -54,7 +54,7 @@ begin
     IsInstMem <= '1' when ((AddrIn >= x"4000") and (AddrIn < x"8000")) else '0';    -- [0X4000, 0X7FFF]
     IsGraphicMem <= '1' when ((AddrIn >= x"ED40") and (AddrIn < x"10000")) else '0';    -- [0XED40, 0XFFFF]
 
-    WillVisitInst <= IsInstMem;
+    WillVisitInst <= IsInstMem and (MemRd or MemWr);
 
     Slct <= IsGraphicMem & IsInstMem & IsCOM & IsPS2;  -- mem will be at most one of them, 0000 | 0001 | 0010 | 0100 | 1000
 

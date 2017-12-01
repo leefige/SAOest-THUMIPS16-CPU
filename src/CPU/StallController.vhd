@@ -73,9 +73,9 @@ begin
     --     Clear_IDEX <= '0';
     -- end if; -- There's no chance that WillHazard = 1 and WillBranch = 1 at the same time
 
-    WE_PC <= '0' when WillHazard = '1' else '1';
-    WE_IFID <= '0' when WillHazard = '1' else '1';
-    Clear_IDEX <= '1' when WillHazard = '1' else '0';
+    WE_PC <= '0' when WillHazard = '1' or WillVisitInst = '1' else '1';
+    WE_IFID <= '0' when WillHazard = '1' or WillVisitInst = '1' else '1';
+    Clear_IDEX <= '1' when WillHazard = '1' or WillVisitInst = '1' else '0';
     WE_EXMEM <= '1';
     WE_MEMWB <= '1';
     Clear_IFID <= '1' when WillBranch = '1' else '0';
