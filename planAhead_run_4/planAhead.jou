@@ -1,10 +1,11 @@
 #-----------------------------------------------------------
-# PlanAhead v14.2
-# Build 194362 by xbuild on Fri Jul 20 18:52:36 MDT 2012
-# Start of session at: Thu Nov 30 17:40:20 2017
-# Process ID: 11452
-# Log file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_4/planAhead.log
-# Journal file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_4/planAhead.jou
+# PlanAhead v14.7
+# Build 321239 by xbuild on Fri Sep 27 19:31:35 MDT 2013
+# Start of session at: Fri Dec 01 15:24:08 2017
+# Process ID: 3220
+# Log file: Y:/Desktop/SAOestCPU/planAhead_run_4/planAhead.log
+# Journal file: Y:/Desktop/SAOestCPU/planAhead_run_4/planAhead.jou
 #-----------------------------------------------------------
 start_gui
-source C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/pa.fromNetlist.tcl
+source Y:/Desktop/SAOestCPU/pa.fromNetlist.tcl
+set_property package_pin "" [get_ports [list  clk_VGA]]

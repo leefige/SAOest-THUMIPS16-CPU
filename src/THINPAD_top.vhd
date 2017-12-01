@@ -187,6 +187,9 @@ signal s_IO_RE : STD_LOGIC;
 signal s_clk_CPU : STD_LOGIC;
 signal s_clk_VGA : STD_LOGIC;
 
+signal clk_for_cpu : STD_LOGIC;
+signal counter : INTEGER range 0 to 1024 := 0;
+
 --------------process-------------------
 
 begin
@@ -294,14 +297,37 @@ begin
 			 (others=>'0') when others;
 
     with Switch (15) select
-    s_clk_CPU <=  clk_11M when '1',
+    s_clk_CPU <=  clk_for_cpu when '1',
                 clk_manual when '0',
                 '0' when others;
-	
-	s_clk_VGA <= clk_50M; -- TODO: need 25M
+
+	-- s_clk_VGA <= clk_50M; -- TODO: need 25M
 
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
+
+    process(clk_11M, rst)
+    begin
+        if (rst = '0') then
+            clk_for_cpu <= '0';
+            counter <= 0;
+        elsif (clk_11M'event and clk_11M = '1') then
+            counter <= counter + 1;
+            if (counter = to_integer(unsigned(Switch(14 downto 8)))) then
+                clk_for_cpu <= not clk_for_cpu;
+                counter <= 0;
+            end if;
+        end if;
+    end process;
+
+    process(clk_50M, rst)
+    begin
+        if (rst = '0') then
+            clk_for_cpu <= '0';
+        elsif (clk_50M'event and clk_50M = '1') then
+            s_clk_VGA <= not s_clk_VGA;
+        end if;
+    end process;
 
 end Behavioral;
 
