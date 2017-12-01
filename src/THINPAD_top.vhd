@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -189,6 +189,7 @@ signal s_clk_VGA : STD_LOGIC;
 
 signal clk_for_cpu : STD_LOGIC;
 signal counter : INTEGER range 0 to 1024 := 0;
+signal FreqDiv : INTEGER range 0 to 1024 := 0;
 
 --------------process-------------------
 
@@ -306,6 +307,8 @@ begin
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
+	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
+
     process(clk_11M, rst)
     begin
         if (rst = '0') then
@@ -313,7 +316,7 @@ begin
             counter <= 0;
         elsif (clk_11M'event and clk_11M = '1') then
             counter <= counter + 1;
-            if (counter = to_integer(unsigned(Switch(14 downto 8)))) then
+            if counter = FreqDiv then
                 clk_for_cpu <= not clk_for_cpu;
                 counter <= 0;
             end if;
@@ -323,7 +326,7 @@ begin
     process(clk_50M, rst)
     begin
         if (rst = '0') then
-            clk_for_cpu <= '0';
+            s_clk_VGA <= '0';
         elsif (clk_50M'event and clk_50M = '1') then
             s_clk_VGA <= not s_clk_VGA;
         end if;
