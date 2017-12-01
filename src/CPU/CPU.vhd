@@ -369,8 +369,8 @@ end component Mux6;
 COMPONENT fontMem
 PORT (
   clka : IN STD_LOGIC;
-  addra : IN STD_LOGIC_VECTOR(17 DOWNTO 0);
-  douta : OUT STD_LOGIC_VECTOR(0 DOWNTO 0)
+  addra : IN STD_LOGIC_VECTOR(10 DOWNTO 0);
+  douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
 );
 END COMPONENT;
 
@@ -389,8 +389,8 @@ port (
     IHdata : in std_logic_vector(15 downto 0);
 
 -- font rom
-    romAddr : out std_logic_vector(17 downto 0);
-    romData : in std_logic_vector(0 downto 0);
+    romAddr : out std_logic_vector(10 downto 0);
+    romData : in std_logic_vector(7 downto 0);
 --VGA Side
     hs,vs	: out std_logic;		--ÐÐÍ¬²½¡¢³¡Í¬²½ÐÅºÅ
     oRed	: out std_logic_vector (2 downto 0);
@@ -447,8 +447,8 @@ signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others
 -- VGA-DEBUG --
 signal r0, r1, r2, r3, r4, r5, r6, r7, rPC, rRA, rTdata, rSPdata, rIHdata : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
-signal fontAddr : STD_LOGIC_VECTOR(17 downto 0);
-signal fontData : STD_LOGIC_VECTOR(0 downto 0);
+signal fontAddr : STD_LOGIC_VECTOR(10 downto 0);
+signal fontData : STD_LOGIC_VECTOR(7 downto 0);
 
 --------------process-------------------
 

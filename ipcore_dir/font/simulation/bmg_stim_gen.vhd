@@ -125,8 +125,8 @@ ENTITY BMG_STIM_GEN IS
       PORT (
             CLK : IN STD_LOGIC;
             RST : IN STD_LOGIC;
-            ADDRA: OUT  STD_LOGIC_VECTOR(17 DOWNTO 0) := (OTHERS => '0'); 
-            DATA_IN : IN STD_LOGIC_VECTOR (0 DOWNTO 0);   --OUTPUT VECTOR         
+            ADDRA: OUT  STD_LOGIC_VECTOR(10 DOWNTO 0) := (OTHERS => '0'); 
+            DATA_IN : IN STD_LOGIC_VECTOR (7 DOWNTO 0);   --OUTPUT VECTOR         
             STATUS : OUT STD_LOGIC:= '0'
     	  );
 END BMG_STIM_GEN;
@@ -168,23 +168,23 @@ ARCHITECTURE BEHAVIORAL OF BMG_STIM_GEN IS
   END hex_to_std_logic_vector;
 
 CONSTANT ZERO : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-SIGNAL READ_ADDR_INT : STD_LOGIC_VECTOR(17 DOWNTO 0) := (OTHERS => '0');
+SIGNAL READ_ADDR_INT : STD_LOGIC_VECTOR(10 DOWNTO 0) := (OTHERS => '0');
 SIGNAL READ_ADDR : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 SIGNAL CHECK_READ_ADDR : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-SIGNAL EXPECTED_DATA : STD_LOGIC_VECTOR(0 DOWNTO 0) := (OTHERS => '0');
+SIGNAL EXPECTED_DATA : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
 SIGNAL DO_READ : STD_LOGIC := '0';
 SIGNAL CHECK_DATA : STD_LOGIC := '0';
 SIGNAL CHECK_DATA_R : STD_LOGIC := '0';
 SIGNAL CHECK_DATA_2R : STD_LOGIC := '0';
 SIGNAL DO_READ_REG: STD_LOGIC_VECTOR(4 DOWNTO 0) :=(OTHERS => '0');
-CONSTANT DEFAULT_DATA  : STD_LOGIC_VECTOR(0 DOWNTO 0):= hex_to_std_logic_vector("0",1);
+CONSTANT DEFAULT_DATA  : STD_LOGIC_VECTOR(7 DOWNTO 0):= hex_to_std_logic_vector("0",8);
 
 BEGIN
 
 
 SYNTH_COE:  IF(C_ROM_SYNTH =0 ) GENERATE
 
-type mem_type is array (238139 downto 0) of std_logic_vector(0 downto 0);
+type mem_type is array (2047 downto 0) of std_logic_vector(7 downto 0);
 
   FUNCTION bit_to_sl(input: BIT) RETURN STD_LOGIC IS
     VARIABLE temp_return : STD_LOGIC;
@@ -228,7 +228,7 @@ type mem_type is array (238139 downto 0) of std_logic_vector(0 downto 0);
 impure FUNCTION init_memory( C_USE_DEFAULT_DATA : INTEGER;
                        C_LOAD_INIT_FILE : INTEGER ;
 					   C_INIT_FILE_NAME : STRING ;
-                       DEFAULT_DATA   :  STD_LOGIC_VECTOR(0 DOWNTO 0);
+                       DEFAULT_DATA   :  STD_LOGIC_VECTOR(7 DOWNTO 0);
                        width : INTEGER;
                        depth         : INTEGER)
   RETURN mem_type IS
@@ -289,8 +289,8 @@ constant c_init : mem_type := init_memory(0,
                                           1,
 										  "font.mif",
                                            DEFAULT_DATA,
-                                          1,
-                                          238140);
+                                          8,
+                                          2048);
 
 
 constant rom : mem_type := c_init;
@@ -299,7 +299,7 @@ BEGIN
  EXPECTED_DATA <= rom(conv_integer(unsigned(check_read_addr)));
 
   CHECKER_RD_ADDR_GEN_INST:ENTITY work.ADDR_GEN
-    GENERIC MAP( C_MAX_DEPTH =>238140 )
+    GENERIC MAP( C_MAX_DEPTH =>2048 )
 
      PORT MAP(
         CLK => CLK,
@@ -344,7 +344,7 @@ SYNTH_CHECKER: IF(C_ROM_SYNTH = 1) GENERATE
 END GENERATE;
 
 
-    READ_ADDR_INT(17 DOWNTO 0) <= READ_ADDR(17 DOWNTO 0);
+    READ_ADDR_INT(10 DOWNTO 0) <= READ_ADDR(10 DOWNTO 0);
     ADDRA <= READ_ADDR_INT ;
 
    CHECK_DATA <= DO_READ;
@@ -353,7 +353,7 @@ END GENERATE;
 
 
   RD_ADDR_GEN_INST:ENTITY work.ADDR_GEN
-    GENERIC MAP( C_MAX_DEPTH => 238140 )
+    GENERIC MAP( C_MAX_DEPTH => 2048 )
 
      PORT MAP(
         CLK => CLK,

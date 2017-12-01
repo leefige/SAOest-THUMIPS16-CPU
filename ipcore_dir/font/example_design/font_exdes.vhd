@@ -88,9 +88,9 @@ USE UNISIM.VCOMPONENTS.ALL;
 ENTITY font_exdes IS
   PORT (
       --Inputs - Port A
-    ADDRA          : IN STD_LOGIC_VECTOR(17 DOWNTO 0);
+    ADDRA          : IN STD_LOGIC_VECTOR(10 DOWNTO 0);
   
-    DOUTA          : OUT STD_LOGIC_VECTOR(0 DOWNTO 0);
+    DOUTA          : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
     CLKA       : IN STD_LOGIC
 
 
@@ -111,9 +111,9 @@ ARCHITECTURE xilinx OF font_exdes IS
   COMPONENT font IS
   PORT (
       --Port A
-    ADDRA      : IN STD_LOGIC_VECTOR(17 DOWNTO 0);
+    ADDRA      : IN STD_LOGIC_VECTOR(10 DOWNTO 0);
   
-    DOUTA      : OUT STD_LOGIC_VECTOR(0 DOWNTO 0);
+    DOUTA      : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
 
     CLKA       : IN STD_LOGIC
 
