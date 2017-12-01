@@ -114,8 +114,7 @@ component ExMemRegister is
         --数据输入
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
-        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
-
+        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
         --信号输入
         RegWrEn_i : in std_logic;
         MemWr_i : in std_logic;
@@ -126,8 +125,7 @@ component ExMemRegister is
         --数据输出
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
-        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
-
+        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
         --信号输出
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
@@ -366,7 +364,7 @@ component Mux6 is
     res   : out std_logic_vector (15 downto 0));
 end component Mux6;
 
-COMPONENT fontMem
+COMPONENT font
 PORT (
   clka : IN STD_LOGIC;
   addra : IN STD_LOGIC_VECTOR(10 DOWNTO 0);
@@ -486,8 +484,8 @@ begin
         oBlue => oBlue
     );
 
-    font: fontMem port map (
-      clka => clk,
+    fontMem: font port map (
+      clka => clk_vga,
       addra => fontAddr,
       douta => fontData
     );

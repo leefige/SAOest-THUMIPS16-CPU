@@ -111,7 +111,7 @@ end component;
 
 component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
-           clk_VGA : in  STD_LOGIC;
+
            rst : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -144,12 +144,6 @@ component IOBridge
            COM_data_ready : in  STD_LOGIC;
            COM_tbre : in  STD_LOGIC;
            COM_tsre : in  STD_LOGIC;
-
-           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_HS : out  STD_LOGIC;
-           VGA_VS : out  STD_LOGIC;
 
            PS2_DATA : in  STD_LOGIC);
 end component;
@@ -211,7 +205,7 @@ begin
 	);
 
     c_CPU : CPU port map (
-        clk_vga => s_clk_VGA,
+        clk_vga => clk_50M,
         hs => VGA_HS,
         vs => VGA_VS,
         oRed => VGA_R,
@@ -248,7 +242,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-        clk_VGA => s_clk_VGA,
+        
         rst => rst,
 
         IOType => s_IOType,
@@ -279,12 +273,6 @@ begin
         COM_data_ready => COM_data_ready,
         COM_tbre => COM_tbre,
         COM_tsre => COM_tsre,
-
-        VGA_R => VGA_R,
-        VGA_G => VGA_G,
-        VGA_B => VGA_B,
-        VGA_HS => VGA_HS,
-        VGA_VS => VGA_VS,
 
         PS2_DATA => PS2_DATA
     );

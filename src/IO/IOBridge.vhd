@@ -68,12 +68,6 @@ entity IOBridge is
         COM_tbre : in  STD_LOGIC;
         COM_tsre : in  STD_LOGIC;
 
-        VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
-        VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
-        VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
-        VGA_HS : out  STD_LOGIC;
-        VGA_VS : out  STD_LOGIC;
-
         PS2_DATA : in  STD_LOGIC
     );
 end IOBridge;
@@ -112,19 +106,6 @@ component DualRAM is
         addrb : in STD_LOGIC_VECTOR(12 downto 0);
         doutb : out STD_LOGIC_VECTOR(15 downto 0)
     );
-end component;
-
-component VGA_640480 is
-	 port(
-        rst :  in  STD_LOGIC;
-        clk :  in std_logic; --25M clk
-        VGA_Data :  in STD_LOGIC_VECTOR(8 downto 0);
-        VGA_Addr :  out STD_LOGIC_VECTOR(12 downto 0);
-
-        VGA_HS :  out STD_LOGIC;
-        VGA_VS :  out STD_LOGIC;
-        VGA_R,VGA_G,VGA_B :  out STD_LOGIC_vector(2 downto 0)
-	);
 end component;
 
 --------------signal--------------------
@@ -216,32 +197,6 @@ begin
         SRAM_WE => SRAM2_WE,
         SRAM_ADDR => SRAM2_ADDR,
         SRAM_DATA => SRAM2_DATA
-    );
-
-    c_GraphicMem: DualRAM port map (
-        clka => clk_VGA,
-        ena => '1',     -- 1 means enabled
-        wea => s_GraphicMemWE,     -- write port
-        addra => s_GraphicMemAddrIn,    -- wr addr
-        dina => s_GraphicMemDataIn,     -- wr data
-
-        clkb => clk_VGA,
-        enb => '1',     -- 1 means enabled
-        addrb => s_VGA_Addr,    -- vga read addr
-        doutb => s_GraphicMemDataOut
-    );
-
-    c_VGA: VGA_640480 port map (
-        rst => rst,
-        clk => clk_VGA,
-        VGA_Data => s_VGA_Data,
-        VGA_Addr => s_VGA_Addr,
-
-        VGA_HS => VGA_HS,
-        VGA_VS => VGA_VS,
-        VGA_R => VGA_R,
-        VGA_G => VGA_G,
-        VGA_B => VGA_B
     );
 
     -----------------------------------------------
