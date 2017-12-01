@@ -65,7 +65,7 @@ begin
 
     MemState <= (EN and WE) & (EN and RE);  -- w & r
 
-    process (MemState)
+    process (MemState, s_DataIn)
     begin
         case MemState is
             when "10" =>    -- write
