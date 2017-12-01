@@ -30,7 +30,13 @@ use ieee.std_logic_unsigned.all;
 --use UNISIM.VComponents.all;
 
 entity CPU is
-    Port ( clk : in  STD_LOGIC;
+    Port (
+        -- vga
+           clk_vga : in std_logic;
+           hs, vs : out std_logic;
+           oRed, oGreen, oBlue : out std_logic_vector(2 downto 0);
+
+           clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            IO_WE : out  STD_LOGIC;
            IO_RE : out  STD_LOGIC;
@@ -279,7 +285,20 @@ component RegisterFile is
         RegWrData  : in std_logic_vector(15 downto 0);
 
         RegDataA : out std_logic_vector(15 downto 0);
-        RegDataB : out std_logic_vector(15 downto 0)
+        RegDataB : out std_logic_vector(15 downto 0);
+
+        r0 : out std_logic_vector(15 downto 0);
+        r1 : out std_logic_vector(15 downto 0);
+        r2 : out std_logic_vector(15 downto 0);
+        r3 : out std_logic_vector(15 downto 0);
+        r4 : out std_logic_vector(15 downto 0);
+        r5 : out std_logic_vector(15 downto 0);
+        r6 : out std_logic_vector(15 downto 0);
+        r7 : out std_logic_vector(15 downto 0);
+        RA : out std_logic_vector(15 downto 0);
+        Tdata : out std_logic_vector(15 downto 0);
+        SPdata : out std_logic_vector(15 downto 0);
+        IHdata : out std_logic_vector(15 downto 0)
     );
 end component;
 
@@ -347,6 +366,39 @@ component Mux6 is
     res   : out std_logic_vector (15 downto 0));
 end component Mux6;
 
+COMPONENT fontMem
+PORT (
+  clka : IN STD_LOGIC;
+  addra : IN STD_LOGIC_VECTOR(17 DOWNTO 0);
+  douta : OUT STD_LOGIC_VECTOR(0 DOWNTO 0)
+);
+END COMPONENT;
+
+COMPONENT VGA_Controller
+port (
+    reset	: in  std_logic;
+    CLK_in	: in  std_logic;			--50MÊ±ÖÓÊäÈë
+
+-- data
+    r0, r1, r2, r3, r4,r5,r6,r7 : in std_logic_vector(15 downto 0);
+
+    PC : in std_logic_vector(15 downto 0);
+    RA : in std_logic_vector(15 downto 0);
+    Tdata : in std_logic_vector(15 downto 0);
+    SPdata : in std_logic_vector(15 downto 0);
+    IHdata : in std_logic_vector(15 downto 0);
+
+-- font rom
+    romAddr : out std_logic_vector(17 downto 0);
+    romData : in std_logic_vector(0 downto 0);
+--VGA Side
+    hs,vs	: out std_logic;		--ÐÐÍ¬²½¡¢³¡Í¬²½ÐÅºÅ
+    oRed	: out std_logic_vector (2 downto 0);
+    oGreen	: out std_logic_vector (2 downto 0);
+    oBlue	: out std_logic_vector (2 downto 0)
+);
+end component;
+
 --------------signal--------------------
 
 -- Stall & Hazard & Forward --
@@ -392,9 +444,53 @@ signal wb_RegWrEn, wb_WBSrc : STD_LOGIC := '0';
 signal wb_RegDst : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
+-- VGA-DEBUG --
+signal r0, r1, r2, r3, r4, r5, r6, r7, rPC, rRA, rTdata, rSPdata, rIHdata : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+
+signal fontAddr : STD_LOGIC_VECTOR(17 downto 0);
+signal fontData : STD_LOGIC_VECTOR(0 downto 0);
+
 --------------process-------------------
 
 begin
+
+    -------------- VGA-DEBUGGER -------------
+    VGA: VGA_Controller port map (
+        reset => rst,
+        CLK_in => clk_vga,			--50MÊ±ÖÓÊäÈë
+
+    -- data
+        r0 => r0,
+        r1 => r1,
+        r2 => r2,
+        r3 => r3,
+        r4 => r4,
+        r5 => r5,
+        r6 => r6,
+        r7 => r7,
+
+        PC => rPC,
+        RA => rRA,
+        Tdata => rTdata,
+        SPdata => rSPdata,
+        IHdata => rIHdata,
+
+    -- font rom
+        romAddr => fontAddr,
+        romData => fontData,
+    --VGA Side
+        hs => hs,
+        vs => vs,
+        oRed => oRed,
+        oGreen => oGreen,
+        oBlue => oBlue
+    );
+
+    font: fontMem port map (
+      clka => clk,
+      addra => fontAddr,
+      douta => fontData
+    );
 
     Logger1 <= "0" & ex_IOType;
     Logger2 <= "0" & id_JumpType;
@@ -459,6 +555,7 @@ begin
 
     InstAddr <= if_InstAddr;
     if_Inst <= Inst;
+    rPC <= if_Inst;
 
     IF_Mux3: MUX3 port map (
         InputA => ex_DataA,
@@ -513,7 +610,19 @@ begin
         RegDst => wb_RegDst,
         RegWrData => wb_Data,
         RegDataA => id_RegDataA,
-        RegDataB => id_RegDataB
+        RegDataB => id_RegDataB,
+        r0 => r0,
+        r1 => r1,
+        r2 => r2,
+        r3 => r3,
+        r4 => r4,
+        r5 => r5,
+        r6 => r6,
+        r7 => r7,
+        RA => rRA,
+        Tdata => rTdata,
+        SPdata => rSPdata,
+        IHdata => rIHdata
     );
 
     ID_Extender: Extender port map (

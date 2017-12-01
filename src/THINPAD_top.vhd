@@ -75,7 +75,12 @@ architecture Behavioral of THINPAD_top is
 --------------component-----------------
 
 component CPU
-    Port ( clk : in  STD_LOGIC;
+    Port (
+           clk_vga : in std_logic;
+           hs, vs : out std_logic;
+           oRed, oGreen, oBlue : out std_logic_vector(2 downto 0);
+
+           clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
 
            IO_WE : out  STD_LOGIC;
@@ -206,6 +211,13 @@ begin
 	);
 
     c_CPU : CPU port map (
+        clk_vga => s_clk_VGA,
+        hs => VGA_HS,
+        vs => VGA_VS,
+        oRed => VGA_R,
+        oGreen => VGA_G,
+        oBlue => VGA_B,
+
         clk => s_clk_CPU,
         rst => rst,
 
