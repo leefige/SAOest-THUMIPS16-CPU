@@ -235,10 +235,6 @@ utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path DualRAM.xco
 utilities_xmdf::xmdfSetData $instance FileSet $fcount type coregen_ip
 incr fcount
 
-utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path DualRAM_synth.vhd
-utilities_xmdf::xmdfSetData $instance FileSet $fcount type vhdl
-incr fcount
-
 utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path DualRAM_xmdf.tcl
 utilities_xmdf::xmdfSetData $instance FileSet $fcount type AnyView
 incr fcount
