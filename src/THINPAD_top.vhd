@@ -188,8 +188,8 @@ signal s_clk_CPU : STD_LOGIC;
 signal s_clk_VGA : STD_LOGIC;
 
 signal clk_for_cpu : STD_LOGIC;
-signal counter : INTEGER range 0 to 1024 := 0;
-signal FreqDiv : INTEGER range 0 to 1024 := 0;
+signal counter : INTEGER range 0 to 1024000 := 0;
+signal FreqDiv : INTEGER range 0 to 1024000 := 0;
 
 --------------process-------------------
 
@@ -307,7 +307,7 @@ begin
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
-	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
+	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8))) * 10;
 
     process(clk_11M, rst)
     begin
