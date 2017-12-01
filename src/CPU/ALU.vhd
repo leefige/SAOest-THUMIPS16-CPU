@@ -48,34 +48,70 @@ architecture Behavioral of ALU is
     signal tmpInputB : std_logic_vector (16 downto 0);
     signal result : std_logic_vector (16 downto 0);
 
+    signal sll_buf : std_logic_vector (16 downto 0);
+    signal sra_buf : std_logic_vector (16 downto 0);
+    signal sra_res : std_logic_vector (16 downto 0);
+    signal srl_buf : std_logic_vector (16 downto 0);
+
+
 begin
 
     tmpInputA <= InputA(15) & InputA;
     tmpInputB <= InputB(15) & InputB;
 
-    result <= (others => 'Z') when ALUOp = "0000"
-        else tmpInputA + tmpInputB when ALUOp = "0001"
-        else tmpInputA - tmpInputB when ALUOp = "0010"
-        else tmpInputA and tmpInputB when ALUOp = "0011"
-        else tmpInputA or tmpInputB when ALUOp = "0100"
-        else to_stdlogicvector(to_bitvector(tmpInputA) sll 8) when (ALUOp = "0101" and InputB = (15 downto 0 =>'0'))
-        else to_stdlogicvector(to_bitvector(tmpInputA) sll conv_integer(InputB)) when ALUOp = "0101"
-        else '0' & to_stdlogicvector(to_bitvector(InputA) srl 8) when (ALUOp = "0110" and InputB = (15 downto 0 => '0'))
-        else '0' & to_stdlogicvector(to_bitvector(InputA) srl conv_integer(InputB)) when ALUOp = "0110"
-        else to_stdlogicvector(to_bitvector(tmpInputA) sra 8) when (ALUOp = "0111" and InputB = (15 downto 0 => '0'))
-        else to_stdlogicvector(to_bitvector(tmpInputA) sra conv_integer(InputB)) when ALUOp = "0111"
-        else (others => '0');
+    with InputB(2 downto 0) select
+        sll_buf <=  tmpInputA(15 downto 0) & '0' when "001",
+                    tmpInputA(14 downto 0) & "00" when "010",
+                    tmpInputA(13 downto 0) & "000" when "011",
+                    tmpInputA(12 downto 0) & "0000" when "100",
+                    tmpInputA(11 downto 0) & "00000" when "101",
+                    tmpInputA(10 downto 0) & "000000" when "110",
+                    tmpInputA(9 downto 0) & "0000000" when "111",
+                    tmpInputA(8 downto 0) & "00000000" when "000",
+                    tmpInputA when others;
+
+    with InputB(2 downto 0) select
+        srl_buf <=  '0' & tmpInputA(16 downto 1) when "001",
+                    "00" & tmpInputA(16 downto 2) when "010",
+                    "000" & tmpInputA(16 downto 3) when "011",
+                    "0000" & tmpInputA(16 downto 4) when "100",
+                    "00000" & tmpInputA(16 downto 5) when "101",
+                    "000000" & tmpInputA(16 downto 6) when "110",
+                    "0000000" & tmpInputA(16 downto 7) when "111",
+                    "00000000" & tmpInputA(16 downto 8) when "000",
+                    tmpInputA when others;
+
+    with InputB(2 downto 0) select
+        sra_buf <=  '1' & tmpInputA(16 downto 1) when "001",
+                    "11" & tmpInputA(16 downto 2) when "010",
+                    "111" & tmpInputA(16 downto 3) when "011",
+                    "1111" & tmpInputA(16 downto 4) when "100",
+                    "11111" & tmpInputA(16 downto 5) when "101",
+                    "111111" & tmpInputA(16 downto 6) when "110",
+                    "1111111" & tmpInputA(16 downto 7) when "111",
+                    "11111111" & tmpInputA(16 downto 8) when "000",
+                    tmpInputA when others;
+
+    with InputA(15) select
+        sra_res <=  srl_buf when '0',
+                    sra_buf when others;
+
+    with ALUOp select
+        result <=   (others => 'Z') when "0000",
+                    tmpInputA + tmpInputB when "0001",
+                    tmpInputA - tmpInputB when "0010",
+                    tmpInputA and tmpInputB when "0011",
+                    tmpInputA or tmpInputB when "0100",
+                    sll_buf when "0101",
+                    srl_buf when "0110",
+                    sra_res when "0111",
+                    (others => '0') when others;
 
     ALURes <= result(15 downto 0);
 
-    -- if (result = "00000000000000000") then
-    --     ALUFlag(0) <= '1';
-    -- else
-    --     ALUFlag(0) <= '0';
-    -- end if;
-
     ALUFlag(0) <= '1' when result = (16 downto 0 => '0')
                       else '0';
+
     ALUFlag(1) <= result(16);
 
 end Behavioral;
