@@ -307,7 +307,7 @@ begin
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
-	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8))) * 10;
+	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
 
     process(clk_11M, rst)
     begin
