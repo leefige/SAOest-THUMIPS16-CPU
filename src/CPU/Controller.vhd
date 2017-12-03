@@ -162,7 +162,7 @@ begin
 
         -- 逻辑
 
-        elsif (first5 = "11101" and last2 = "01100") then       -- AND
+        elsif (first5 = "11101" and last5 = "01100") then       -- AND
             TRegType  <= '0';
             RegWrEn   <= '1';
             MemWr     <= '0';
