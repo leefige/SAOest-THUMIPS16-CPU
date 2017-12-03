@@ -188,6 +188,8 @@ signal s_clk_CPU : STD_LOGIC;
 signal s_clk_IO : STD_LOGIC;
 signal s_clk_VGA : STD_LOGIC;
 
+signal clk_from_io_to_cpu : STD_LOGIC;
+
 signal clk_for_cpu : STD_LOGIC;
 signal clk_for_io : STD_LOGIC;
 signal counter : INTEGER range 0 to 1024000 := 0;
@@ -217,7 +219,7 @@ begin
         oGreen => VGA_G,
         oBlue => VGA_B,
 
-        clk => s_clk_CPU,
+        clk => clk_from_io_to_cpu,
         rst => rst,
 
         IO_RE => s_IO_RE,
@@ -248,8 +250,10 @@ begin
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
 
-        clk => s_clk_io,
+        clk => clk_for_cpu,
         rst => rst,
+
+        clk_for_cpu => clk_from_io_to_cpu,
 
         IOType => s_IOType,
         IO_WE => s_IO_WE,

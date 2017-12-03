@@ -38,6 +38,8 @@ entity IOBridge is
         clk : in  STD_LOGIC;
         rst : in  STD_LOGIC;
 
+        clk_for_cpu : out STD_LOGIC;
+
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
         IO_WE : in  STD_LOGIC;
@@ -113,8 +115,8 @@ end component;
 type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO);
 signal IOState : IOStateType := Data_IO;
 
-type COMStateType is (DATA_PRE, DATA_RW);
-signal COMState : COMStateType;
+type TimingStateType is (DATA_PRE, DATA_RW);
+signal TimingState : TimingStateType;
 
 signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);       -- extended addr
 signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
@@ -221,6 +223,22 @@ begin
         end if;
     end process;
 
+    --------------------Timing CTRL--------------------
+
+    timing_state_ctrl: process (rst, clk)
+    begin
+        if (rst = '0') then
+            TimingState <= DATA_PRE;
+        else
+            case TimingState is
+                when DATA_PRE => TimingState <= DATA_RW;
+                when DATA_RW => TimingState <= DATA_PRE;
+                when others => TimingState <= DATA_PRE;
+            end case;
+        end if;
+    end process;
+
+
     ----------------------------------------------
 
     -- signals for global IO data
@@ -275,10 +293,10 @@ begin
     io_data_out: process (clk) -- IOState, IOAddr, IO_RE, s_InstDataOut, BF00, BF01, BF02, BF03, s_MemDataOut
     begin
         if (clk'event and clk = '1') then
-            case COMState is
+            case TimingState is
                 when DATA_PRE =>
                     if (IO_RE = '1') then   -- need read
-                        COMState <= DATA_RW;
+                        TimingState <= DATA_RW;
                     else
                         s_IODataOut <= (others=>'Z');
                     end if;
@@ -310,7 +328,7 @@ begin
                             s_IODataOut <= s_MemDataOut;   -- DATA MEM
                     end case;
                 when others =>
-                    COMState <= DATA_PRE;
+                    TimingState <= DATA_PRE;
             end case;
         end if;
     --     if (IO_RE = '1') then   -- need read
