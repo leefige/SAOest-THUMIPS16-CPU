@@ -189,7 +189,7 @@ begin
             ExRes     <= "011";
             ALUSrc    <= '0';
 
-        -- 移位
+        -- 移佝
 
         elsif (first5 = "00110" and last2 = "00") then          -- SLL
             TRegType  <= '0';
@@ -361,7 +361,7 @@ begin
             ExRes     <= "000";
             ALUSrc    <= '0';
 
-        -- 特殊寄存器取/赋�
+        -- 特殊寄存器坖/赋�
 
         elsif (first5 = "11110" and last8 = "00000000") then    -- MFIH
             TRegType  <= '0';
