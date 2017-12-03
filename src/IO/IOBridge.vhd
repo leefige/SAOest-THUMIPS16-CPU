@@ -35,6 +35,7 @@ entity IOBridge is
     Port (
         clk_PS2 : in  STD_LOGIC;
         clk_VGA : in  STD_LOGIC;
+        clk : in  STD_LOGIC;
         rst : in  STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -111,6 +112,9 @@ end component;
 --------------signal--------------------
 type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO);
 signal IOState : IOStateType := Data_IO;
+
+type COMStateType is (DATA_PRE, DATA_RW);
+signal COMState : COMStateType;
 
 signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);       -- extended addr
 signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
@@ -268,38 +272,77 @@ begin
     s_IOAddr <= "00" & IOAddr;
 
     -- select io data out
-    io_data_out: process (IOState, IOAddr, IO_RE, s_InstDataOut, BF00, BF01, BF02, BF03, s_MemDataOut)
+    io_data_out: process (clk) -- IOState, IOAddr, IO_RE, s_InstDataOut, BF00, BF01, BF02, BF03, s_MemDataOut
     begin
-        if (IO_RE = '1') then   -- need read
-            case IOState is
-                when Inst_IO =>
-                    s_IODataOut <= s_InstDataOut;    -- inst MEM
-                when Graphic_IO =>
-                    s_IODataOut <= (others=>'1');  -- NOTE: DISABLE to read from Graphic MEM !
-                when COM_IO =>
-                    case IOAddr is
-                        when x"BF00" =>
-                            s_IODataOut <= BF00;   -- COM DATA
-                        when x"BF01" =>
-                            s_IODataOut <= BF01;   -- COM FLAG
+        if (clk'event and clk = '1') then
+            case COMState is
+                when DATA_PRE =>
+                    if (IO_RE = '1') then   -- need read
+                        COMState <= DATA_RW;
+                    else
+                        s_IODataOut <= (others=>'Z');
+                    end if;
+                when DATA_RW =>
+                    case IOState is
+                        when Inst_IO =>
+                            s_IODataOut <= s_InstDataOut;    -- inst MEM
+                        when Graphic_IO =>
+                            s_IODataOut <= (others=>'1');  -- NOTE: DISABLE to read from Graphic MEM !
+                        when COM_IO =>
+                            case IOAddr is
+                                when x"BF00" =>
+                                    s_IODataOut <= BF00;   -- COM DATA
+                                when x"BF01" =>
+                                    s_IODataOut <= BF01;   -- COM FLAG
+                                when others =>
+                                    s_IODataOut <= (others=>'1');  -- no chance
+                            end case;
+                        when PS2_IO =>
+                            case IOAddr is
+                                when x"BF02" =>
+                                    s_IODataOut <= BF02;   -- PS2 DATA
+                                when x"BF03" =>
+                                    s_IODataOut <= BF03;   -- PS2 FLAG
+                                when others =>
+                                    s_IODataOut <= (others=>'1');  -- no chance
+                            end case;
                         when others =>
-                            s_IODataOut <= (others=>'1');  -- no chance
-                    end case;
-                when PS2_IO =>
-                    case IOAddr is
-                        when x"BF02" =>
-                            s_IODataOut <= BF02;   -- PS2 DATA
-                        when x"BF03" =>
-                            s_IODataOut <= BF03;   -- PS2 FLAG
-                        when others =>
-                            s_IODataOut <= (others=>'1');  -- no chance
+                            s_IODataOut <= s_MemDataOut;   -- DATA MEM
                     end case;
                 when others =>
-                    s_IODataOut <= s_MemDataOut;   -- DATA MEM
+                    COMState <= DATA_PRE;
             end case;
-        else    -- don't read
-            s_IODataOut <= (others=>'Z');
         end if;
+    --     if (IO_RE = '1') then   -- need read
+    --         case IOState is
+    --             when Inst_IO =>
+    --                 s_IODataOut <= s_InstDataOut;    -- inst MEM
+    --             when Graphic_IO =>
+    --                 s_IODataOut <= (others=>'1');  -- NOTE: DISABLE to read from Graphic MEM !
+    --             when COM_IO =>
+    --                 case IOAddr is
+    --                     when x"BF00" =>
+    --                         s_IODataOut <= BF00;   -- COM DATA
+    --                     when x"BF01" =>
+    --                         s_IODataOut <= BF01;   -- COM FLAG
+    --                     when others =>
+    --                         s_IODataOut <= (others=>'1');  -- no chance
+    --                 end case;
+    --             when PS2_IO =>
+    --                 case IOAddr is
+    --                     when x"BF02" =>
+    --                         s_IODataOut <= BF02;   -- PS2 DATA
+    --                     when x"BF03" =>
+    --                         s_IODataOut <= BF03;   -- PS2 FLAG
+    --                     when others =>
+    --                         s_IODataOut <= (others=>'1');  -- no chance
+    --                 end case;
+    --             when others =>
+    --                 s_IODataOut <= s_MemDataOut;   -- DATA MEM
+    --         end case;
+    --     else    -- don't read
+    --         s_IODataOut <= (others=>'Z');
+    --     end if;
     end process;
 
     ------------------------INST OUT-----------------------------

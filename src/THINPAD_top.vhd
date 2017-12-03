@@ -113,6 +113,7 @@ component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
 
            rst : in  STD_LOGIC;
+           clk : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
@@ -184,11 +185,15 @@ signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
 signal s_clk_CPU : STD_LOGIC;
+signal s_clk_IO : STD_LOGIC;
 signal s_clk_VGA : STD_LOGIC;
 
 signal clk_for_cpu : STD_LOGIC;
+signal clk_for_io : STD_LOGIC;
 signal counter : INTEGER range 0 to 1024000 := 0;
+signal counter_io : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
+signal FreqDiv_io : INTEGER range 0 to 1024000 := 0;
 
 --------------process-------------------
 
@@ -242,7 +247,8 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-        
+
+        clk => s_clk_io,
         rst => rst,
 
         IOType => s_IOType,
@@ -302,20 +308,30 @@ begin
                 clk_manual when '0',
                 '0' when others;
 
+    s_clk_io <=  clk_for_io;
+
 	-- s_clk_VGA <= clk_50M; -- TODO: need 25M
 
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
-	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
+	FreqDiv <= to_integer(unsigned(Switch(14 downto 8))) * 10;
+	FreqDiv_io <= to_integer(unsigned(Switch(14 downto 8))) * 5;
 
     process(clk_11M, rst)
     begin
         if (rst = '0') then
             clk_for_cpu <= '0';
+            clk_for_io <= '0';
             counter <= 0;
+            counter_io <= 0;
         elsif (clk_11M'event and clk_11M = '1') then
+            counter_io <= counter_io + 1;
             counter <= counter + 1;
+            if counter_io = FreqDiv_io then
+                clk_for_io <= not clk_for_io;
+                counter_io <= 0;
+            end if;
             if counter = FreqDiv then
                 clk_for_cpu <= not clk_for_cpu;
                 counter <= 0;
