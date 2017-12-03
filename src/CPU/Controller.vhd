@@ -413,7 +413,7 @@ begin
             WBSrc     <= '1';
             JumpType  <= "111";
             ALUOp     <= "0000";
-            RegSrcA   <= '0' & rx;
+            RegSrcA   <= '0' & ry;
             RegSrcB   <= (others => '1');
             RegDst    <= "1010";
             ExRes     <= "100";
