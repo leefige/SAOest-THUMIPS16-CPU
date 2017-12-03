@@ -77,8 +77,10 @@ begin
     -- end if;
 
     -- Faster way, but may cause some conflict if controller's delay is not enough
-    RegDataA <= regs(to_integer(unsigned(RegSrcA)));
-    RegDataB <= regs(to_integer(unsigned(RegSrcB)));
+    RegDataA <= regs(to_integer(unsigned(RegSrcA))) when RegSrcA /= RegDst
+                else RegWrData;
+    RegDataB <= regs(to_integer(unsigned(RegSrcB))) WHEN RegSrcB /= RegDst
+                else RegWrData;
 
     r0 <= regs(0);
     r1 <= regs(1);
