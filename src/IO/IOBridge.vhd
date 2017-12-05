@@ -305,9 +305,19 @@ begin
     ------------------------INST OUT-----------------------------
 
     -- select inst out
-    with IOState select
-        s_Inst <=   "0000100000000000" when Inst_IO,      -- nop
-                    s_InstDataOut when others;          -- normally IF
+    inst_out: process(IOState, IO_RE, IO_WE, s_InstDataOut)
+    begin
+        case IOState is
+            when Inst_IO =>
+                if (IO_RE = '1' or IO_WE = '1') then
+                    s_Inst <= "0000100000000000";
+                else
+                    s_Inst <= s_InstDataOut;
+                end if;
+            when others =>
+                s_Inst <= s_InstDataOut;
+        end case;
+    end process;
 
     --==================================================================--
 
