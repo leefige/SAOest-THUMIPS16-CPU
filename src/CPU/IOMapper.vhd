@@ -46,6 +46,7 @@ signal IsPS2 : STD_LOGIC;
 signal IsInstMem : STD_LOGIC;
 signal IsGraphicMem : STD_LOGIC;
 signal Slct : STD_LOGIC_VECTOR (3 downto 0); -- select
+signal WillIO : STD_LOGIC;
 
 begin
 
@@ -54,16 +55,31 @@ begin
     IsInstMem <= '1' when ((AddrIn >= x"4000") and (AddrIn < x"8000")) else '0';    -- [0X4000, 0X7FFF]
     IsGraphicMem <= '1' when ((AddrIn >= x"ED40") and (AddrIn < x"10000")) else '0';    -- [0XED40, 0XFFFF]
 
-    WillVisitInst <= IsInstMem and (MemRd or MemWr);
+    WillIO <= MemRd or MemWr;
+
+    WillVisitInst <= IsInstMem and WillIO;
 
     Slct <= IsGraphicMem & IsInstMem & IsCOM & IsPS2;  -- mem will be at most one of them, 0000 | 0001 | 0010 | 0100 | 1000
 
-    with Slct select
-        IOType <=   "001" when "0100",  -- inst mem, special case
-                    "010" when "0010",  -- com
-                    "011" when "0001",  -- ps2
-                    "100" when "1000",  -- graphic mem
-                    "000" when others;   -- don't need to disable sram1
+    process (Slct, WillIO)
+    begin
+        if (WillIO = '1') then
+            case Slct is
+                when "0100" =>      -- inst mem, special case
+                    IOType <= "001";
+                when "0010" =>      -- com
+                    IOType <= "010";
+                when "0001" =>      -- ps2
+                    IOType <= "011";
+                when "1000" =>      -- graphic mem
+                    IOType <= "100";
+                when others =>      -- don't need to disable sram1
+                    IOType <= "000";
+            end case;
+        else
+            IOType <= "111";        -- won't IO
+        end if;
+    end process;
 
 end Behavioral;
 

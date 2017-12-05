@@ -109,7 +109,7 @@ component DualRAM is
 end component;
 
 --------------signal--------------------
-type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO);
+type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO, IDLE_IO);
 signal IOState : IOStateType := Data_IO;
 
 signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);       -- extended addr
@@ -205,14 +205,15 @@ begin
     io_state_ctrl: process (rst, IOType)
     begin
         if (rst = '0') then
-            IOState <= Data_IO;
+            IOState <= IDLE_IO;
         else
             case IOType is
                 when "001" => IOState <= Inst_IO;
                 when "010" => IOState <= COM_IO;
                 when "011" => IOState <= PS2_IO;
                 when "100" => IOState <= Graphic_IO;
-                when others => IOState <= Data_IO;
+                when "000" => IOState <= Data_IO;
+                when others => IOState <= IDLE_IO;
             end case;
         end if;
     end process;
@@ -238,12 +239,12 @@ begin
     begin
         if (IO_WE = '1') then
             case IOState is
-                when Inst_IO | Graphic_IO =>
-                    s_DataToBus <= (others=>'Z');
                 when COM_IO | PS2_IO =>
                     s_DataToBus <= s_IODataIn;      -- directly send io data to bus
-                when others =>
+                when Data_IO =>
                     s_DataToBus <= s_subBusData_Mem;    -- map to sub bus of sram1
+                when others =>
+                    s_DataToBus <= (others=>'Z');
             end case;
         else
             s_DataToBus <= (others=>'Z');
@@ -257,8 +258,8 @@ begin
 
     -- disable SRAM1 when visiting UART
     with IOState select
-        s_DataMemEN <=  '0' when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2
-                        '1' when others;
+        s_DataMemEN <=  '1' when Data_IO, -- DATA MEM
+                        '0' when others;
 
     -------------------------PORT CONTROL------------------------
 
@@ -294,8 +295,10 @@ begin
                         when others =>
                             s_IODataOut <= (others=>'1');  -- no chance
                     end case;
-                when others =>
+                when Data_IO =>
                     s_IODataOut <= s_MemDataOut;   -- DATA MEM
+                when others =>
+                    s_IODataOut <= (others=>'Z');
             end case;
         else    -- don't read
             s_IODataOut <= (others=>'Z');
@@ -305,15 +308,11 @@ begin
     ------------------------INST OUT-----------------------------
 
     -- select inst out
-    inst_out: process(IOState, IO_RE, IO_WE, s_InstDataOut)
+    inst_out: process(IOState, s_InstDataOut)
     begin
         case IOState is
             when Inst_IO =>
-                if (IO_RE = '1' or IO_WE = '1') then
-                    s_Inst <= "0000100000000000";
-                else
-                    s_Inst <= s_InstDataOut;
-                end if;
+                s_Inst <= "0000100000000000";
             when others =>
                 s_Inst <= s_InstDataOut;
         end case;
@@ -325,11 +324,11 @@ begin
     ------------------------INST MEM CONTROL-----------------------------
 
     -- select inst addr
-    s_InstAddr <=   "00" & IOAddr when ((IOState = Inst_IO) and ((IO_WE = '1') or (IO_RE = '1'))) else       -- IO will visit inst mem
+    s_InstAddr <=   "00" & IOAddr when (IOState = Inst_IO) else       -- IO will wr inst mem
                     "00" & InstAddr;    -- normally IF
 
     -- select inst data in
-    s_InstDataIn <= s_IODataIn when ((IOState = Inst_IO) and ((IO_WE = '1') or (IO_RE = '1'))) else        -- IO will visit inst mem
+    s_InstDataIn <= s_IODataIn when ((IOState = Inst_IO) and (IO_WE = '1')) else    -- IO will write inst mem
                     (others=>'Z');    -- normally IF
 
     -- select inst data RE, be 0 only when wr inst mem
@@ -342,28 +341,28 @@ begin
 
     -- select data mem data in
     with IOState select
-        s_MemDataIn <=  (others=>'Z') when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2 & graphic
-                        s_IODataIn when others;
+        s_MemDataIn <=  s_IODataIn when Data_IO, -- inst & COM & ps2 & graphic
+                        (others=>'Z') when others;
 
     -- select DATA data RE, let it be IO_RE
     with IOState select
-        s_DataMemRE <=  '0' when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2 & graphic
-                        IO_RE when others;
+        s_DataMemRE <=  IO_RE when Data_IO, -- inst & COM & ps2 & graphic
+                        '0' when others;
 
     -- select DATA data WE
     with IOState select
-        s_DataMemWE <=  '0' when Inst_IO | COM_IO | PS2_IO | Graphic_IO, -- inst & COM & ps2 & graphic
-                        IO_WE when others;
+        s_DataMemWE <=  IO_WE when Data_IO, -- inst & COM & ps2 & graphic
+                        '0' when others;
 
     -- switch sub data bus for mem
     set_s_subBusData_Mem: process (IO_RE, IOState, s_DataFromBus)
     begin
         if (IO_RE = '1') then
             case IOState is
-                when Inst_IO | COM_IO | PS2_IO | Graphic_IO =>
-                    s_subBusData_Mem <= (others=>'Z');
-                when others =>
+                when Data_IO =>
                     s_subBusData_Mem <= s_DataFromBus;
+                when others =>
+                    s_subBusData_Mem <= (others=>'Z');
             end case;
         else
             s_subBusData_Mem <= (others=>'Z');
