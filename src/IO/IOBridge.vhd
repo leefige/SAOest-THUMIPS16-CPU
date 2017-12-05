@@ -325,14 +325,12 @@ begin
     ------------------------INST MEM CONTROL-----------------------------
 
     -- select inst addr
-    with IOState select
-        s_InstAddr <=   "00" & IOAddr when Inst_IO,       -- IO will visit inst mem
-                        "00" & InstAddr when others;    -- normally IF
+    s_InstAddr <=   "00" & IOAddr when ((IOState = Inst_IO) and ((IO_WE = '1') or (IO_RE = '1'))) else       -- IO will visit inst mem
+                    "00" & InstAddr;    -- normally IF
 
     -- select inst data in
-    with IOState select
-        s_InstDataIn <= s_IODataIn when Inst_IO,        -- IO will visit inst mem
-                        (others=>'Z') when others;    -- normally IF
+    s_InstDataIn <= s_IODataIn when ((IOState = Inst_IO) and ((IO_WE = '1') or (IO_RE = '1'))) else        -- IO will visit inst mem
+                    (others=>'Z');    -- normally IF
 
     -- select inst data RE, be 0 only when wr inst mem
     s_InstMemRE <= '0' when ((IOState = Inst_IO) and (IO_WE = '1')) else '1';
