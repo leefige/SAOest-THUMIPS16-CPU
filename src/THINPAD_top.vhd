@@ -66,6 +66,15 @@ entity THINPAD_top is
            VGA_HS : out  STD_LOGIC;
            VGA_VS : out  STD_LOGIC;
 
+           FlashByte : out std_logic;
+           FlashVpen : out std_logic;
+           FlashCE : out std_logic;
+           FlashOE : out std_logic;
+           FlashWE : out std_logic;
+           FlashRP : out std_logic;
+           FlashAddr : out std_logic_vector(22 downto 0);
+           FlashData : inout std_logic_vector(15 downto 0);
+
            PS2_DATA : in  STD_LOGIC);
 
 end THINPAD_top;
@@ -153,6 +162,26 @@ component Digit7 is
            seg : out  STD_LOGIC_VECTOR (6 downto 0));
 end component;
 
+component FlashAdapter
+port (
+    Clock : in std_logic;
+    Reset : in std_logic;
+    Address : in std_logic_vector(22 downto 0);
+    OutputData : out std_logic_vector(15 downto 0);
+    ctl_read : in std_logic;
+
+    FlashByte : out std_logic;
+    FlashVpen : out std_logic;
+    FlashCE : out std_logic;
+    FlashOE : out std_logic;
+    FlashWE : out std_logic;
+    FlashRP : out std_logic;
+
+    FlashAddr : out std_logic_vector(22 downto 0);
+    FlashData : inout std_logic_vector(15 downto 0)
+);
+end component;
+
 --------------signal--------------------
 
 signal s_DebugNum1 : STD_LOGIC_VECTOR (3 downto 0);
@@ -190,6 +219,17 @@ signal clk_for_cpu : STD_LOGIC;
 signal clk_dump : STD_LOGIC;
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
+
+
+signal s_clk_FLASH : STD_LOGIC;
+signal FlashBootMemAddr : std_logic_vector(15 downto 0);
+signal FlashBootAddr : std_logic_vector(22 downto 0);
+signal FlashAddrInput : std_logic_vector(22 downto 0);
+signal FlashDataOutput : std_logic_vector(15 downto 0);
+
+signal FlashTimer : std_logic_vector(7 downto 0);
+signal FlashReadData : std_logic_vector(15 downto 0);
+signal ctl_read : std_logic;
 
 --------------process-------------------
 
@@ -277,6 +317,25 @@ begin
 
         PS2_DATA => PS2_DATA
     );
+
+    c_FlashAdapter : FlashAdapter port map (
+		Clock => s_clk_FLASH,
+		Reset => rst,
+		Address => FlashAddrInput,
+		OutputData => FlashDataOutput,
+		ctl_read => ctl_read,
+
+		FlashByte => FlashByte,
+		FlashVpen => FlashVpen,
+		FlashCE => FlashCE,
+		FlashOE => FlashOE,
+		FlashWE => FlashWE,
+		FlashRP => FlashRP,
+
+		FlashAddr => FlashAddr,
+		FlashData => FlashData
+	);
+
 
     with Switch (7 downto 0) select
     Light <= s_InstAddr when "00000000",
