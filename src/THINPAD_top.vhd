@@ -148,6 +148,15 @@ component IOBridge
            PS2_DATA : in  STD_LOGIC);
 end component;
 
+component ClockGen
+	Port(
+		CLKIN_IN : in std_logic;
+		RST_IN : in std_logic;
+		CLKFX_OUT : out std_logic;
+		CLK0_OUT : out std_logic
+		);
+	end component;
+
 component Digit7 is
     Port ( num : in  STD_LOGIC_VECTOR (3 downto 0);
            seg : out  STD_LOGIC_VECTOR (6 downto 0));
@@ -184,9 +193,12 @@ signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
 signal s_clk_CPU : STD_LOGIC;
-signal s_clk_VGA : STD_LOGIC;
+signal s_clk_25M : STD_LOGIC;
 
-signal clk_for_cpu : STD_LOGIC;
+signal s_clk_div : STD_LOGIC;
+signal s_clk_50M : STD_LOGIC;
+signal s_clk_fx : STD_LOGIC;
+
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
 
@@ -204,8 +216,15 @@ begin
         seg => DYP2
 	);
 
+    c_ClockGen: ClockGen port map(
+		CLKIN_IN => clk_50M,
+		RST_IN => rst,
+		CLKFX_OUT => s_clk_fx,
+		CLK0_OUT => s_clk_50M
+	);
+
     c_CPU : CPU port map (
-        clk_vga => clk_50M,
+        clk_vga => s_clk_50M,
         hs => VGA_HS,
         vs => VGA_VS,
         oRed => VGA_R,
@@ -242,7 +261,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-        
+
         rst => rst,
 
         IOType => s_IOType,
@@ -297,38 +316,38 @@ begin
 
 			 (others=>'0') when others;
 
-    with Switch (15) select
-    s_clk_CPU <=  clk_for_cpu when '1',
-                clk_manual when '0',
-                '0' when others;
-
-	-- s_clk_VGA <= clk_50M; -- TODO: need 25M
+    with Switch (15 downto 14) select
+        s_clk_CPU <=    clk_manual when "00",
+                        s_clk_div when "01",
+                        s_clk_fx when "10",
+                        s_clk_50M when "11",
+                        '0' when others;
 
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
-	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
+    FreqDiv <= to_integer(unsigned(Switch(13 downto 8)));
 
-    process(clk_50M, rst)
+    process(s_clk_50M, rst)
     begin
         if (rst = '0') then
-            clk_for_cpu <= '0';
+            s_clk_div <= '0';
             counter <= 0;
-        elsif (clk_50M'event and clk_50M = '1') then
+        elsif (s_clk_50M'event and s_clk_50M = '1') then
             counter <= counter + 1;
             if counter = FreqDiv then
-                clk_for_cpu <= not clk_for_cpu;
+                s_clk_div <= not s_clk_div;
                 counter <= 0;
             end if;
         end if;
     end process;
 
-    process(clk_50M, rst)
+    process(s_clk_50M, rst)
     begin
         if (rst = '0') then
-            s_clk_VGA <= '0';
-        elsif (clk_50M'event and clk_50M = '1') then
-            s_clk_VGA <= not s_clk_VGA;
+            s_clk_25M <= '0';
+        elsif (s_clk_50M'event and s_clk_50M = '1') then
+            s_clk_25M <= not s_clk_25M;
         end if;
     end process;
 

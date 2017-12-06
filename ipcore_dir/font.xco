@@ -1,7 +1,7 @@
 ##############################################################
 #
-# Xilinx Core Generator version 14.7
-# Date: Fri Dec 01 18:46:47 2017
+# Xilinx Core Generator version 14.2
+# Date: Wed Dec 06 08:09:17 2017
 #
 ##############################################################
 #
@@ -46,7 +46,7 @@ CSET axi_id_width=4
 CSET axi_slave_type=Memory_Slave
 CSET axi_type=AXI4_Full
 CSET byte_size=9
-CSET coe_file=D:\jjj\SAOestCPU\src\font.coe
+CSET coe_file=C:\Users\Liyf\Desktop\CO\proj\THINPAD\SAOestCPU\src\font.coe
 CSET collision_warnings=ALL
 CSET component_name=font
 CSET disable_collision_warnings=false
@@ -101,8 +101,5 @@ CSET write_depth_a=2048
 CSET write_width_a=8
 CSET write_width_b=8
 # END Parameters
-# BEGIN Extra information
-MISC pkg_timestamp=2012-11-19T16:22:25Z
-# END Extra information
 GENERATE
-# CRC:  ba761ae
+# CRC: 7ab3364b

@@ -72,3 +72,4 @@ doc/~*
 tmp/
 .Xil/
 thinpad_top.bit
+font.xco
