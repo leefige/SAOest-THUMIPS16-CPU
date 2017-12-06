@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity IOBridge is
     Port (
         clk_PS2 : in  STD_LOGIC;
-        clk_VGA : in  STD_LOGIC;
+        clk_50M : in STD_LOGIC;
         rst : in  STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -67,6 +67,12 @@ entity IOBridge is
         COM_data_ready : in  STD_LOGIC;
         COM_tbre : in  STD_LOGIC;
         COM_tsre : in  STD_LOGIC;
+
+        VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_HS : out  STD_LOGIC;
+        VGA_VS : out  STD_LOGIC;
 
         PS2_DATA : in  STD_LOGIC
     );
@@ -106,6 +112,19 @@ component DualRAM is
         addrb : in STD_LOGIC_VECTOR(12 downto 0);
         doutb : out STD_LOGIC_VECTOR(15 downto 0)
     );
+end component;
+
+component VGA_640480 is
+	 port(
+        rst :  in  STD_LOGIC;
+        clk :  in std_logic; --25M clk
+        VGA_Data :  in STD_LOGIC_VECTOR(8 downto 0);
+        VGA_Addr :  out STD_LOGIC_VECTOR(12 downto 0);
+
+        VGA_HS :  out STD_LOGIC;
+        VGA_VS :  out STD_LOGIC;
+        VGA_R,VGA_G,VGA_B :  out STD_LOGIC_vector(2 downto 0)
+	);
 end component;
 
 --------------signal--------------------
@@ -151,6 +170,7 @@ signal s_PS2_data_ready : std_logic;
 signal s_PS2_wrn : std_logic;
 
 -- VGA
+signal s_clk_VGA : STD_LOGIC;
 signal s_VGA_Addr : STD_LOGIC_VECTOR(12 downto 0);
 signal s_VGA_Data : STD_LOGIC_VECTOR(8 downto 0);
 
@@ -199,6 +219,32 @@ begin
         SRAM_DATA => SRAM2_DATA
     );
 
+    c_GraphicMem: DualRAM port map (
+        clka => clk_50M,
+        ena => '1',     -- 1 means enabled
+        wea => s_GraphicMemWE,     -- write port
+        addra => s_GraphicMemAddrIn,    -- wr addr
+        dina => s_GraphicMemDataIn,     -- wr data
+
+        clkb => clk_50M,
+        enb => '1',     -- 1 means enabled
+        addrb => s_VGA_Addr,    -- vga read addr
+        doutb => s_GraphicMemDataOut
+    );
+
+    c_VGA: VGA_640480 port map (
+        rst => rst,
+        clk => s_clk_VGA,
+        VGA_Data => s_VGA_Data,
+        VGA_Addr => s_VGA_Addr,
+
+        VGA_HS => VGA_HS,
+        VGA_VS => VGA_VS,
+        VGA_R => VGA_R,
+        VGA_G => VGA_G,
+        VGA_B => VGA_B
+    );
+
     -----------------------------------------------
 
     -- state
@@ -215,6 +261,17 @@ begin
                 when "000" => IOState <= Data_IO;
                 when others => IOState <= IDLE_IO;
             end case;
+        end if;
+    end process;
+
+    ----------------------------------------------
+    -- get 25M clk for vga
+    clk_vga: process(clk_50M, rst)
+    begin
+        if (rst = '0') then
+            s_clk_VGA <= '0';
+        elsif (clk_50M'event and clk_50M = '1') then
+            s_clk_VGA <= not s_clk_VGA;
         end if;
     end process;
 

@@ -41,19 +41,7 @@ entity RegisterFile is
         RegWrData  : in std_logic_vector(15 downto 0);
 
         RegDataA : out std_logic_vector(15 downto 0);
-        RegDataB : out std_logic_vector(15 downto 0);
-        r0 : out std_logic_vector(15 downto 0);
-        r1 : out std_logic_vector(15 downto 0);
-        r2 : out std_logic_vector(15 downto 0);
-        r3 : out std_logic_vector(15 downto 0);
-        r4 : out std_logic_vector(15 downto 0);
-        r5 : out std_logic_vector(15 downto 0);
-        r6 : out std_logic_vector(15 downto 0);
-        r7 : out std_logic_vector(15 downto 0);
-        RA : out std_logic_vector(15 downto 0);
-        Tdata : out std_logic_vector(15 downto 0);
-        SPdata : out std_logic_vector(15 downto 0);
-        IHdata : out std_logic_vector(15 downto 0)
+        RegDataB : out std_logic_vector(15 downto 0)
     );
 end RegisterFile;
 
@@ -81,20 +69,6 @@ begin
                 else RegWrData;
     RegDataB <= regs(to_integer(unsigned(RegSrcB))) WHEN RegSrcB /= RegDst
                 else RegWrData;
-
-    r0 <= regs(0);
-    r1 <= regs(1);
-    r2 <= regs(2);
-    r3 <= regs(3);
-    r4 <= regs(4);
-    r5 <= regs(5);
-    r6 <= regs(6);
-    r7 <= regs(7);
-    RA <= regs(11);
-    Tdata <= regs(8);
-    SPdata <= regs(10);
-    IHdata <= regs(9);
-
 
     process(clk, rst)
     begin

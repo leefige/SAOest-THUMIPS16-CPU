@@ -76,10 +76,6 @@ architecture Behavioral of THINPAD_top is
 
 component CPU
     Port (
-           clk_vga : in std_logic;
-           hs, vs : out std_logic;
-           oRed, oGreen, oBlue : out std_logic_vector(2 downto 0);
-
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
 
@@ -111,7 +107,7 @@ end component;
 
 component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
-
+           clk_50M : in STD_LOGIC;
            rst : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -144,6 +140,12 @@ component IOBridge
            COM_data_ready : in  STD_LOGIC;
            COM_tbre : in  STD_LOGIC;
            COM_tsre : in  STD_LOGIC;
+
+           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_HS : out  STD_LOGIC;
+           VGA_VS : out  STD_LOGIC;
 
            PS2_DATA : in  STD_LOGIC);
 end component;
@@ -206,13 +208,6 @@ begin
 	);
 
     c_CPU : CPU port map (
-        clk_vga => clk_dump,
-        hs => VGA_HS,
-        vs => VGA_VS,
-        oRed => VGA_R,
-        oGreen => VGA_G,
-        oBlue => VGA_B,
-
         clk => s_clk_CPU,
         rst => rst,
 
@@ -243,7 +238,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-
+        clk_50M => clk_50M,
         rst => rst,
 
         IOType => s_IOType,
@@ -275,6 +270,12 @@ begin
         COM_tbre => COM_tbre,
         COM_tsre => COM_tsre,
 
+        VGA_R => VGA_R,
+        VGA_G => VGA_G,
+        VGA_B => VGA_B,
+        VGA_HS => VGA_HS,
+        VGA_VS => VGA_VS,
+
         PS2_DATA => PS2_DATA
     );
 
@@ -299,7 +300,7 @@ begin
 			 (others=>'0') when others;
 
     with Switch (15) select
-    s_clk_CPU <=  clk_for_cpu when '1',
+    s_clk_CPU <=  clk_11M when '1',
                 clk_manual when '0',
                 '0' when others;
 
@@ -308,14 +309,14 @@ begin
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
-	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
+	FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
 
-    process(clk_50M, rst)
+    process(clk_11M, rst)
     begin
         if (rst = '0') then
             clk_for_cpu <= '0';
             counter <= 0;
-        elsif (clk_50M'event and clk_50M = '1') then
+        elsif (clk_11M'event and clk_11M = '1') then
             counter <= counter + 1;
             if counter = FreqDiv then
                 clk_for_cpu <= not clk_for_cpu;
