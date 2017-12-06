@@ -108,6 +108,7 @@ end component;
 component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
            clk_50M : in STD_LOGIC;
+           clk_11M : in STD_LOGIC;
            rst : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -238,6 +239,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
+        clk_11M => clk_11M,
         clk_50M => clk_50M,
         rst => rst,
 

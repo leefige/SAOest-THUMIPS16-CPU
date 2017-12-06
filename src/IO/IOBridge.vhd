@@ -35,6 +35,7 @@ entity IOBridge is
     Port (
         clk_PS2 : in  STD_LOGIC;
         clk_50M : in STD_LOGIC;
+        clk_11M : in STD_LOGIC;
         rst : in  STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -127,6 +128,18 @@ component VGA_640480 is
 	);
 end component;
 
+component KeyboardAdapter is
+    port (
+        PS2Data : in std_logic; -- PS2 data
+        PS2Clock : in std_logic; -- PS2 clk
+        Clock : in std_logic;
+        Reset : in std_logic;
+        DataReceive : in std_logic;
+        DataReady : out std_logic ;  -- data output enable signal
+        KeyOutput : out std_logic_vector(7 downto 0) -- scan code signal output
+        );
+end component;
+
 --------------signal--------------------
 type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO, IDLE_IO);
 signal IOState : IOStateType := Data_IO;
@@ -168,6 +181,8 @@ signal BF02 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_PS2_data_ready : std_logic;
 signal s_PS2_wrn : std_logic;
+signal s_PS2_data : std_logic_vector (7 downto 0);
+signal s_PS2_datareceive : std_logic;
 
 -- VGA
 signal s_clk_VGA : STD_LOGIC;
@@ -243,6 +258,16 @@ begin
         VGA_R => VGA_R,
         VGA_G => VGA_G,
         VGA_B => VGA_B
+    );
+
+    c_key: KeyboardAdapter port map (
+        PS2Data => PS2_DATA, -- PS2 data
+        PS2Clock => clk_PS2, -- PS2 clk
+        Clock => clk_11M,
+        Reset => rst,
+        DataReceive => s_PS2_datareceive,
+        DataReady => s_PS2_data_ready,  -- data output enable signal
+        KeyOutput => s_PS2_data -- scan code signal output
     );
 
     -----------------------------------------------
@@ -442,10 +467,10 @@ begin
 	BF03(0) <= s_PS2_data_ready;
 	BF03(15 downto 1) <= (others=>'0');
 
-	s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
+    -- s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
+    s_PS2_datareceive <= '0' when (IOAddr = x"BF02") else '1';
 
-    -- TODO
-    BF02 <= (others=>'Z');
+    BF02 <= "00000000" & s_PS2_data;
 
     ------------------------VGA-----------------------------
 
