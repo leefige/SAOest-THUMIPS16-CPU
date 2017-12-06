@@ -1,6 +1,6 @@
 # intermediate build files
 *.bgn
-*.bit
+#*.bit
 *.bld
 *.cmd_log
 *.drc
@@ -71,3 +71,4 @@ _xmsgs/
 doc/~*
 tmp/
 .Xil/
+thinpad_top.bit
