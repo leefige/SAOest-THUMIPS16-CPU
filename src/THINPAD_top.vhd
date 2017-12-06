@@ -309,12 +309,12 @@ begin
 
 	 FreqDiv <= to_integer(unsigned(Switch(14 downto 8)));
 
-    process(clk_11M, rst)
+    process(clk_50M, rst)
     begin
         if (rst = '0') then
             clk_for_cpu <= '0';
             counter <= 0;
-        elsif (clk_11M'event and clk_11M = '1') then
+        elsif (clk_50M'event and clk_50M = '1') then
             counter <= counter + 1;
             if counter = FreqDiv then
                 clk_for_cpu <= not clk_for_cpu;
