@@ -27,12 +27,11 @@ end Keyboard;
 
 architecture Behavioral of Keyboard is
 type state_type is (delay, start, s0, s1, s2, s3, s4, s5, s6, s7, parity, stop, finish);
-signal data, clk, clk1, clk2, odd, fokSignal : std_logic; -- 毛刺处理内部信号, odd为奇偶校�
+signal data, clk, clk1, clk2, odd, fokSignal : std_logic; -- 毛刺处理内部信号, odd为奇偶校�
 signal code : std_logic_vector (7 downto 0);
 signal OutputCode : std_logic_vector (7 downto 0);
-signal ready : std_logic := '0';
 signal state : state_type;
-signal st : std_logic;
+signal st : std_logic := '0';
 
 begin
 	clk1 <= PS2Clock when rising_edge(Clock);

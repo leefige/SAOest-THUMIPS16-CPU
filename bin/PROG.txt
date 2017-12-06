@@ -1,4 +1,4 @@
-INIT:
+﻿INIT:
 
   LI R0 0x001e    ; height
   LI R1 0x00c2
@@ -31,6 +31,7 @@ LOOP:
 
   CMP R0 R5       ; whether num of barrier is equal to max num
   BTNEZ LOOP
+  NOP
 
 BEGIN:
 
@@ -56,6 +57,7 @@ BEGIN:
     SW R1 R0 0x0001
 
 UPDATE:
+;41
     LW R1 R2 0x0000  ; R2 height
     ADDU R2 R0 R2
     SW R1 R2 0x0000
@@ -67,6 +69,7 @@ UPDATE:
 
     LW R1 R0 0x0002  ; R0 scenePos
     ADDIU R0 0x0001
+	;50
     AND R0 R2
     SW R1 R0 0x0002
 
@@ -83,6 +86,7 @@ GOUP:
     NOP
 
 PAINT:
+;60
     LI R5 0x003c
     SW_SP R5 0x0002
     LI R5 0x0004
@@ -146,7 +150,7 @@ TESTKEYBOARD:
 	LW R5 R0 0x0000
 	LI R5 0x0001
 	AND R0 R5
-	BEQZ R0 TESTKEYBOARD   ;BF01&1=0  则等待
+	BEQZ R0 UPDATE   ;BF01&1=0
 	NOP
 	JR R4
 	NOP

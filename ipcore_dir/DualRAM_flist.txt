@@ -52,6 +52,7 @@ DualRAM\simulation\timing\vcs_session.tcl
 DualRAM\simulation\timing\wave_mti.do
 DualRAM\simulation\timing\wave_ncsim.sv
 DualRAM_flist.txt
+DualRAM_synth.vhd
 DualRAM_xmdf.tcl
 _xmsgs\pn_parser.xmsgs
 summary.log
