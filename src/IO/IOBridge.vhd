@@ -108,6 +108,7 @@ component DualRAM is
     );
 end component;
 
+
 --------------signal--------------------
 type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO, IDLE_IO);
 signal IOState : IOStateType := Data_IO;
