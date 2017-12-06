@@ -75,7 +75,8 @@ entity IOBridge is
         VGA_HS : out  STD_LOGIC;
         VGA_VS : out  STD_LOGIC;
 
-        PS2_DATA : in  STD_LOGIC
+        PS2_DATA : in  STD_LOGIC;
+        debugger : out std_logic
     );
 end IOBridge;
 
@@ -463,6 +464,8 @@ begin
     BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
 
     ------------------------PS2-----------------------------
+
+    debugger <= s_PS2_data_ready;
 
 	BF03(0) <= s_PS2_data_ready;
 	BF03(15 downto 1) <= (others=>'0');

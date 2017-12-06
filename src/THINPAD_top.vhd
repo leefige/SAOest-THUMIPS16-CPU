@@ -148,7 +148,9 @@ component IOBridge
            VGA_HS : out  STD_LOGIC;
            VGA_VS : out  STD_LOGIC;
 
-           PS2_DATA : in  STD_LOGIC);
+           PS2_DATA : in  STD_LOGIC;
+           debugger : out std_logic
+        );
 end component;
 
 component Digit7 is
@@ -159,7 +161,7 @@ end component;
 COMPONENT ClockGen
 	PORT(
 		CLKIN_IN : IN std_logic;
-		RST_IN : IN std_logic;          
+		RST_IN : IN std_logic;
 		CLKFX_OUT : OUT std_logic;
 		CLKIN_IBUFG_OUT : OUT std_logic;
 		CLK0_OUT : OUT std_logic;
@@ -206,6 +208,8 @@ signal clk_origin : STD_LOGIC;
 signal clk_double : STD_LOGIC;
 signal clk_fx : STD_LOGIC;
 signal clk_bufg : std_logic;
+
+signal keyboard_dataready : std_logic;
 
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
@@ -303,7 +307,8 @@ begin
         VGA_HS => VGA_HS,
         VGA_VS => VGA_VS,
 
-        PS2_DATA => PS2_DATA
+        PS2_DATA => PS2_DATA,
+        debugger => keyboard_dataready
     );
 
     with Switch (7 downto 0) select
@@ -322,7 +327,7 @@ begin
              s_Logger16_8 when "00001100",
              s_Logger16_9 when "00001101",
              s_Logger16_10 when "00001110",
-             s_Logger16_11 when "00001111",
+             "000000000000000" & keyboard_dataready when "00001111",
 
 			 (others=>'0') when others;
 
