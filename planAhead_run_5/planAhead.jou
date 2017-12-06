@@ -1,10 +1,29 @@
 #-----------------------------------------------------------
 # PlanAhead v14.7
 # Build 321239 by xbuild on Fri Sep 27 19:31:35 MDT 2013
-# Start of session at: Wed Dec 06 21:13:31 2017
-# Process ID: 6452
+# Start of session at: Thu Dec 07 00:15:23 2017
+# Process ID: 8768
 # Log file: D:/jjj/SAOestCPU/planAhead_run_5/planAhead.log
 # Journal file: D:/jjj/SAOestCPU/planAhead_run_5/planAhead.jou
 #-----------------------------------------------------------
 start_gui
 source D:/jjj/SAOestCPU/pa.fromNetlist.tcl
+startgroup
+set_property package_pin C1 [get_ports FlashByte]
+endgroup
+startgroup
+set_property package_pin E4 [get_ports FlashCE]
+endgroup
+startgroup
+set_property package_pin E1 [get_ports FlashOE]
+endgroup
+startgroup
+set_property package_pin D1 [get_ports FlashRP]
+endgroup
+startgroup
+set_property package_pin C2 [get_ports FlashVpen]
+endgroup
+startgroup
+set_property package_pin D4 [get_ports FlashWE]
+endgroup
+save_constraints
