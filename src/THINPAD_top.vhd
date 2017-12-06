@@ -187,6 +187,7 @@ signal s_clk_CPU : STD_LOGIC;
 signal s_clk_VGA : STD_LOGIC;
 
 signal clk_for_cpu : STD_LOGIC;
+signal clk_dump : STD_LOGIC;
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
 
@@ -205,7 +206,7 @@ begin
 	);
 
     c_CPU : CPU port map (
-        clk_vga => clk_50M,
+        clk_vga => clk_dump,
         hs => VGA_HS,
         vs => VGA_VS,
         oRed => VGA_R,
@@ -242,7 +243,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-        
+
         rst => rst,
 
         IOType => s_IOType,
@@ -323,11 +324,11 @@ begin
         end if;
     end process;
 
-    process(clk_50M, rst)
+    process(clk_dump, rst)
     begin
         if (rst = '0') then
             s_clk_VGA <= '0';
-        elsif (clk_50M'event and clk_50M = '1') then
+        elsif (clk_dump'event and clk_dump = '1') then
             s_clk_VGA <= not s_clk_VGA;
         end if;
     end process;
