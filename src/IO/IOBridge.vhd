@@ -36,8 +36,10 @@ entity IOBridge is
         clk_PS2 : in  STD_LOGIC;
         clk_50M : in STD_LOGIC;
         clk_11M : in STD_LOGIC;
-        clk_CPU : in STD_LOGIC;
+        clk_IO : in STD_LOGIC;
         rst : in  STD_LOGIC;
+
+        clk_CPU : out STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
@@ -149,6 +151,11 @@ end component;
 type IOStateType is (Inst_IO, COM_IO, PS2_IO, Data_IO, Graphic_IO, IDLE_IO);
 signal IOState : IOStateType := Data_IO;
 
+type TimingStateType is (ST_RISE, ST_FALL);
+signal TimingState : TimingStateType := ST_FALL;
+
+signal s_clk_CPU : STD_LOGIC;
+
 signal s_IOAddr : STD_LOGIC_VECTOR (17 downto 0);       -- extended addr
 signal s_InstAddr : STD_LOGIC_VECTOR (17 downto 0);
 
@@ -185,7 +192,6 @@ signal BF00 : STD_LOGIC_VECTOR (15 downto 0);
 signal BF02 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_PS2_data_ready : std_logic;
-signal s_PS2_wrn : std_logic;
 signal s_PS2_data : std_logic_vector (7 downto 0);
 signal s_PS2_datareceive : std_logic;
 
@@ -205,6 +211,8 @@ signal s_GraphicMemDataOut : STD_LOGIC_VECTOR(15 downto 0);
 
 begin
 
+    clk_CPU <= s_clk_CPU;
+
     -- DataMem, SRAM1
     c_DataMem: Memory port map (
         Addr => s_IOAddr,
@@ -213,7 +221,7 @@ begin
         WE => s_DataMemWE,
         RE => s_DataMemRE,
         EN => s_DataMemEN,
-        clk => clk_CPU,
+        clk => s_clk_CPU,
         rst => rst,
 
         -- connect to SRAM1 on board
@@ -232,7 +240,7 @@ begin
         WE => s_InstMemWE,
         RE => s_InstMemRE,
         EN => s_InstMemEN,
-        clk => clk_CPU,
+        clk => s_clk_CPU,
         rst => rst,
 
         -- connect to SRAM1 on board
@@ -281,7 +289,7 @@ begin
 
     -----------------------------------------------
 
-    -- state
+    -- io state
     io_state_ctrl: process (rst, IOType)
     begin
         if (rst = '0') then
@@ -292,9 +300,25 @@ begin
                 when "010" => IOState <= COM_IO;
                 when "011" => IOState <= PS2_IO;
                 when "100" => IOState <= Graphic_IO;
-                when "000" => IOState <= Data_IO;
+                when "101" => IOState <= Data_IO;
                 when others => IOState <= IDLE_IO;
             end case;
+        end if;
+    end process;
+
+    -- timing state
+    timing_state_ctrl: process (rst, clk_IO)
+    begin
+        if (rst = '0') then
+            TimingState <= ST_FALL;
+            s_clk_CPU <= '0';
+        elsif clk_IO'event and clk_IO = '1' then
+            s_clk_CPU <= not s_clk_CPU;
+            if TimingState = ST_RISE then
+                TimingState <= ST_FALL;
+            else
+                TimingState <= ST_RISE;
+            end if;
         end if;
     end process;
 
@@ -330,8 +354,8 @@ begin
     begin
         if (IO_WE = '1') then
             case IOState is
-                when COM_IO | PS2_IO =>
-                    s_DataToBus <= s_IODataIn;      -- directly send io data to bus
+                when COM_IO =>
+                    s_DataToBus <= s_IODataIn;      -- directly send io data to bus, only com
                 when Data_IO =>
                     s_DataToBus <= s_subBusData_Mem;    -- map to sub bus of sram1
                 when others =>
@@ -369,27 +393,20 @@ begin
                 when Graphic_IO =>
                     s_IODataOut <= (others=>'1');  -- NOTE: DISABLE to read from Graphic MEM !
                 when COM_IO =>
-                    case IOAddr is
-                        when x"BF00" =>
-                            s_IODataOut <= BF00;   -- COM DATA
-                        when x"BF01" =>
-                            s_IODataOut <= BF01;   -- COM FLAG
-                        when others =>
-                            s_IODataOut <= (others=>'1');  -- no chance
-                    end case;
+                    s_IODataOut <= BF00;   -- COM DATA
                 when PS2_IO =>
-                    case IOAddr is
-                        when x"BF02" =>
-                            s_IODataOut <= BF02;   -- PS2 DATA
-                        when x"BF03" =>
-                            s_IODataOut <= BF03;   -- PS2 FLAG
-                        when others =>
-                            s_IODataOut <= (others=>'1');  -- no chance
-                    end case;
+                    s_IODataOut <= BF02;   -- PS2 DATA
                 when Data_IO =>
                     s_IODataOut <= s_MemDataOut;   -- DATA MEM
                 when others =>
-                    s_IODataOut <= (others=>'Z');
+                    case IOAddr is
+                       when x"BF03" =>
+                            s_IODataOut <= BF03;   -- PS2 FLAG
+                        when x"BF01" =>
+                            s_IODataOut <= BF01;   -- COM FLAG
+                        when others =>
+                            s_IODataOut <= (others=>'Z');  -- no chance
+                    end case;
             end case;
         else    -- don't read
             s_IODataOut <= (others=>'Z');
@@ -462,12 +479,12 @@ begin
 
     ------------------------COM-----------------------------
 
-    -- set_com: process (clk_CPU, rst)
+    -- set_com: process (clk_IO, rst)
     -- begin
     --     if rst = '0' then
     --         COM_wrn <= '1';
     --         COM_rdn <= '1';
-    --     elsif clk_CPU'event and clk_CPU = '0' then  -- falling
+    --     elsif clk_IO'event and clk_IO = '0' then  -- falling
     --         if IOAddr = x"BF00" then
     --             COM_wrn <= not IO_WE;
     --             COM_rdn <= not IO_RE;
@@ -478,24 +495,59 @@ begin
     --     end if;
     -- end process;
 
-    COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
-	COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
+    write_come: process (clk_IO, rst)
+    begin
+        if rst = '0' then
+            COM_wrn <= '1';
+        elsif clk_IO'event and clk_IO = '0' then
+            if TimingState = ST_RISE then      -- prepare, send data to tbr
+                if IO_WE = '1' and IOState = COM_IO then
+                    COM_wrn <= '0';
+                else
+                    COM_wrn <= '1';
+                end if;
+            else  -- rising, output data
+                COM_wrn <= '1';     -- reset wrn
+            end if;
+        end if;
+    end process;
 
-    get_com: process (clk_CPU, rst)
+    read_com: process (clk_IO, rst)
+    begin
+        if rst = '0' then
+            COM_rdn <= '1';
+            BF00 <= (others=>'Z');    -- DATA from BUS
+
+        elsif clk_IO'event and clk_IO = '0' then
+            if TimingState = ST_RISE then       -- rising, let data come into bus
+                BF00 <= (others=>'Z');    -- DATA from BUS
+                if IO_RE = '1' and IOState = COM_IO then
+                    COM_rdn <= '0';
+                else
+                    COM_rdn <= '1';
+                end if;
+            else  -- falling, send data to tbr
+                BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
+                COM_rdn <= '1';     -- reset rdn
+            end if;
+        end if;
+    end process;
+
+    -- COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
+	-- COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
+
+	BF01(15 downto 2) <= (others=>'0');
+
+    get_com_flag: process (clk_IO, rst)
     begin
         if rst = '0' then
             BF01(0) <= '0';
             BF01(1) <= '0';
-            BF00 <= (others=>'Z');    -- DATA from BUS
-        elsif clk_CPU'event and clk_CPU = '0' then  -- falling
+        elsif clk_IO'event and clk_IO = '0' then  -- falling
             BF01(0) <= COM_tsre and COM_tbre;
             BF01(1) <= COM_data_ready;
-            BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
         end if;
     end process;
-
-	BF01(15 downto 2) <= (others=>'0');
-
 
     ------------------------PS2-----------------------------
 
@@ -504,7 +556,6 @@ begin
 	BF03(0) <= s_PS2_data_ready;
 	BF03(15 downto 1) <= (others=>'0');
 
-    -- s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
     s_PS2_datareceive <= not IO_RE when (IOAddr = x"BF02") else '1';
 
     BF02 <= "00000000" & s_PS2_data;

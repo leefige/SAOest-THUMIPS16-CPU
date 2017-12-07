@@ -109,8 +109,10 @@ component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
            clk_50M : in STD_LOGIC;
            clk_11M : in STD_LOGIC;
-           clk_CPU : in STD_LOGIC;
+           clk_IO : in STD_LOGIC;
            rst : in  STD_LOGIC;
+
+           clk_CPU : out STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
@@ -200,6 +202,7 @@ signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
+signal s_clk_IO : STD_LOGIC;
 signal s_clk_CPU : STD_LOGIC;
 signal clk_half : STD_LOGIC;
 
@@ -209,6 +212,11 @@ signal clk_origin : STD_LOGIC;
 signal clk_double : STD_LOGIC;
 signal clk_fx : STD_LOGIC;
 signal clk_bufg : std_logic;
+
+signal clk_src1 : std_logic;
+signal clk_src2 : std_logic;
+signal clk_auto : std_logic;
+signal clk_ori_dbl : std_logic;
 
 signal keyboard_dataready : std_logic;
 
@@ -270,6 +278,8 @@ begin
     );
 
     c_IOBridge : IOBridge port map (
+        clk_IO => s_clk_IO,
+
         clk_PS2 => clk_PS2,
         clk_11M => clk_origin,
         clk_50M => clk_50M,
@@ -335,10 +345,19 @@ begin
 
 			 (others=>'0') when others;
 
-    with Switch (15 downto 14) select
-    s_clk_CPU <=  clk_origin when "01",
-                clk_half when "10",
-				clk_manual when "00",
+    with Switch (15) select
+    s_clk_IO <=  clk_auto when '1',
+				clk_manual when '0',
+                '0' when others;
+
+    with Switch (14) select
+    clk_auto <=  clk_ori_dbl when '1',
+				clk_for_cpu when '0',
+                '0' when others;
+
+    with Switch (13) select
+    clk_ori_dbl <=  clk_11M when '1',
+				clk_half when '0',
                 '0' when others;
 
 	-- clk_half <= clk_50M; -- TODO: need 25M
@@ -346,14 +365,14 @@ begin
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
-	FreqDiv <= to_integer(unsigned(Switch(13 downto 8)));
+	FreqDiv <= to_integer(unsigned(Switch(12 downto 8)));
 
-    process(clk_origin, rst)
+    process(clk_11M, rst)
     begin
         if (rst = '0') then
             clk_for_cpu <= '0';
             counter <= 0;
-        elsif (clk_origin'event and clk_origin = '1') then
+        elsif (clk_11M'event and clk_11M = '1') then
             counter <= counter + 1;
             if counter = FreqDiv then
                 clk_for_cpu <= not clk_for_cpu;
@@ -362,11 +381,11 @@ begin
         end if;
     end process;
 
-	process(clk_origin, rst)
+	process(clk_11M, rst)
     begin
         if (rst = '0') then
             clk_half <= '0';
-        elsif (clk_origin'event and clk_origin = '1') then
+        elsif (clk_11M'event and clk_11M = '1') then
             clk_half <= not clk_half;
         end if;
     end process;
