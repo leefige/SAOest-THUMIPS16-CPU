@@ -335,3 +335,74 @@ Processing design ...
 Writing EDIF netlist file font.edif ...
 ngc2edif: Total memory usage is 114816 kilobytes
 
+Release 14.7 - ngc2edif P.20131013 (nt)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+Reading design THINPAD_top.ngc ...
+WARNING:NetListWriters:298 - No output is written to THINPAD_top.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+WARNING:NetListWriters:306 - Signal bus Madd_FlashBootAddr_addsub0000_lut<3 : 1>
+   on block THINPAD_top is not reconstructed, because there are some missing bus
+   signals.
+WARNING:NetListWriters:306 - Signal bus Mcompar_state_cmp_lt0000_lut<10 : 1> on
+   block THINPAD_top is not reconstructed, because there are some missing bus
+   signals.
+WARNING:NetListWriters:306 - Signal bus Mcompar_state_cmp_lt0001_lut<6 : 1> on
+   block THINPAD_top is not reconstructed, because there are some missing bus
+   signals.
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_ALURes<15 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_DataA<15 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus c_IOBridge/IOState<3 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+  finished :Prep
+Writing EDIF netlist file THINPAD_top.edif ...
+ngc2edif: Total memory usage is 118144 kilobytes
+
+Release 14.7 - ngc2edif P.20131013 (nt)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+Reading design font.ngc ...
+WARNING:NetListWriters:298 - No output is written to font.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+  finished :Prep
+Writing EDIF netlist file font.edif ...
+ngc2edif: Total memory usage is 114752 kilobytes
+
+Release 14.7 - ngc2edif P.20131013 (nt)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+Reading design THINPAD_top.ngc ...
+WARNING:NetListWriters:298 - No output is written to THINPAD_top.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+WARNING:NetListWriters:306 - Signal bus Mcompar_state_cmp_lt0000_lut<10 : 1> on
+   block THINPAD_top is not reconstructed, because there are some missing bus
+   signals.
+WARNING:NetListWriters:306 - Signal bus Mcompar_state_cmp_lt0001_lut<8 : 1> on
+   block THINPAD_top is not reconstructed, because there are some missing bus
+   signals.
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_ALURes<15 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_DataA<15 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus c_IOBridge/IOState<3 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+  finished :Prep
+Writing EDIF netlist file THINPAD_top.edif ...
+ngc2edif: Total memory usage is 117952 kilobytes
+
+Release 14.7 - ngc2edif P.20131013 (nt)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+Reading design font.ngc ...
+WARNING:NetListWriters:298 - No output is written to font.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+  finished :Prep
+Writing EDIF netlist file font.edif ...
+ngc2edif: Total memory usage is 114880 kilobytes
+

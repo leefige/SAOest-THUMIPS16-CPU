@@ -1,8 +1,8 @@
 #-----------------------------------------------------------
 # PlanAhead v14.7
 # Build 321239 by xbuild on Fri Sep 27 19:31:35 MDT 2013
-# Start of session at: Thu Dec 07 00:15:23 2017
-# Process ID: 8768
+# Start of session at: Thu Dec 07 15:26:52 2017
+# Process ID: 8304
 # Log file: D:/jjj/SAOestCPU/planAhead_run_5/planAhead.log
 # Journal file: D:/jjj/SAOestCPU/planAhead_run_5/planAhead.jou
 #-----------------------------------------------------------
@@ -37,7 +37,10 @@ WARNING:NetListWriters:298 - No output is written to THINPAD_top.xncf, ignored.
 Processing design ...
    Preping design's networks ...
    Preping design's macros ...
-WARNING:NetListWriters:306 - Signal bus Madd_FlashTimer_addsub0000_cy<5 : 2> on
+WARNING:NetListWriters:306 - Signal bus Mcompar_state_cmp_lt0000_lut<10 : 1> on
+   block THINPAD_top is not reconstructed, because there are some missing bus
+   signals.
+WARNING:NetListWriters:306 - Signal bus Mcompar_state_cmp_lt0001_lut<8 : 1> on
    block THINPAD_top is not reconstructed, because there are some missing bus
    signals.
 WARNING:NetListWriters:306 - Signal bus c_CPU/ex_ALURes<15 : 0> on block
@@ -48,7 +51,7 @@ WARNING:NetListWriters:306 - Signal bus c_IOBridge/IOState<3 : 0> on block
    THINPAD_top is not reconstructed, because there are some missing bus signals.
   finished :Prep
 Writing EDIF netlist file THINPAD_top.edif ...
-ngc2edif: Total memory usage is 118208 kilobytes
+ngc2edif: Total memory usage is 117952 kilobytes
 
 Parsing EDIF File [./planAhead_run_5/SAOestCPU.data/cache/THINPAD_top_ngc_zx.edif]
 Finished Parsing EDIF File [./planAhead_run_5/SAOestCPU.data/cache/THINPAD_top_ngc_zx.edif]
@@ -64,7 +67,7 @@ Processing design ...
    Preping design's macros ...
   finished :Prep
 Writing EDIF netlist file font.edif ...
-ngc2edif: Total memory usage is 114816 kilobytes
+ngc2edif: Total memory usage is 114880 kilobytes
 
 Reading core file 'D:/jjj/SAOestCPU/ipcore_dir/font.ngc' for (cell view 'font', library 'THINPAD_top_lib', file 'THINPAD_top.ngc')
 Parsing EDIF File [./planAhead_run_5/SAOestCPU.data/cache/font_ngc_zx.edif]
@@ -88,34 +91,15 @@ Finished Parsing UCF File [D:/jjj/SAOestCPU/THINPAD_top.ucf]
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Phase 0 | Netlist Checksum: bdc10783
-link_design: Time (s): elapsed = 00:00:10 . Memory (MB): peak = 508.348 ; gain = 102.516
-startgroup
-set_property package_pin C1 [get_ports FlashByte]
-endgroup
-startgroup
-set_property package_pin E4 [get_ports FlashCE]
-endgroup
-startgroup
-set_property package_pin E1 [get_ports FlashOE]
-endgroup
-startgroup
-set_property package_pin D1 [get_ports FlashRP]
-endgroup
-startgroup
-set_property package_pin C2 [get_ports FlashVpen]
-endgroup
-startgroup
-set_property package_pin D4 [get_ports FlashWE]
-endgroup
-save_constraints
+Phase 0 | Netlist Checksum: 4ea6e951
+link_design: Time (s): elapsed = 00:00:10 . Memory (MB): peak = 493.387 ; gain = 101.375
 exit
 ERROR: [PlanAhead 12-106] *** Exception: ui.h.b: Found deleted key in HTclEventBroker. Verify if the classes listed here call cleanup()
 HTclEvent: SIGNAL_MODIFY   Classes: ui.views.aR 
-HTclEvent: SIGNAL_BUS_MODIFY   Classes: ui.views.aR 
-HTclEvent: DEBUG_PORT_CONFIG_CHANGE   Classes: ui.views.aR 
 HTclEvent: DEBUG_CORE_CONFIG_CHANGE   Classes: ui.views.aR 
- (See D:/jjj/SAOestCPU\planAhead_pid8768.debug)
+HTclEvent: DEBUG_PORT_CONFIG_CHANGE   Classes: ui.views.aR 
+HTclEvent: SIGNAL_BUS_MODIFY   Classes: ui.views.aR 
+ (See D:/jjj/SAOestCPU\planAhead_pid8304.debug)
 ERROR: [Common 17-39] 'stop_gui' failed due to earlier errors.
-INFO: [Common 17-206] Exiting PlanAhead at Thu Dec 07 00:17:26 2017...
+INFO: [Common 17-206] Exiting PlanAhead at Thu Dec 07 15:28:00 2017...
 INFO: [Common 17-83] Releasing license: PlanAhead
