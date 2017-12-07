@@ -109,6 +109,7 @@ component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
            clk_50M : in STD_LOGIC;
            clk_11M : in STD_LOGIC;
+           clk_CPU : in STD_LOGIC;
            rst : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -200,7 +201,7 @@ signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
 signal s_clk_CPU : STD_LOGIC;
-signal s_clk_VGA : STD_LOGIC;
+signal clk_half : STD_LOGIC;
 
 signal clk_for_cpu : STD_LOGIC;
 signal clk_dump : STD_LOGIC;
@@ -228,14 +229,16 @@ begin
         seg => DYP2
 	);
 
-	Inst_ClockGen: ClockGen PORT MAP(
-		CLKIN_IN => clk_11M,
-		RST_IN => not rst,
-		CLKFX_OUT => clk_fx,
-		CLKIN_IBUFG_OUT => clk_bufg,
-		CLK0_OUT => clk_origin,
-		CLK2X_OUT => clk_double
-	);
+	-- Inst_ClockGen: ClockGen PORT MAP(
+	-- 	CLKIN_IN => clk_11M,
+	-- 	RST_IN => not rst,
+	-- 	CLKFX_OUT => clk_fx,
+	-- 	CLKIN_IBUFG_OUT => clk_bufg,
+	-- 	CLK0_OUT => clk_origin,
+	-- 	CLK2X_OUT => clk_double
+	-- );
+
+    clk_origin <= clk_11M;
 
     c_CPU : CPU port map (
         clk => s_clk_CPU,
@@ -270,6 +273,7 @@ begin
         clk_PS2 => clk_PS2,
         clk_11M => clk_origin,
         clk_50M => clk_50M,
+        clk_CPU => s_clk_CPU,
         rst => rst,
 
         IOType => s_IOType,
@@ -333,11 +337,11 @@ begin
 
     with Switch (15 downto 14) select
     s_clk_CPU <=  clk_origin when "01",
-                clk_fx when "10",
+                clk_half when "10",
 				clk_manual when "00",
                 '0' when others;
 
-	-- s_clk_VGA <= clk_50M; -- TODO: need 25M
+	-- clk_half <= clk_50M; -- TODO: need 25M
 
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
@@ -358,14 +362,15 @@ begin
         end if;
     end process;
 
-    process(clk_dump, rst)
+	process(clk_origin, rst)
     begin
         if (rst = '0') then
-            s_clk_VGA <= '0';
-        elsif (clk_dump'event and clk_dump = '1') then
-            s_clk_VGA <= not s_clk_VGA;
+            clk_half <= '0';
+        elsif (clk_origin'event and clk_origin = '1') then
+            clk_half <= not clk_half;
         end if;
     end process;
+
 
 end Behavioral;
 

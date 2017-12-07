@@ -36,6 +36,7 @@ entity IOBridge is
         clk_PS2 : in  STD_LOGIC;
         clk_50M : in STD_LOGIC;
         clk_11M : in STD_LOGIC;
+        clk_CPU : in STD_LOGIC;
         rst : in  STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -92,6 +93,9 @@ component Memory is
         WE : in STD_LOGIC;
         RE : in STD_LOGIC;
         EN : in STD_LOGIC;
+
+        clk : in STD_LOGIC;
+        rst : in STD_LOGIC;
 
         -- connect to SRAM on board
         SRAM_EN : out  STD_LOGIC;
@@ -209,6 +213,8 @@ begin
         WE => s_DataMemWE,
         RE => s_DataMemRE,
         EN => s_DataMemEN,
+        clk => clk_CPU,
+        rst => rst,
 
         -- connect to SRAM1 on board
         SRAM_EN => SRAM1_EN,
@@ -226,6 +232,8 @@ begin
         WE => s_InstMemWE,
         RE => s_InstMemRE,
         EN => s_InstMemEN,
+        clk => clk_CPU,
+        rst => rst,
 
         -- connect to SRAM1 on board
         SRAM_EN => SRAM2_EN,
@@ -264,7 +272,7 @@ begin
     c_key: KeyboardAdapter port map (
         PS2Data => PS2_DATA, -- PS2 data
         PS2Clock => clk_PS2, -- PS2 clk
-        Clock => clk_11M,
+        Clock => clk_50M,
         Reset => rst,
         DataReceive => s_PS2_datareceive,
         DataReady => s_PS2_data_ready,  -- data output enable signal
@@ -454,14 +462,40 @@ begin
 
     ------------------------COM-----------------------------
 
-    BF01(0) <= COM_tsre and COM_tbre;
-	BF01(1) <= COM_data_ready;
-	BF01(15 downto 2) <= (others=>'0');
+    -- set_com: process (clk_CPU, rst)
+    -- begin
+    --     if rst = '0' then
+    --         COM_wrn <= '1';
+    --         COM_rdn <= '1';
+    --     elsif clk_CPU'event and clk_CPU = '0' then  -- falling
+    --         if IOAddr = x"BF00" then
+    --             COM_wrn <= not IO_WE;
+    --             COM_rdn <= not IO_RE;
+    --         else
+    --             COM_wrn <= '1';
+    --             COM_rdn <= '1';
+    --         end if;
+    --     end if;
+    -- end process;
 
     COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
 	COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
 
-    BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
+    get_com: process (clk_CPU, rst)
+    begin
+        if rst = '0' then
+            BF01(0) <= '0';
+            BF01(1) <= '0';
+            BF00 <= (others=>'Z');    -- DATA from BUS
+        elsif clk_CPU'event and clk_CPU = '0' then  -- falling
+            BF01(0) <= COM_tsre and COM_tbre;
+            BF01(1) <= COM_data_ready;
+            BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
+        end if;
+    end process;
+
+	BF01(15 downto 2) <= (others=>'0');
+
 
     ------------------------PS2-----------------------------
 
@@ -471,7 +505,7 @@ begin
 	BF03(15 downto 1) <= (others=>'0');
 
     -- s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
-    s_PS2_datareceive <= '0' when (IOAddr = x"BF02") else '1';
+    s_PS2_datareceive <= not IO_RE when (IOAddr = x"BF02") else '1';
 
     BF02 <= "00000000" & s_PS2_data;
 
