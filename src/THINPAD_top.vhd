@@ -110,10 +110,13 @@ component CPU
 end component;
 
 component IOBridge
-    Port ( clk_PS2 : in  STD_LOGIC;
+    Port (
+        clk_PS2 : in  STD_LOGIC;
         clk_VGA : in  STD_LOGIC;
-        clk_CPU : in STD_LOGIC;
+        clk_IO : in STD_LOGIC;
         rst : in  STD_LOGIC;
+
+        clk_CPU : out STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
@@ -150,14 +153,14 @@ component IOBridge
 		   );
 end component;
 
-component ClockGen
-	Port(
-		CLKIN_IN : in std_logic;
-		RST_IN : in std_logic;
-		CLKFX_OUT : out std_logic;
-		CLK0_OUT : out std_logic
-		);
-	end component;
+-- component ClockGen
+-- 	Port(
+-- 		CLKIN_IN : in std_logic;
+-- 		RST_IN : in std_logic;
+-- 		CLKFX_OUT : out std_logic;
+-- 		CLK0_OUT : out std_logic
+-- 		);
+-- 	end component;
 
 component Digit7 is
     Port ( num : in  STD_LOGIC_VECTOR (3 downto 0);
@@ -194,12 +197,25 @@ signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
+signal s_clk_IO : STD_LOGIC;
 signal s_clk_CPU : STD_LOGIC;
-signal s_clk_25M : STD_LOGIC;
+signal clk_half : STD_LOGIC;
 
-signal s_clk_div : STD_LOGIC;
-signal s_clk_50M : STD_LOGIC;
-signal s_clk_fx : STD_LOGIC;
+signal clk_for_cpu : STD_LOGIC;
+signal clk_dump : STD_LOGIC;
+signal clk_origin : STD_LOGIC;
+signal clk_double : STD_LOGIC;
+signal clk_fx : STD_LOGIC;
+signal clk_bufg : std_logic;
+
+signal clk_src1 : std_logic;
+signal clk_src2 : std_logic;
+signal clk_auto : std_logic;
+signal clk_ori_dbl : std_logic;
+
+SIGNAL s_clk_div : std_logic;
+SIGNAL s_clk_25M : std_logic;
+
 
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
@@ -218,15 +234,15 @@ begin
         seg => DYP2
 	);
 
-    c_ClockGen: ClockGen port map(
-		CLKIN_IN => clk_50M,
-		RST_IN => rst,
-		CLKFX_OUT => s_clk_fx,
-		CLK0_OUT => s_clk_50M
-	);
+    -- c_ClockGen: ClockGen port map(
+	-- 	CLKIN_IN => clk_50M,
+	-- 	RST_IN => rst,
+	-- 	CLKFX_OUT => s_clk_fx,
+	-- 	CLK0_OUT => s_clk_50M
+	-- );
 
     c_CPU : CPU port map (
-        clk_vga => s_clk_50M,
+        clk_vga => clk_50M,
         hs => VGA_HS,
         vs => VGA_VS,
         oRed => VGA_R,
@@ -262,8 +278,10 @@ begin
     );
 
     c_IOBridge : IOBridge port map (
+        clk_IO => s_clk_IO,
+
         clk_PS2 => clk_PS2,
-		clk_VGA => s_clk_25M,
+		clk_VGA => clk_half,
         clk_CPU => s_clk_CPU,
 
         rst => rst,
@@ -320,24 +338,32 @@ begin
 
 			 (others=>'0') when others;
 
-    with Switch (15 downto 14) select
-        s_clk_CPU <=    clk_manual when "00",
-                        s_clk_div when "01",
-                        s_clk_fx when "10",
-                        s_clk_50M when "11",
-                        '0' when others;
+    with Switch (15) select
+    s_clk_IO <=  clk_auto when '1',
+				clk_manual when '0',
+                '0' when others;
+
+    with Switch (14) select
+    clk_auto <=  clk_ori_dbl when '1',
+				clk_for_cpu when '0',
+                '0' when others;
+
+    with Switch (13) select
+    clk_ori_dbl <=  clk_11M when '1',
+				clk_half when '0',
+                '0' when others;
 
     s_DebugNum1 <= '0' & s_IOType;
     s_DebugNum2 <= s_Logger2;
 
     FreqDiv <= to_integer(unsigned(Switch(13 downto 8)));
 
-    process(s_clk_50M, rst)
+    process(clk_11M, rst)
     begin
         if (rst = '0') then
             s_clk_div <= '0';
             counter <= 0;
-        elsif (s_clk_50M'event and s_clk_50M = '1') then
+        elsif (clk_11M'event and clk_11M = '1') then
             counter <= counter + 1;
             if counter = FreqDiv then
                 s_clk_div <= not s_clk_div;
@@ -346,11 +372,11 @@ begin
         end if;
     end process;
 
-    process(s_clk_50M, rst)
+    process(clk_11M, rst)
     begin
         if (rst = '0') then
             s_clk_25M <= '0';
-        elsif (s_clk_50M'event and s_clk_50M = '1') then
+        elsif (clk_11M'event and clk_11M = '1') then
             s_clk_25M <= not s_clk_25M;
         end if;
     end process;
