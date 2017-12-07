@@ -259,7 +259,7 @@ begin
         addra => s_GraphicMemAddrIn,    -- wr addr
         dina => s_GraphicMemDataIn,     -- wr data
 
-        clkb => clk_IO,
+        clkb => clk_50M,
         enb => '1',     -- 1 means enabled
         addrb => s_VGA_Addr,    -- vga read addr
         doutb => s_GraphicMemDataOut
