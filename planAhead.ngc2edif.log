@@ -406,3 +406,24 @@ Processing design ...
 Writing EDIF netlist file font.edif ...
 ngc2edif: Total memory usage is 114880 kilobytes
 
+Release 14.7 - ngc2edif P.20131013 (nt)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+Reading design THINPAD_top.ngc ...
+WARNING:NetListWriters:298 - No output is written to THINPAD_top.xncf, ignored.
+Processing design ...
+   Preping design's networks ...
+   Preping design's macros ...
+WARNING:NetListWriters:306 - Signal bus Mcompar_FlashTimer_cmp_lt0000_lut<10 :
+   1> on block THINPAD_top is not reconstructed, because there are some missing
+   bus signals.
+WARNING:NetListWriters:306 - Signal bus c_CPU/ex_ALURes<15 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus c_IOBridge/IOState<4 : 0> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+WARNING:NetListWriters:306 - Signal bus
+   c_IOBridge/Msub_s_GraphicMemAddr_16_addsub0000_Madd_cy<10 : 7> on block
+   THINPAD_top is not reconstructed, because there are some missing bus signals.
+  finished :Prep
+Writing EDIF netlist file THINPAD_top.edif ...
+ngc2edif: Total memory usage is 117440 kilobytes
+

@@ -87,9 +87,6 @@ architecture Behavioral of THINPAD_top is
 
 component CPU
     Port (
-           clk_vga : in std_logic;
-           hs, vs : out std_logic;
-           oRed, oGreen, oBlue : out std_logic_vector(2 downto 0);
 
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
@@ -261,15 +258,6 @@ begin
         seg => DYP2
 	);
 
-	Inst_ClockGen: ClockGen PORT MAP(
-		CLKIN_IN => clk_11M,
-		RST_IN => not rst,
-		CLKFX_OUT => clk_fx,
-		CLKIN_IBUFG_OUT => clk_bufg,
-		CLK0_OUT => clk_origin,
-		CLK2X_OUT => clk_double
-	);
-
     c_CPU : CPU port map (
         clk => s_clk_CPU,
         rst => rst,
@@ -301,7 +289,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-        clk_11M => clk_origin,
+        clk_11M => clk_11M,
         clk_50M => clk_50M,
         rst => rst,
 
@@ -367,8 +355,7 @@ begin
 			 (others=>'0') when others;
 
     with Switch (15 downto 14) select
-    s_clk_CPU <=  clk_origin when "01",
-                clk_fx when "10",
+    s_clk_CPU <=  clk_for_cpu when "01",
 				clk_manual when "00",
                 '0' when others;
 
@@ -377,7 +364,7 @@ begin
     s_DebugNum1 <= '0' & FlashIOType;
     -- s_DebugNum2 <= s_Logger2;
 
-	FreqDiv <= to_integer(unsigned(Switch(13 downto 8)));
+	FreqDiv <= conv_integer(unsigned(Switch(13 downto 8)));
 
     process(clk_11M, rst)
     begin

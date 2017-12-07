@@ -264,7 +264,7 @@ begin
     c_key: KeyboardAdapter port map (
         PS2Data => PS2_DATA, -- PS2 data
         PS2Clock => clk_PS2, -- PS2 clk
-        Clock => clk_11M,
+        Clock => clk_50M,
         Reset => rst,
         DataReceive => s_PS2_datareceive,
         DataReady => s_PS2_data_ready,  -- data output enable signal
