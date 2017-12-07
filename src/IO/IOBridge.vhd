@@ -36,6 +36,7 @@ entity IOBridge is
         clk_PS2 : in  STD_LOGIC;
         clk_VGA : in  STD_LOGIC;
         clk_IO : in STD_LOGIC;
+		clk_50M : in STD_LOGIC;
         rst : in  STD_LOGIC;
 
         clk_CPU : out STD_LOGIC;
@@ -252,13 +253,13 @@ begin
     );
 
     c_GraphicMem: DualRAM port map (
-        clka => clk_50M,
+        clka => clk_IO,
         ena => '1',     -- 1 means enabled
         wea => s_GraphicMemWE,     -- write port
         addra => s_GraphicMemAddrIn,    -- wr addr
         dina => s_GraphicMemDataIn,     -- wr data
 
-        clkb => clk_50M,
+        clkb => clk_IO,
         enb => '1',     -- 1 means enabled
         addrb => s_VGA_Addr,    -- vga read addr
         doutb => s_GraphicMemDataOut
@@ -309,7 +310,7 @@ begin
     
     ----------------------------------------------
     -- get 25M clk for vga
-    clk_vga: process(clk_50M, rst)
+    vga: process(clk_50M, rst)
     begin
         if (rst = '0') then
             s_clk_VGA <= '0';

@@ -122,6 +122,7 @@ component IOBridge
         clk_PS2 : in  STD_LOGIC;
         clk_VGA : in  STD_LOGIC;
         clk_IO : in STD_LOGIC;
+		clk_50M : in STD_LOGIC;
         rst : in  STD_LOGIC;
 
         clk_CPU : out STD_LOGIC;
@@ -204,6 +205,7 @@ signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
+signal s_clk_VGA : STD_LOGIC;
 signal s_clk_IO : STD_LOGIC;
 signal s_clk_CPU : STD_LOGIC;
 signal clk_half : STD_LOGIC;
@@ -290,7 +292,7 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_IO => s_clk_IO,
-
+		clk_50M => clk_50M,
         clk_PS2 => clk_PS2,
     	clk_VGA => clk_half,
         clk_CPU => s_clk_CPU,
