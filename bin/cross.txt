@@ -1,0 +1,103 @@
+INIT:
+    LI R0 0x28 ; centerx
+    SW_SP R0 0x0001
+    LI R0 0x1e ; centery
+    SW_SP R0 0x0002
+
+START:
+    ; paint
+    LW_SP R0 0x0001 ;R0 = x
+    LW_SP R1 0x0002 ;R1 = y
+
+    LI R4 0x00ed
+    SLL R4 R4 0x0000
+    ADDIU R4 0x0040
+    ADDU R4 R0 R4
+    LI R2 0x0050
+
+UPDATECENTER:
+    ADDU R2 R4 R4
+    ADDIU R1 0xffff
+    BNEZ R1 UPDATECENTER
+    NOP
+
+    LI R5 0x0005
+
+KEEPDRAW:
+    LI R3 0x00ff
+    SW R4 R3 0x0000
+    ADDIU R4 0x0050
+    ADDIU R5 0xffff
+    BNEZ R5 KEEPDRAW
+    NOP
+
+
+    ; Wait for keyboard
+    MFPC R4
+    ADDIU R4 0x0003
+    NOP
+    B TESTKEYBOARD
+    NOP
+    LI R5 0x00BF
+    SLL R5 R5 0x0000
+    ADDIU R5 0x0002
+    LW R5 R3 0x0002
+
+    LI R0 0x004A
+    CMP R0 R3
+    BTEQZ GOUP ; find the 'w' key to go up
+    NOP
+
+    LI R0 0x004A
+    CMP R0 R3
+    BTEQZ GODOWN ; find the 's' key to go down
+    NOP
+
+    LI R0 0x004A
+    CMP R0 R3
+    BTEQZ GOLEFT ; find the 'a' key to go left
+    NOP
+
+    LI R0 0x004A
+    CMP R0 R3
+    BTEQZ GORIGHT ; find the 'd' key to go right
+    NOP
+
+GOUP:
+    LW_SP R0 0x0002
+    ADDIU R0 0xffff
+    SW_SP R0 0x0002
+    B START
+    NOP
+GODOWN:
+    LW_SP R0 0x0002
+    ADDIU R0 0x0001
+    SW_SP R0 0x0002
+    B START
+    NOP
+GOLEFT:
+    LW_SP R0 0x0001
+    ADDIU R0 0xffff
+    SW_SP R0 0x0001
+    B START
+    NOP
+GORIGHT:
+    LW_SP R0 0x0001
+    ADDIU R0 0x0001
+    SW_SP R0 0x0001
+    B START
+    NOP
+
+
+TESTKEYBOARD:
+	NOP
+	LI R5 0x00BF
+	SLL R5 R5 0x0000
+	ADDIU R5 0x0003
+	LW R5 R0 0x0000
+	LI R5 0x0001
+	AND R0 R5
+	BEQZ R0 TESTKEYBOARD   ;BF01&1=0  则等待
+	NOP
+	JR R4
+	NOP

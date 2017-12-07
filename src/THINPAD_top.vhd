@@ -354,10 +354,9 @@ begin
 
 			 (others=>'0') when others;
 
-    with Switch (15 downto 14) select
-    s_clk_CPU <=  clk_for_cpu when "01",
-				clk_manual when "00",
-                '0' when others;
+    with Switch (15) select
+    s_clk_CPU <=  clk_for_cpu when '1',
+				clk_manual when others;
 
 	-- s_clk_VGA <= clk_50M; -- TODO: need 25M
 
