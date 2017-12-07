@@ -1,0 +1,146 @@
+#-----------------------------------------------------------
+# PlanAhead v14.2
+# Build 194362 by xbuild on Fri Jul 20 18:52:36 MDT 2012
+# Start of session at: Fri Dec 08 04:16:22 2017
+# Process ID: 30992
+# Log file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_1/planAhead.log
+# Journal file: C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+start_gui
+source C:/Users/Liyf/Desktop/CO/proj/THINPAD/SAOestCPU/pa.fromNetlist.tcl
+startgroup
+set_property package_pin T2 [get_ports {FlashAddr[0]}]
+endgroup
+startgroup
+set_property package_pin T1 [get_ports {FlashAddr[1]}]
+endgroup
+startgroup
+set_property package_pin R3 [get_ports {FlashAddr[2]}]
+endgroup
+startgroup
+set_property package_pin R2 [get_ports {FlashAddr[3]}]
+endgroup
+startgroup
+set_property package_pin P4 [get_ports {FlashAddr[4]}]
+endgroup
+startgroup
+set_property package_pin P3 [get_ports {FlashAddr[5]}]
+endgroup
+startgroup
+set_property package_pin P2 [get_ports {FlashAddr[6]}]
+endgroup
+startgroup
+set_property package_pin P1 [get_ports {FlashAddr[7]}]
+endgroup
+startgroup
+set_property package_pin N5 [get_ports {FlashAddr[8]}]
+endgroup
+startgroup
+set_property package_pin N4 [get_ports {FlashAddr[9]}]
+endgroup
+startgroup
+set_property package_pin M6 [get_ports {FlashAddr[10]}]
+endgroup
+startgroup
+set_property package_pin M5 [get_ports {FlashAddr[11]}]
+endgroup
+startgroup
+set_property package_pin M4 [get_ports {FlashAddr[12]}]
+endgroup
+startgroup
+set_property package_pin M3 [get_ports {FlashAddr[13]}]
+endgroup
+startgroup
+set_property package_pin L6 [get_ports {FlashAddr[14]}]
+endgroup
+startgroup
+set_property package_pin L5 [get_ports {FlashAddr[15]}]
+endgroup
+startgroup
+set_property package_pin L4 [get_ports {FlashAddr[16]}]
+endgroup
+startgroup
+set_property package_pin L3 [get_ports {FlashAddr[17]}]
+endgroup
+startgroup
+set_property package_pin L2 [get_ports {FlashAddr[18]}]
+endgroup
+startgroup
+set_property package_pin L1 [get_ports {FlashAddr[19]}]
+endgroup
+startgroup
+set_property package_pin K6 [get_ports {FlashAddr[20]}]
+endgroup
+startgroup
+set_property package_pin K5 [get_ports {FlashAddr[21]}]
+endgroup
+startgroup
+set_property package_pin K4 [get_ports {FlashAddr[22]}]
+endgroup
+startgroup
+set_property package_pin J5 [get_ports {FlashData[0]}]
+endgroup
+startgroup
+set_property package_pin J4 [get_ports {FlashData[1]}]
+endgroup
+startgroup
+set_property package_pin J2 [get_ports {FlashData[2]}]
+endgroup
+startgroup
+set_property package_pin J1 [get_ports {FlashData[3]}]
+endgroup
+startgroup
+set_property package_pin H6 [get_ports {FlashData[4]}]
+endgroup
+startgroup
+set_property package_pin H5 [get_ports {FlashData[5]}]
+endgroup
+startgroup
+set_property package_pin H4 [get_ports {FlashData[6]}]
+endgroup
+startgroup
+set_property package_pin H3 [get_ports {FlashData[7]}]
+endgroup
+startgroup
+set_property package_pin H2 [get_ports {FlashData[8]}]
+endgroup
+startgroup
+set_property package_pin H1 [get_ports {FlashData[9]}]
+endgroup
+startgroup
+set_property package_pin G6 [get_ports {FlashData[10]}]
+endgroup
+startgroup
+set_property package_pin G5 [get_ports {FlashData[11]}]
+endgroup
+startgroup
+set_property package_pin G4 [get_ports {FlashData[12]}]
+endgroup
+startgroup
+set_property package_pin G3 [get_ports {FlashData[13]}]
+endgroup
+startgroup
+set_property package_pin F2 [get_ports {FlashData[14]}]
+endgroup
+startgroup
+set_property package_pin F1 [get_ports {FlashData[15]}]
+endgroup
+startgroup
+set_property package_pin C1 [get_ports FlashByte]
+endgroup
+startgroup
+set_property package_pin E4 [get_ports FlashCE]
+endgroup
+startgroup
+set_property package_pin E1 [get_ports FlashOE]
+endgroup
+startgroup
+set_property package_pin D1 [get_ports FlashRP]
+endgroup
+startgroup
+set_property package_pin C2 [get_ports FlashVpen]
+endgroup
+startgroup
+set_property package_pin D4 [get_ports FlashWE]
+endgroup
+save_design

@@ -7,7 +7,7 @@
 -- \   \   \/     Version : 14.2
 --  \   \         Application : xaw2vhdl
 --  /   /         Filename : ClockGen.vhd
--- /___/   /\     Timestamp : 12/08/2017 02:34:31
+-- /___/   /\     Timestamp : 12/08/2017 04:15:46
 -- \   \  /  \ 
 --  \___\/\___\ 
 --

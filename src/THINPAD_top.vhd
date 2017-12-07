@@ -296,27 +296,27 @@ begin
     );
 
     c_IOBridge : IOBridge port map (
-        clk_IO => s_clk_IO,
+        clk_IO => Flash_clk_IO,
 		clk_50M => clk_origin,
         clk_PS2 => clk_PS2,
         clk_CPU => s_clk_CPU,
 
         rst => rst,
 
-        IOType => s_IOType,
-        IO_WE => s_IO_WE,
-        IO_RE => s_IO_RE,
-        -- IOType => FlashIOType,
-        -- IO_WE => FlashIO_WE,
-        -- IO_RE => FlashIO_RE,
+        -- IOType => s_IOType,
+        -- IO_WE => s_IO_WE,
+        -- IO_RE => s_IO_RE,
+        IOType => FlashIOType,
+        IO_WE => FlashIO_WE,
+        IO_RE => FlashIO_RE,
 
         InstAddr => s_InstAddr,
         InstOut => s_Inst,
 
-        -- IOAddr => FlashBootMemAddr,
-        -- IODataIn => FlashReadData,
-        IOAddr => s_IOAddr,
-        IODataIn => s_IODataCPU2Bridge,
+        IOAddr => FlashBootMemAddr,
+        IODataIn => FlashReadData,
+        --IOAddr => s_IOAddr,
+        --IODataIn => s_IODataCPU2Bridge,
         IODataOut => s_IODataBridge2CPU,
 
         SRAM1_EN => SRAM1_EN,
@@ -362,6 +362,7 @@ begin
              s_Logger16_8 when "00001100",
              s_Logger16_9 when "00001101",
              s_Logger16_10 when "00001110",
+             FlashReadData when "11111111",
 			 (others=>'0') when others;
 
     with Switch (15) select
@@ -398,11 +399,11 @@ begin
     --     end if;
     -- end process;
 
-    -- with clk_selector select
-    --     Flash_clk_IO <= clk_11M when '0',
-    --                     s_clk_IO when others;
+    with clk_selector select
+        Flash_clk_IO <= clk_11M when '0',
+                        s_clk_IO when others;
 
-    flash_boot: process(clk_11M, rst)
+    flash_boot: process(Flash_clk_IO, rst)
     begin
         if(rst_manual = '1') then
            FlashIOType <= s_IOType;
@@ -410,17 +411,17 @@ begin
            FlashIO_RE <= s_IO_RE;
            FlashBootMemAddr <= s_IOAddr;
            FlashReadData <= s_IODataCPU2Bridge;
-        --    clk_selector <= '1';
+           clk_selector <= '1';
         elsif (rst = '0') then
             state <= BOOT_START;
             s_DebugNum2 <= "0000";
-            -- clk_selector <= '0';
-        elsif (clk_11M'event and clk_11M = '1') then
+            clk_selector <= '0';
+        elsif (Flash_clk_IO'event and Flash_clk_IO = '1') then
         if(FlashTimer = 1000) then
             FlashTimer := 0;
             case state is
                 when BOOT =>
-                    -- clk_selector <= '1';
+                    clk_selector <= '1';
 					state <= BOOT;
                     s_DebugNum2 <= "1000";
 				when BOOT_START =>
