@@ -55,7 +55,7 @@ begin
     IsPS2 <= '1' when (AddrIn = x"BF02") else '0';    --  0XBF02
     IsInstMem <= '1' when ((AddrIn >= x"4000") and (AddrIn < x"8000")) else '0';    -- [0X4000, 0X7FFF]
     IsGraphicMem <= '1' when ((AddrIn >= x"ED40") and (AddrIn < x"10000")) else '0';    -- [0XED40, 0XFFFF]
-    IsDataMem <= '1' when (((AddrIn >= x"8000") and (AddrIn < x"BF00")) or ((AddrIn >= x"BF10") and (AddrIn < x"ED40"))) else '0';
+    IsDataMem <= '1' when (((AddrIn >= x"8000") and (AddrIn < x"BF00")) or ((AddrIn >= x"BF04") and (AddrIn < x"ED40"))) else '0';
 
     WillIO <= MemRd or MemWr;
 

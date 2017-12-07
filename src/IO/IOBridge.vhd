@@ -34,7 +34,6 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity IOBridge is
     Port (
         clk_PS2 : in  STD_LOGIC;
-        clk_VGA : in  STD_LOGIC;
         clk_IO : in STD_LOGIC;
 		clk_50M : in STD_LOGIC;
         rst : in  STD_LOGIC;
@@ -78,8 +77,7 @@ entity IOBridge is
         VGA_HS : out  STD_LOGIC;
         VGA_VS : out  STD_LOGIC;
 
-        PS2_DATA : in  STD_LOGIC;
-        debugger : out std_logic
+        PS2_DATA : in  STD_LOGIC
     );
 end IOBridge;
 
@@ -192,7 +190,6 @@ signal BF00 : STD_LOGIC_VECTOR (15 downto 0);
 signal BF02 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_PS2_data_ready : std_logic;
-signal s_PS2_wrn : std_logic;
 signal s_PS2_data : std_logic_vector (7 downto 0);
 signal s_PS2_datareceive : std_logic;
 
@@ -306,8 +303,8 @@ begin
             end case;
         end if;
     end process;
-    
-    
+
+
     ----------------------------------------------
     -- get 25M clk for vga
     vga: process(clk_50M, rst)
@@ -318,7 +315,7 @@ begin
             s_clk_VGA <= not s_clk_VGA;
         end if;
     end process;
-    
+
 
     -- timing state
     timing_state_ctrl: process (rst, clk_IO)
@@ -520,9 +517,6 @@ begin
         end if;
     end process;
 
-    -- COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
-	-- COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
-
 	BF01(15 downto 2) <= (others=>'0');
 
     get_com_flag: process (clk_IO, rst)
@@ -537,8 +531,6 @@ begin
     end process;
 
     ------------------------PS2-----------------------------
-
-    debugger <= s_PS2_data_ready;
 
 	BF03(0) <= s_PS2_data_ready;
 	BF03(15 downto 1) <= (others=>'0');

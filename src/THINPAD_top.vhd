@@ -87,7 +87,6 @@ architecture Behavioral of THINPAD_top is
 
 component CPU
     Port (
-
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
 
@@ -120,7 +119,6 @@ end component;
 component IOBridge
     Port (
         clk_PS2 : in  STD_LOGIC;
-        clk_VGA : in  STD_LOGIC;
         clk_IO : in STD_LOGIC;
 		clk_50M : in STD_LOGIC;
         rst : in  STD_LOGIC;
@@ -158,14 +156,13 @@ component IOBridge
         COM_tbre : in  STD_LOGIC;
         COM_tsre : in  STD_LOGIC;
 
-           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_HS : out  STD_LOGIC;
-           VGA_VS : out  STD_LOGIC;
+        VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_HS : out  STD_LOGIC;
+        VGA_VS : out  STD_LOGIC;
 
-           PS2_DATA : in  STD_LOGIC;
-           debugger : out std_logic
+        PS2_DATA : in  STD_LOGIC
         );
 end component;
 
@@ -173,6 +170,16 @@ component Digit7 is
     Port ( num : in  STD_LOGIC_VECTOR (3 downto 0);
            seg : out  STD_LOGIC_VECTOR (6 downto 0));
 end component;
+
+COMPONENT ClockGen
+	PORT(
+		CLKIN_IN : IN std_logic;
+		RST_IN : IN std_logic;
+		CLKFX_OUT : OUT std_logic;
+		CLKIN_IBUFG_OUT : OUT std_logic;
+		CLK0_OUT : OUT std_logic
+		);
+END COMPONENT;
 
 --------------signal--------------------
 
@@ -205,36 +212,34 @@ signal s_IODataBridge2CPU : STD_LOGIC_VECTOR (15 downto 0);
 signal s_IO_WE : STD_LOGIC;
 signal s_IO_RE : STD_LOGIC;
 
-signal s_clk_VGA : STD_LOGIC;
 signal s_clk_IO : STD_LOGIC;
 signal s_clk_CPU : STD_LOGIC;
-signal clk_half : STD_LOGIC;
 
 signal s_clk_div : STD_LOGIC;
-signal clk_dump : STD_LOGIC;
 signal clk_origin : STD_LOGIC;
-signal clk_double : STD_LOGIC;
 signal clk_fx : STD_LOGIC;
-signal clk_bufg : std_logic;
+signal clk_bufg : STD_LOGIC;
 
-signal clk_auto : std_logic;
-signal clk_ori_dbl : std_logic;
-signal keyboard_dataready : std_logic;
+signal clk_auto : STD_LOGIC;
+signal clk_ori_dbl : STD_LOGIC;
 
-signal counter : INTEGER range 0 to 1024000 := 0;
-signal FreqDiv : INTEGER range 0 to 1024000 := 0;
+-- signal counter : INTEGER range 0 to 1024000 := 0;
+-- signal FreqDiv : INTEGER range 0 to 1024000 := 0;
 
-signal FlashBootMemAddr : std_logic_vector(15 downto 0);
+signal FlashBootMemAddr : STD_LOGIC_VECTOR(15 downto 0);
 
 shared variable FlashTimer : integer := 0;
-signal FlashReadData : std_logic_vector(15 downto 0);
+signal FlashReadData : STD_LOGIC_VECTOR(15 downto 0);
 
-signal FlashIOType : std_logic_vector(2 downto 0);
-signal FlashIO_WE : std_logic;
-signal FlashIO_RE : std_logic;
-signal rst_manual : std_logic := '0';
+signal FlashIOType : STD_LOGIC_VECTOR(2 downto 0);
+signal FlashIO_WE : STD_LOGIC;
+signal FlashIO_RE : STD_LOGIC;
+signal Flash_clk_IO : STD_LOGIC;
+signal rst_manual : STD_LOGIC := '0';
 
-signal current_addr : std_logic_vector(15 downto 0) := (others => '0');	--flash当前要读的地址
+signal clk_selector : STD_LOGIC := '0';
+
+signal current_addr : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');	--flash当前要读的地址
 
 type STATE_TYPE is (BOOT, BOOT_START, BOOT_FLASH, BOOT_FLASH2, BOOT_FLASH3, BOOT_FLASH4, BOOT_RAM, BOOT_COMPLETE);
 signal state : STATE_TYPE;
@@ -251,6 +256,14 @@ begin
     c_DYP2: Digit7 port map (
 		num => s_DebugNum2,
         seg => DYP2
+	);
+
+	c_ClockGen: ClockGen PORT MAP(
+		CLKIN_IN => clk_50M,
+		RST_IN => not rst,
+		CLKFX_OUT => clk_fx,
+		CLKIN_IBUFG_OUT => clk_bufg,
+		CLK0_OUT => clk_origin
 	);
 
     c_CPU : CPU port map (
@@ -284,9 +297,8 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_IO => s_clk_IO,
-		clk_50M => clk_50M,
+		clk_50M => clk_origin,
         clk_PS2 => clk_PS2,
-    	clk_VGA => clk_half,
         clk_CPU => s_clk_CPU,
 
         rst => rst,
@@ -331,8 +343,7 @@ begin
         VGA_HS => VGA_HS,
         VGA_VS => VGA_VS,
 
-        PS2_DATA => PS2_DATA,
-        debugger => keyboard_dataready
+        PS2_DATA => PS2_DATA
     );
 
     with Switch (7 downto 0) select
@@ -351,8 +362,6 @@ begin
              s_Logger16_8 when "00001100",
              s_Logger16_9 when "00001101",
              s_Logger16_10 when "00001110",
-             "000000000000000" & keyboard_dataready when "00001111",
-
 			 (others=>'0') when others;
 
     with Switch (15) select
@@ -361,115 +370,122 @@ begin
                 '0' when others;
 
     with Switch (14) select
-    clk_auto <=  s_clk_div when '1',
-				clk_ori_dbl when '0',
+    clk_auto <=  clk_ori_dbl when '1',
+				clk_fx when '0',
                 '0' when others;
 
     with Switch (13) select
     clk_ori_dbl <=  clk_11M when '1',
-				clk_50M when '0',
+				clk_origin when '0',
                 '0' when others;
 
     s_DebugNum1 <= '0' & FlashIOType;
     -- s_DebugNum2 <= s_Logger2;
 
-	FreqDiv <= conv_integer(unsigned(Switch(12 downto 8)));
+	-- FreqDiv <= conv_integer(unsigned(Switch(12 downto 8)));
 
-    process(clk_50M, rst)
-    begin
-        if (rst = '0') then
-            s_clk_div <= '0';
-            counter <= 0;
-        elsif (clk_50M'event and clk_50M = '1') then
-            counter <= counter + 1;
-            if counter = FreqDiv then
-                s_clk_div <= not s_clk_div;
-                counter <= 0;
-            end if;
-        end if;
-    end process;
-
-    -- flash_boot: process(s_clk_CPU, rst)
+    -- process(clk_origin, rst)
     -- begin
-    --     if(rst_manual = '1') then
-    --        FlashIOType <= s_IOType;
-    --        FlashIO_WE <= s_IO_WE;
-    --        FlashIO_RE <= s_IO_RE;
-    --        FlashBootMemAddr <= s_IOAddr;
-    --        FlashReadData <= s_IODataCPU2Bridge;
-    --     elsif (rst = '0') then
-    --         state <= BOOT_START;
-    --         s_DebugNum2 <= "0000";
-    --     elsif (s_clk_CPU'event and s_clk_CPU = '1') then
-    --     if(FlashTimer = 1000) then
-    --         FlashTimer := 0;
-    --         case state is
-    --             when BOOT =>
-	-- 				state <= BOOT;
-    --         s_DebugNum2 <= "1000";
-	-- 			when BOOT_START =>
-    --                 current_addr <= (others => '0');
-    --                 FlashWE <= '0';
-    --                 FlashOE <= '1';
-
-    --                 FlashByte <= '1';
-    --                 FlashVpen <= '1';
-    --                 FlashRP <= '1';
-    --                 FlashCE <= '0';
-
-    --                 state <= BOOT_FLASH;
-    --         s_DebugNum2 <= "0001";
-
-	-- 			when BOOT_FLASH =>
-	-- 				FlashData <= x"00FF";
-    --                 state <= BOOT_FLASH2;
-    --         s_DebugNum2 <= "0010";
-
-    --             when BOOT_FLASH2 =>
-    --                 FlashWE <= '1';
-    --                 state <= BOOT_FLASH3;
-    --         s_DebugNum2 <= "0011";
-
-    --             when BOOT_FLASH3 =>
-    --                 FlashAddr <= "000000" & current_addr & '0';
-	-- 				FlashData <= (others => 'Z');
-	-- 				FlashOE <= '0';
-    --                 state <= BOOT_FLASH4;
-    --         s_DebugNum2 <= "0100";
-
-    --             when BOOT_FLASH4 =>
-    --                 FlashReadData <= FlashData;
-    --                 FlashBootMemAddr <= current_addr;
-    --                 FlashIOType <= "001";
-    --                 FlashIO_WE <= '1';
-    --                 FlashIO_RE <= '0';
-    --                 state <= BOOT_RAM;
-    --         s_DebugNum2 <= "0101";
-
-	-- 			when BOOT_RAM =>
-    --                 FlashIO_WE <= '0';
-    --                 FlashIO_RE <= '0';
-	-- 				if (current_addr < x"0FFF") then
-	-- 					state <= BOOT_FLASH;
-	-- 				else
-	-- 					state <= BOOT_COMPLETE;
-	-- 				end if;
-    --                 current_addr <= current_addr + 1;
-    --         s_DebugNum2 <= "0110";
-
-	-- 			when BOOT_COMPLETE =>
-    --                 rst_manual <= '1';
-	-- 				state <= BOOT;
-    --         s_DebugNum2 <= "0111";
-
-    --             when others =>
-	-- 				state <= BOOT;
-    --         end case;
-    --         elsif (FlashTimer < 1000) then
-    --             FlashTimer := FlashTimer + 1;
+    --     if (rst = '0') then
+    --         s_clk_div <= '0';
+    --         counter <= 0;
+    --     elsif (clk_origin'event and clk_origin = '1') then
+    --         counter <= counter + 1;
+    --         if counter = FreqDiv then
+    --             s_clk_div <= not s_clk_div;
+    --             counter <= 0;
     --         end if;
     --     end if;
     -- end process;
+
+    -- with clk_selector select
+    --     Flash_clk_IO <= clk_11M when '0',
+    --                     s_clk_IO when others;
+
+    flash_boot: process(clk_11M, rst)
+    begin
+        if(rst_manual = '1') then
+           FlashIOType <= s_IOType;
+           FlashIO_WE <= s_IO_WE;
+           FlashIO_RE <= s_IO_RE;
+           FlashBootMemAddr <= s_IOAddr;
+           FlashReadData <= s_IODataCPU2Bridge;
+        --    clk_selector <= '1';
+        elsif (rst = '0') then
+            state <= BOOT_START;
+            s_DebugNum2 <= "0000";
+            -- clk_selector <= '0';
+        elsif (clk_11M'event and clk_11M = '1') then
+        if(FlashTimer = 1000) then
+            FlashTimer := 0;
+            case state is
+                when BOOT =>
+                    -- clk_selector <= '1';
+					state <= BOOT;
+                    s_DebugNum2 <= "1000";
+				when BOOT_START =>
+                    current_addr <= (others => '0');
+                    FlashWE <= '0';
+                    FlashOE <= '1';
+
+                    FlashByte <= '1';
+                    FlashVpen <= '1';
+                    FlashRP <= '1';
+                    FlashCE <= '0';
+
+                    state <= BOOT_FLASH;
+            s_DebugNum2 <= "0001";
+
+				when BOOT_FLASH =>
+					FlashData <= x"00FF";
+                    state <= BOOT_FLASH2;
+            s_DebugNum2 <= "0010";
+
+                when BOOT_FLASH2 =>
+                    FlashWE <= '1';
+                    state <= BOOT_FLASH3;
+            s_DebugNum2 <= "0011";
+
+                when BOOT_FLASH3 =>
+                    FlashAddr <= "000000" & current_addr & '0';
+					FlashData <= (others => 'Z');
+					FlashOE <= '0';
+                    state <= BOOT_FLASH4;
+            s_DebugNum2 <= "0100";
+
+                when BOOT_FLASH4 =>
+                    FlashReadData <= FlashData;
+                    FlashBootMemAddr <= current_addr;
+                    FlashIOType <= "001";
+                    FlashIO_WE <= '1';
+                    FlashIO_RE <= '0';
+                    state <= BOOT_RAM;
+            s_DebugNum2 <= "0101";
+
+				when BOOT_RAM =>
+                    FlashIO_WE <= '0';
+                    FlashIO_RE <= '0';
+					if (current_addr < x"0FFF") then
+						state <= BOOT_FLASH;
+					else
+						state <= BOOT_COMPLETE;
+					end if;
+                    current_addr <= current_addr + 1;
+            s_DebugNum2 <= "0110";
+
+				when BOOT_COMPLETE =>
+                    rst_manual <= '1';
+					state <= BOOT;
+            s_DebugNum2 <= "0111";
+
+                when others =>
+					state <= BOOT;
+            end case;
+            elsif (FlashTimer < 1000) then
+                FlashTimer := FlashTimer + 1;
+            end if;
+        end if;
+    end process;
 
 end Behavioral;
 
