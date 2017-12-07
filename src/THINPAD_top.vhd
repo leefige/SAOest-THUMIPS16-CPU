@@ -19,6 +19,8 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -66,6 +68,15 @@ entity THINPAD_top is
            VGA_HS : out  STD_LOGIC;
            VGA_VS : out  STD_LOGIC;
 
+           FlashByte : out std_logic;
+           FlashVpen : out std_logic;
+           FlashCE : out std_logic;
+           FlashOE : out std_logic;
+           FlashWE : out std_logic;
+           FlashRP : out std_logic;
+           FlashAddr : out std_logic_vector(22 downto 0);
+           FlashData : inout STD_LOGIC_VECTOR(15 downto 0);
+
            PS2_DATA : in  STD_LOGIC);
 
 end THINPAD_top;
@@ -76,9 +87,6 @@ architecture Behavioral of THINPAD_top is
 
 component CPU
     Port (
-           clk_vga : in std_logic;
-           hs, vs : out std_logic;
-           oRed, oGreen, oBlue : out std_logic_vector(2 downto 0);
 
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
@@ -149,18 +157,16 @@ component IOBridge
         COM_tbre : in  STD_LOGIC;
         COM_tsre : in  STD_LOGIC;
 
-        PS2_DATA : in  STD_LOGIC
-		   );
-end component;
+           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_HS : out  STD_LOGIC;
+           VGA_VS : out  STD_LOGIC;
 
--- component ClockGen
--- 	Port(
--- 		CLKIN_IN : in std_logic;
--- 		RST_IN : in std_logic;
--- 		CLKFX_OUT : out std_logic;
--- 		CLK0_OUT : out std_logic
--- 		);
--- 	end component;
+           PS2_DATA : in  STD_LOGIC;
+           debugger : out std_logic
+        );
+end component;
 
 component Digit7 is
     Port ( num : in  STD_LOGIC_VECTOR (3 downto 0);
@@ -185,6 +191,7 @@ signal s_Logger16_8 : STD_LOGIC_VECTOR (15 downto 0);
 signal s_Logger16_9 : STD_LOGIC_VECTOR (15 downto 0);
 signal s_Logger16_10 : STD_LOGIC_VECTOR (15 downto 0);
 signal s_Logger16_11 : STD_LOGIC_VECTOR (15 downto 0);
+signal s_Logger16_12 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_Inst : STD_LOGIC_VECTOR (15 downto 0);
 signal s_InstAddr : STD_LOGIC_VECTOR (15 downto 0);
@@ -212,6 +219,7 @@ signal clk_src1 : std_logic;
 signal clk_src2 : std_logic;
 signal clk_auto : std_logic;
 signal clk_ori_dbl : std_logic;
+signal keyboard_dataready : std_logic;
 
 SIGNAL s_clk_div : std_logic;
 SIGNAL s_clk_25M : std_logic;
@@ -219,6 +227,23 @@ SIGNAL s_clk_25M : std_logic;
 
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
+
+
+signal FlashBootMemAddr : std_logic_vector(15 downto 0);
+
+shared variable FlashTimer : integer := 0;
+signal FlashReadData : std_logic_vector(15 downto 0);
+
+signal FlashIOType : std_logic_vector(2 downto 0);
+signal FlashIO_WE : std_logic;
+signal FlashIO_RE : std_logic;
+signal rst_manual : std_logic := '0';
+
+
+signal current_addr : std_logic_vector(15 downto 0) := (others => '0');	--flash当前要读的地址
+
+type STATE_TYPE is (BOOT, BOOT_START, BOOT_FLASH, BOOT_FLASH2, BOOT_FLASH3, BOOT_FLASH4, BOOT_RAM, BOOT_COMPLETE);
+signal state : STATE_TYPE;
 
 --------------process-------------------
 
@@ -234,21 +259,7 @@ begin
         seg => DYP2
 	);
 
-    -- c_ClockGen: ClockGen port map(
-	-- 	CLKIN_IN => clk_50M,
-	-- 	RST_IN => rst,
-	-- 	CLKFX_OUT => s_clk_fx,
-	-- 	CLK0_OUT => s_clk_50M
-	-- );
-
     c_CPU : CPU port map (
-        clk_vga => clk_50M,
-        hs => VGA_HS,
-        vs => VGA_VS,
-        oRed => VGA_R,
-        oGreen => VGA_G,
-        oBlue => VGA_B,
-
         clk => s_clk_CPU,
         rst => rst,
 
@@ -281,20 +292,20 @@ begin
         clk_IO => s_clk_IO,
 
         clk_PS2 => clk_PS2,
-		clk_VGA => clk_half,
+    	clk_VGA => clk_half,
         clk_CPU => s_clk_CPU,
 
         rst => rst,
 
-        IOType => s_IOType,
-        IO_WE => s_IO_WE,
-        IO_RE => s_IO_RE,
+        IOType => FlashIOType,
+        IO_WE => FlashIO_WE,
+        IO_RE => FlashIO_RE,
 
         InstAddr => s_InstAddr,
         InstOut => s_Inst,
 
-        IOAddr => s_IOAddr,
-        IODataIn => s_IODataCPU2Bridge,
+        IOAddr => FlashBootMemAddr,
+        IODataIn => FlashReadData,
         IODataOut => s_IODataBridge2CPU,
 
         SRAM1_EN => SRAM1_EN,
@@ -315,7 +326,14 @@ begin
         COM_tbre => COM_tbre,
         COM_tsre => COM_tsre,
 
-        PS2_DATA => PS2_DATA
+        VGA_R => VGA_R,
+        VGA_G => VGA_G,
+        VGA_B => VGA_B,
+        VGA_HS => VGA_HS,
+        VGA_VS => VGA_VS,
+
+        PS2_DATA => PS2_DATA,
+        debugger => keyboard_dataready
     );
 
     with Switch (7 downto 0) select
@@ -334,7 +352,7 @@ begin
              s_Logger16_8 when "00001100",
              s_Logger16_9 when "00001101",
              s_Logger16_10 when "00001110",
-             s_Logger16_11 when "00001111",
+             "000000000000000" & keyboard_dataready when "00001111",
 
 			 (others=>'0') when others;
 
@@ -353,31 +371,113 @@ begin
 				clk_half when '0',
                 '0' when others;
 
-    s_DebugNum1 <= '0' & s_IOType;
-    s_DebugNum2 <= s_Logger2;
+    s_DebugNum1 <= '0' & FlashIOType;
+    -- s_DebugNum2 <= s_Logger2;
 
-    FreqDiv <= to_integer(unsigned(Switch(13 downto 8)));
+	FreqDiv <= conv_integer(unsigned(Switch(13 downto 8)));
 
     process(clk_11M, rst)
     begin
         if (rst = '0') then
-            s_clk_div <= '0';
+            clk_for_cpu <= '0';
             counter <= 0;
         elsif (clk_11M'event and clk_11M = '1') then
             counter <= counter + 1;
             if counter = FreqDiv then
-                s_clk_div <= not s_clk_div;
+                clk_for_cpu <= not clk_for_cpu;
                 counter <= 0;
             end if;
         end if;
     end process;
 
-    process(clk_11M, rst)
+    process(clk_dump, rst)
     begin
         if (rst = '0') then
-            s_clk_25M <= '0';
+            s_clk_VGA <= '0';
+        elsif (clk_dump'event and clk_dump = '1') then
+            s_clk_VGA <= not s_clk_VGA;
+        end if;
+    end process;
+
+    process(clk_11M, rst)
+    begin
+        if(rst_manual = '1') then
+           FlashIOType <= s_IOType;
+           FlashIO_WE <= s_IO_WE;
+           FlashIO_RE <= s_IO_RE;
+           FlashBootMemAddr <= s_IOAddr;
+           FlashReadData <= s_IODataCPU2Bridge;
+        elsif (rst = '0') then   
+            state <= BOOT_START;
+            s_DebugNum2 <= "0000";
         elsif (clk_11M'event and clk_11M = '1') then
-            s_clk_25M <= not s_clk_25M;
+        if(FlashTimer = 1000) then
+            FlashTimer := 0;
+            case state is
+                when BOOT =>        
+					state <= BOOT;
+            s_DebugNum2 <= "1000";
+				when BOOT_START =>
+                    current_addr <= (others => '0');
+                    FlashWE <= '0';
+                    FlashOE <= '1';
+                    
+                    FlashByte <= '1';
+                    FlashVpen <= '1';
+                    FlashRP <= '1';
+                    FlashCE <= '0';
+
+                    state <= BOOT_FLASH;
+            s_DebugNum2 <= "0001";
+                    
+				when BOOT_FLASH =>
+					FlashData <= x"00FF";
+                    state <= BOOT_FLASH2;
+            s_DebugNum2 <= "0010";
+                    
+                when BOOT_FLASH2 =>
+                    FlashWE <= '1';
+                    state <= BOOT_FLASH3;
+            s_DebugNum2 <= "0011";
+                    
+                when BOOT_FLASH3 =>
+                    FlashAddr <= "000000" & current_addr & '0';
+					FlashData <= (others => 'Z');
+					FlashOE <= '0';
+                    state <= BOOT_FLASH4;
+            s_DebugNum2 <= "0100";
+                    
+                when BOOT_FLASH4 =>
+                    FlashReadData <= FlashData;
+                    FlashBootMemAddr <= current_addr;
+                    FlashIOType <= "001";
+                    FlashIO_WE <= '1';
+                    FlashIO_RE <= '0';
+                    state <= BOOT_RAM;
+            s_DebugNum2 <= "0101";
+                    
+				when BOOT_RAM =>
+                    FlashIO_WE <= '0';
+                    FlashIO_RE <= '0';
+					if (current_addr < x"0FFF") then
+						state <= BOOT_FLASH;
+					else
+						state <= BOOT_COMPLETE;
+					end if;
+                    current_addr <= current_addr + 1;
+            s_DebugNum2 <= "0110";
+                    
+				when BOOT_COMPLETE =>
+                    rst_manual <= '1';
+					state <= BOOT;
+            s_DebugNum2 <= "0111";
+                    
+                when others =>
+					state <= BOOT;
+            end case;
+            elsif (FlashTimer < 1000) then
+                FlashTimer := FlashTimer + 1;
+            end if;
         end if;
     end process;
 

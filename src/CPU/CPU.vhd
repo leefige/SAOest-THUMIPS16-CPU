@@ -31,11 +31,6 @@ use ieee.std_logic_unsigned.all;
 
 entity CPU is
     Port (
-        -- vga
-           clk_vga : in std_logic;
-           hs, vs : out std_logic;
-           oRed, oGreen, oBlue : out std_logic_vector(2 downto 0);
-
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            IO_WE : out  STD_LOGIC;
@@ -114,7 +109,7 @@ component ExMemRegister is
         --数据输入
         RegDst_i : in std_logic_vector(3 downto 0);
         ExData_i : in std_logic_vector(15 downto 0);
-        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_i : in std_logic_vector(15 downto 0); --供SW语句写内??
         --信号输入
         RegWrEn_i : in std_logic;
         MemWr_i : in std_logic;
@@ -125,7 +120,7 @@ component ExMemRegister is
         --数据输出
         RegDst_o : out std_logic_vector(3 downto 0);
         ExData_o : out std_logic_vector(15 downto 0);
-        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内�
+        RegDataB_o : out std_logic_vector(15 downto 0); --供SW语句写内??
         --信号输出
         RegWrEn_o : out std_logic;
         MemWr_o : out std_logic;
@@ -283,20 +278,7 @@ component RegisterFile is
         RegWrData  : in std_logic_vector(15 downto 0);
 
         RegDataA : out std_logic_vector(15 downto 0);
-        RegDataB : out std_logic_vector(15 downto 0);
-
-        r0 : out std_logic_vector(15 downto 0);
-        r1 : out std_logic_vector(15 downto 0);
-        r2 : out std_logic_vector(15 downto 0);
-        r3 : out std_logic_vector(15 downto 0);
-        r4 : out std_logic_vector(15 downto 0);
-        r5 : out std_logic_vector(15 downto 0);
-        r6 : out std_logic_vector(15 downto 0);
-        r7 : out std_logic_vector(15 downto 0);
-        RA : out std_logic_vector(15 downto 0);
-        Tdata : out std_logic_vector(15 downto 0);
-        SPdata : out std_logic_vector(15 downto 0);
-        IHdata : out std_logic_vector(15 downto 0)
+        RegDataB : out std_logic_vector(15 downto 0)
     );
 end component;
 
@@ -364,39 +346,6 @@ component Mux6 is
     res   : out std_logic_vector (15 downto 0));
 end component Mux6;
 
-COMPONENT font
-PORT (
-  clka : IN STD_LOGIC;
-  addra : IN STD_LOGIC_VECTOR(10 DOWNTO 0);
-  douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
-);
-END COMPONENT;
-
-COMPONENT VGA_Controller
-port (
-    reset	: in  std_logic;
-    CLK_in	: in  std_logic;			--50MÊ±ÖÓÊäÈë
-
--- data
-    r0, r1, r2, r3, r4,r5,r6,r7 : in std_logic_vector(15 downto 0);
-
-    PC : in std_logic_vector(15 downto 0);
-    RA : in std_logic_vector(15 downto 0);
-    Tdata : in std_logic_vector(15 downto 0);
-    SPdata : in std_logic_vector(15 downto 0);
-    IHdata : in std_logic_vector(15 downto 0);
-
--- font rom
-    romAddr : out std_logic_vector(10 downto 0);
-    romData : in std_logic_vector(7 downto 0);
---VGA Side
-    hs,vs	: out std_logic;		--ÐÐÍ¬²½¡¢³¡Í¬²½ÐÅºÅ
-    oRed	: out std_logic_vector (2 downto 0);
-    oGreen	: out std_logic_vector (2 downto 0);
-    oBlue	: out std_logic_vector (2 downto 0)
-);
-end component;
-
 --------------signal--------------------
 
 -- Stall & Hazard & Forward --
@@ -442,53 +391,9 @@ signal wb_RegWrEn, wb_WBSrc : STD_LOGIC := '0';
 signal wb_RegDst : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 signal wb_Data, wb_MemData, wb_ExData : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 
--- VGA-DEBUG --
-signal r0, r1, r2, r3, r4, r5, r6, r7, rPC, rRA, rTdata, rSPdata, rIHdata : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
-
-signal fontAddr : STD_LOGIC_VECTOR(10 downto 0);
-signal fontData : STD_LOGIC_VECTOR(7 downto 0);
-
 --------------process-------------------
 
 begin
-
-    -------------- VGA-DEBUGGER -------------
-    VGA: VGA_Controller port map (
-        reset => rst,
-        CLK_in => clk_vga,			--50MÊ±ÖÓÊäÈë
-
-    -- data
-        r0 => r0,
-        r1 => r1,
-        r2 => r2,
-        r3 => r3,
-        r4 => r4,
-        r5 => r5,
-        r6 => r6,
-        r7 => r7,
-
-        PC => rPC,
-        RA => rRA,
-        Tdata => rTdata,
-        SPdata => rSPdata,
-        IHdata => rIHdata,
-
-    -- font rom
-        romAddr => fontAddr,
-        romData => fontData,
-    --VGA Side
-        hs => hs,
-        vs => vs,
-        oRed => oRed,
-        oGreen => oGreen,
-        oBlue => oBlue
-    );
-
-    fontMem: font port map (
-      clka => clk_vga,
-      addra => fontAddr,
-      douta => fontData
-    );
 
     Logger1 <= "0" & ex_IOType;
     Logger2 <= "0" & id_JumpType;
@@ -553,7 +458,6 @@ begin
 
     InstAddr <= if_InstAddr;
     if_Inst <= Inst;
-    rPC <= if_Inst;
 
     IF_Mux3: MUX3 port map (
         InputA => ex_DataA,
@@ -608,19 +512,7 @@ begin
         RegDst => wb_RegDst,
         RegWrData => wb_Data,
         RegDataA => id_RegDataA,
-        RegDataB => id_RegDataB,
-        r0 => r0,
-        r1 => r1,
-        r2 => r2,
-        r3 => r3,
-        r4 => r4,
-        r5 => r5,
-        r6 => r6,
-        r7 => r7,
-        RA => rRA,
-        Tdata => rTdata,
-        SPdata => rSPdata,
-        IHdata => rIHdata
+        RegDataB => id_RegDataB
     );
 
     ID_Extender: Extender port map (

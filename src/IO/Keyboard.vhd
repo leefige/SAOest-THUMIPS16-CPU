@@ -30,8 +30,9 @@ type state_type is (delay, start, s0, s1, s2, s3, s4, s5, s6, s7, parity, stop, 
 signal data, clk, clk1, clk2, odd, fokSignal : std_logic; -- 毛刺处理内部信号, odd为奇偶校验
 signal code : std_logic_vector (7 downto 0);
 signal OutputCode : std_logic_vector (7 downto 0);
-signal ready : std_logic := '0';
 signal state : state_type;
+signal st : std_logic := '0';
+
 begin
 	clk1 <= PS2Clock when rising_edge(Clock);
 	clk2 <= clk1 when rising_edge(Clock);
@@ -43,7 +44,7 @@ begin
 
 	process(Reset, Clock)
 	begin
-		if Reset = '1' then
+		if Reset = '0' then
 			state <= delay ;
 			code <= (others => '0') ;
 			fokSignal <= '1';

@@ -71,7 +71,14 @@ entity IOBridge is
         COM_tbre : in  STD_LOGIC;
         COM_tsre : in  STD_LOGIC;
 
-        PS2_DATA : in  STD_LOGIC
+        VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+        VGA_HS : out  STD_LOGIC;
+        VGA_VS : out  STD_LOGIC;
+
+        PS2_DATA : in  STD_LOGIC;
+        debugger : out std_logic
     );
 end IOBridge;
 
@@ -112,6 +119,31 @@ component DualRAM is
         addrb : in STD_LOGIC_VECTOR(12 downto 0);
         doutb : out STD_LOGIC_VECTOR(15 downto 0)
     );
+end component;
+
+component VGA_640480 is
+	 port(
+        rst :  in  STD_LOGIC;
+        clk :  in std_logic; --25M clk
+        VGA_Data :  in STD_LOGIC_VECTOR(8 downto 0);
+        VGA_Addr :  out STD_LOGIC_VECTOR(12 downto 0);
+
+        VGA_HS :  out STD_LOGIC;
+        VGA_VS :  out STD_LOGIC;
+        VGA_R,VGA_G,VGA_B :  out STD_LOGIC_vector(2 downto 0)
+	);
+end component;
+
+component KeyboardAdapter is
+    port (
+        PS2Data : in std_logic; -- PS2 data
+        PS2Clock : in std_logic; -- PS2 clk
+        Clock : in std_logic;
+        Reset : in std_logic;
+        DataReceive : in std_logic;
+        DataReady : out std_logic ;  -- data output enable signal
+        KeyOutput : out std_logic_vector(7 downto 0) -- scan code signal output
+        );
 end component;
 
 --------------signal--------------------
@@ -160,8 +192,11 @@ signal BF02 : STD_LOGIC_VECTOR (15 downto 0);
 
 signal s_PS2_data_ready : std_logic;
 signal s_PS2_wrn : std_logic;
+signal s_PS2_data : std_logic_vector (7 downto 0);
+signal s_PS2_datareceive : std_logic;
 
 -- VGA
+signal s_clk_VGA : STD_LOGIC;
 signal s_VGA_Addr : STD_LOGIC_VECTOR(12 downto 0);
 signal s_VGA_Data : STD_LOGIC_VECTOR(8 downto 0);
 
@@ -216,6 +251,42 @@ begin
         SRAM_DATA => SRAM2_DATA
     );
 
+    c_GraphicMem: DualRAM port map (
+        clka => clk_50M,
+        ena => '1',     -- 1 means enabled
+        wea => s_GraphicMemWE,     -- write port
+        addra => s_GraphicMemAddrIn,    -- wr addr
+        dina => s_GraphicMemDataIn,     -- wr data
+
+        clkb => clk_50M,
+        enb => '1',     -- 1 means enabled
+        addrb => s_VGA_Addr,    -- vga read addr
+        doutb => s_GraphicMemDataOut
+    );
+
+    c_VGA: VGA_640480 port map (
+        rst => rst,
+        clk => s_clk_VGA,
+        VGA_Data => s_VGA_Data,
+        VGA_Addr => s_VGA_Addr,
+
+        VGA_HS => VGA_HS,
+        VGA_VS => VGA_VS,
+        VGA_R => VGA_R,
+        VGA_G => VGA_G,
+        VGA_B => VGA_B
+    );
+
+    c_key: KeyboardAdapter port map (
+        PS2Data => PS2_DATA, -- PS2 data
+        PS2Clock => clk_PS2, -- PS2 clk
+        Clock => clk_50M,
+        Reset => rst,
+        DataReceive => s_PS2_datareceive,
+        DataReady => s_PS2_data_ready,  -- data output enable signal
+        KeyOutput => s_PS2_data -- scan code signal output
+    );
+
     -----------------------------------------------
 
     -- io state
@@ -234,6 +305,19 @@ begin
             end case;
         end if;
     end process;
+    
+    
+    ----------------------------------------------
+    -- get 25M clk for vga
+    clk_vga: process(clk_50M, rst)
+    begin
+        if (rst = '0') then
+            s_clk_VGA <= '0';
+        elsif (clk_50M'event and clk_50M = '1') then
+            s_clk_VGA <= not s_clk_VGA;
+        end if;
+    end process;
+    
 
     -- timing state
     timing_state_ctrl: process (rst, clk_IO)
@@ -453,13 +537,15 @@ begin
 
     ------------------------PS2-----------------------------
 
+    debugger <= s_PS2_data_ready;
+
 	BF03(0) <= s_PS2_data_ready;
 	BF03(15 downto 1) <= (others=>'0');
 
-	s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
+    -- s_PS2_wrn <= IO_RE when (IOAddr = x"BF02") else '0';
+    s_PS2_datareceive <= '0' when (IOAddr = x"BF02") else '1';
 
-    -- TODO
-    BF02 <= (others=>'Z');
+    BF02 <= "00000000" & s_PS2_data;
 
     ------------------------VGA-----------------------------
 
