@@ -27,11 +27,16 @@ architecture behavior of VGA_640480 is
 
     signal s_VGA_Data : STD_LOGIC_VECTOR(8 downto 0);
 
-	signal posx, posy : integer range 0 to 127;
+	signal unsignedA : unsigned(6 downto 0);
+	signal unsignedB : unsigned(5 downto 0);
+    signal result : unsigned(12 downto 0);
+    signal const80 : std_logic_vector(6 downto 0);
 
 begin
 
     s_VGA_Data <= VGA_Data;
+
+    const80 <= "1010000";
 
     process(clk, rst)	-- set vector_x
     begin
@@ -121,27 +126,32 @@ begin
 		end if;
 	end process;
 
+    ------------------------------------------------
+
+    unsignedA <= unsigned(vector_x(9 downto 3));
+ 	unsignedB <= unsigned(vector_y(8 downto 3));
+ 	result <= unsignedB * unsigned(const80) + unsignedA;
+
+    VGA_Addr <= std_logic_vector(result);
+
  -----------------------------------------------------------------------
 	process(rst, clk, vector_x, vector_y) -- ctrl x, y, output VGA_Addr
 	begin
 		if rst='0' then
-            VGA_Addr <= (others=>'0');
             r1 <= "000";
 			g1 <= "000";
 			b1 <= "000";
         elsif (clk'event and clk = '1') then
-            if (vector_x >= 80) and (vector_x <= 560) then  -- sqaure display area
-                posx <= conv_integer(vector_x(9 downto 3) - "0001010");     -- 80: 1010000, srl by 3: 1010
-                posy <= conv_integer(vector_y(8 downto 3));
-                VGA_Addr <= conv_std_logic_vector(posy * 60 + posx, 13);
+            if vector_x > 639 or vector_y > 479 then
+					r1  <= "000";
+					g1	<= "000";
+					b1	<= "000";
+            else
+                -- posx <= conv_integer(vector_x(9 downto 3));     -- 80: 1010000, srl by 3: 1010
+                -- posy <= conv_integer(vector_y(8 downto 3));
                 r1 <= s_VGA_Data(8 downto 6);
                 g1 <= s_VGA_Data(5 downto 3);
                 b1 <= s_VGA_Data(2 downto 0);
-            else
-                VGA_Addr <= (others=>'0');
-                r1 <= "000";
-                g1 <= "000";
-                b1 <= "000";
             end if;
         end if;
 	end process;

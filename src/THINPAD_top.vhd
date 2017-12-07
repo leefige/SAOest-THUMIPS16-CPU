@@ -122,7 +122,8 @@ end component;
 
 component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
-
+           clk_50M : in STD_LOGIC;
+           clk_11M : in STD_LOGIC;
            rst : in  STD_LOGIC;
 
            IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -156,7 +157,15 @@ component IOBridge
            COM_tbre : in  STD_LOGIC;
            COM_tsre : in  STD_LOGIC;
 
-           PS2_DATA : in  STD_LOGIC);
+           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+           VGA_HS : out  STD_LOGIC;
+           VGA_VS : out  STD_LOGIC;
+
+           PS2_DATA : in  STD_LOGIC;
+           debugger : out std_logic
+        );
 end component;
 
 component Digit7 is
@@ -164,6 +173,16 @@ component Digit7 is
            seg : out  STD_LOGIC_VECTOR (6 downto 0));
 end component;
 
+COMPONENT ClockGen
+	PORT(
+		CLKIN_IN : IN std_logic;
+		RST_IN : IN std_logic;
+		CLKFX_OUT : OUT std_logic;
+		CLKIN_IBUFG_OUT : OUT std_logic;
+		CLK0_OUT : OUT std_logic;
+		CLK2X_OUT : OUT std_logic
+		);
+	END COMPONENT;
 
 --------------signal--------------------
 
@@ -201,6 +220,13 @@ signal s_clk_VGA : STD_LOGIC;
 
 signal clk_for_cpu : STD_LOGIC;
 signal clk_dump : STD_LOGIC;
+signal clk_origin : STD_LOGIC;
+signal clk_double : STD_LOGIC;
+signal clk_fx : STD_LOGIC;
+signal clk_bufg : std_logic;
+
+signal keyboard_dataready : std_logic;
+
 signal counter : INTEGER range 0 to 1024000 := 0;
 signal FreqDiv : INTEGER range 0 to 1024000 := 0;
 
@@ -235,14 +261,16 @@ begin
         seg => DYP2
 	);
 
-    c_CPU : CPU port map (
-        clk_vga => clk_dump,
-        hs => VGA_HS,
-        vs => VGA_VS,
-        oRed => VGA_R,
-        oGreen => VGA_G,
-        oBlue => VGA_B,
+	Inst_ClockGen: ClockGen PORT MAP(
+		CLKIN_IN => clk_11M,
+		RST_IN => not rst,
+		CLKFX_OUT => clk_fx,
+		CLKIN_IBUFG_OUT => clk_bufg,
+		CLK0_OUT => clk_origin,
+		CLK2X_OUT => clk_double
+	);
 
+    c_CPU : CPU port map (
         clk => s_clk_CPU,
         rst => rst,
 
@@ -273,7 +301,8 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
-
+        clk_11M => clk_origin,
+        clk_50M => clk_50M,
         rst => rst,
 
         IOType => FlashIOType,
@@ -305,7 +334,14 @@ begin
         COM_tbre => COM_tbre,
         COM_tsre => COM_tsre,
 
-        PS2_DATA => PS2_DATA
+        VGA_R => VGA_R,
+        VGA_G => VGA_G,
+        VGA_B => VGA_B,
+        VGA_HS => VGA_HS,
+        VGA_VS => VGA_VS,
+
+        PS2_DATA => PS2_DATA,
+        debugger => keyboard_dataready
     );
  
     
@@ -326,14 +362,14 @@ begin
              s_Logger16_8 when "00001100",
              s_Logger16_9 when "00001101",
              s_Logger16_10 when "00001110",
-             s_Logger16_11 when "00001111",
-             FlashReadData when "11111111",
+             "000000000000000" & keyboard_dataready when "00001111",
 
 			 (others=>'0') when others;
 
-    with Switch (15) select
-    s_clk_CPU <=  clk_for_cpu when '1',
-                clk_manual when '0',
+    with Switch (15 downto 14) select
+    s_clk_CPU <=  clk_origin when "01",
+                clk_fx when "10",
+				clk_manual when "00",
                 '0' when others;
 
 	-- s_clk_VGA <= clk_50M; -- TODO: need 25M
@@ -341,7 +377,7 @@ begin
     s_DebugNum1 <= '0' & FlashIOType;
     -- s_DebugNum2 <= s_Logger2;
 
-	 FreqDiv <= conv_integer(unsigned(Switch(14 downto 8)));
+	FreqDiv <= to_integer(unsigned(Switch(13 downto 8)));
 
     process(clk_11M, rst)
     begin

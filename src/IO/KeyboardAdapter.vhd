@@ -9,7 +9,7 @@ port (
 	Reset : in std_logic;
 	DataReceive : in std_logic;
 	DataReady : out std_logic ;  -- data output enable signal
-	Output : out std_logic_vector(7 downto 0) -- scan code signal output
+	KeyOutput : out std_logic_vector(7 downto 0) -- scan code signal output
 	);
 end KeyboardAdapter;
 
@@ -58,7 +58,7 @@ begin
 
 	KeyboardToAscii_c : KeyboardTranslator port map (
 		Data => PS2DataSignal,
-		Output => Output
+		Output => KeyOutput
 	);
 
 end architecture ; -- Behavioral
