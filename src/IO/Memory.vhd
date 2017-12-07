@@ -63,21 +63,21 @@ begin
 
     MemState <= (EN and WE) & (EN and RE);  -- w & r
 
-    pre: process (clk, rst)
-    begin
-        if rst = '0' then
-            SRAM_ADDR <= (others=>'Z');
-            SRAM_EN <= '1';
-            SRAM_OE <= '1';
-            SRAM_WE <= '1';
+    -- pre: process (clk, rst)
+    -- begin
+        -- if rst = '0' then
+            -- SRAM_ADDR <= (others=>'Z');
+            -- SRAM_EN <= '1';
+            -- SRAM_OE <= '1';
+            -- SRAM_WE <= '1';
 
-        elsif clk'event and clk = '1' then  -- rising
+        -- elsif clk'event and clk = '1' then  -- rising
             SRAM_EN <= not EN;
             SRAM_OE <= not RE;
             SRAM_WE <= not WE;
             SRAM_ADDR <= s_Addr;
-        end if;
-    end process;
+        -- end if;
+    -- end process;
 
     data: process (clk, rst)
     begin
