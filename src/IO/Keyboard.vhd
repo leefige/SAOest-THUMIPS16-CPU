@@ -44,7 +44,7 @@ begin
 
 	process(Reset, Clock)
 	begin
-		if Reset = '1' then
+		if Reset = '0' then
 			state <= delay ;
 			code <= (others => '0') ;
 			fokSignal <= '1';

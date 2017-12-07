@@ -213,8 +213,8 @@ signal FlashReadData : std_logic_vector(15 downto 0);
 signal FlashIOType : std_logic_vector(2 downto 0);
 signal FlashIO_WE : std_logic;
 signal FlashIO_RE : std_logic;
-signal Flashclk_cpu : std_logic := '0';
 signal rst_manual : std_logic := '0';
+
 
 signal current_addr : std_logic_vector(15 downto 0) := (others => '0');	--flash当前要读的地址
 
@@ -328,7 +328,6 @@ begin
              s_Logger16_10 when "00001110",
              s_Logger16_11 when "00001111",
              FlashReadData when "11111111",
-             "000000000000000"&Flashclk_cpu when "11111100",
 
 			 (others=>'0') when others;
 
