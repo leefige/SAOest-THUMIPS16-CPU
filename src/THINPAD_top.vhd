@@ -111,41 +111,43 @@ end component;
 
 component IOBridge
     Port ( clk_PS2 : in  STD_LOGIC;
+        clk_VGA : in  STD_LOGIC;
+        clk_CPU : in STD_LOGIC;
+        rst : in  STD_LOGIC;
 
-           rst : in  STD_LOGIC;
+        IOType : in  STD_LOGIC_VECTOR (2 downto 0);
 
-           IOType : in  STD_LOGIC_VECTOR (2 downto 0);
+        IO_WE : in  STD_LOGIC;
+        IO_RE : in  STD_LOGIC;
 
-           IO_WE : in  STD_LOGIC;
-           IO_RE : in  STD_LOGIC;
+        InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
+        InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-           InstAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-           InstOut : out  STD_LOGIC_VECTOR (15 downto 0);
+        IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
+        IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
+        IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
 
-           IOAddr : in  STD_LOGIC_VECTOR (15 downto 0);
-           IODataIn : in  STD_LOGIC_VECTOR (15 downto 0);
-           IODataOut : out  STD_LOGIC_VECTOR (15 downto 0);
+        -- connect to instruments on board; just connect without change
+        SRAM1_EN : out  STD_LOGIC;
+        SRAM1_OE : out  STD_LOGIC;
+        SRAM1_WE : out  STD_LOGIC;
+        SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+        SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-           -- connect to instruments on board; just connect without change
-           SRAM1_EN : out  STD_LOGIC;
-           SRAM1_OE : out  STD_LOGIC;
-           SRAM1_WE : out  STD_LOGIC;
-           SRAM1_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           SRAM1_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
+        SRAM2_EN : out  STD_LOGIC;
+        SRAM2_OE : out  STD_LOGIC;
+        SRAM2_WE : out  STD_LOGIC;
+        SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
+        SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
 
-           SRAM2_EN : out  STD_LOGIC;
-           SRAM2_OE : out  STD_LOGIC;
-           SRAM2_WE : out  STD_LOGIC;
-           SRAM2_ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           SRAM2_DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
+        COM_rdn : out  STD_LOGIC;
+        COM_wrn : out  STD_LOGIC;
+        COM_data_ready : in  STD_LOGIC;
+        COM_tbre : in  STD_LOGIC;
+        COM_tsre : in  STD_LOGIC;
 
-           COM_rdn : out  STD_LOGIC;
-           COM_wrn : out  STD_LOGIC;
-           COM_data_ready : in  STD_LOGIC;
-           COM_tbre : in  STD_LOGIC;
-           COM_tsre : in  STD_LOGIC;
-
-           PS2_DATA : in  STD_LOGIC);
+        PS2_DATA : in  STD_LOGIC
+		   );
 end component;
 
 component ClockGen
@@ -261,6 +263,8 @@ begin
 
     c_IOBridge : IOBridge port map (
         clk_PS2 => clk_PS2,
+		clk_VGA => s_clk_25M,
+        clk_CPU => s_clk_CPU,
 
         rst => rst,
 

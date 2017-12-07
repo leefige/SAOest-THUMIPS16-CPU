@@ -35,6 +35,7 @@ entity IOBridge is
     Port (
         clk_PS2 : in  STD_LOGIC;
         clk_VGA : in  STD_LOGIC;
+        clk_CPU : in STD_LOGIC;
         rst : in  STD_LOGIC;
 
         IOType : in  STD_LOGIC_VECTOR (2 downto 0);
@@ -84,6 +85,9 @@ component Memory is
         WE : in STD_LOGIC;
         RE : in STD_LOGIC;
         EN : in STD_LOGIC;
+
+        clk : in STD_LOGIC;
+        rst : in STD_LOGIC;
 
         -- connect to SRAM on board
         SRAM_EN : out  STD_LOGIC;
@@ -173,6 +177,8 @@ begin
         WE => s_DataMemWE,
         RE => s_DataMemRE,
         EN => s_DataMemEN,
+        clk => clk_CPU,
+        rst => rst,
 
         -- connect to SRAM1 on board
         SRAM_EN => SRAM1_EN,
@@ -190,6 +196,8 @@ begin
         WE => s_InstMemWE,
         RE => s_InstMemRE,
         EN => s_InstMemEN,
+        clk => clk_CPU,
+        rst => rst,
 
         -- connect to SRAM1 on board
         SRAM_EN => SRAM2_EN,
@@ -371,14 +379,27 @@ begin
 
     ------------------------COM-----------------------------
 
-    BF01(0) <= COM_tsre and COM_tbre;
-	BF01(1) <= COM_data_ready;
+    -- BF01(0) <= COM_tsre and COM_tbre;
+	-- BF01(1) <= COM_data_ready;
 	BF01(15 downto 2) <= (others=>'0');
+
+    get_com: process (clk_CPU, rst)
+    begin
+        if rst = '0' then
+            BF01(0) <= '0';
+            BF01(1) <= '0';
+            BF00 <= (others=>'Z');    -- DATA from BUS
+        elsif clk_CPU'event and clk_CPU = '0' then  -- falling
+            BF01(0) <= COM_tsre and COM_tbre;
+            BF01(1) <= COM_data_ready;
+            BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
+        end if;
+    end process;
 
     COM_wrn <= not IO_WE when (IOAddr = x"BF00") else '1';
 	COM_rdn <= not IO_RE when (IOAddr = x"BF00") else '1';
 
-    BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
+    -- BF00 <= "00000000" & s_DataFromBus(7 downto 0);    -- DATA from BUS
 
     ------------------------PS2-----------------------------
 

@@ -36,6 +36,8 @@ entity Memory is
            WE : in STD_LOGIC;
            RE : in STD_LOGIC;
            EN : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           rst : in STD_LOGIC;
 
            -- connect to SRAM on board
            SRAM_EN : out  STD_LOGIC;
@@ -58,26 +60,44 @@ begin
     s_DataIn <= DataIn;
 
     -- control SRAM1 on board
-    SRAM_EN <= not EN;
-    SRAM_OE <= not RE;
-    SRAM_WE <= not WE;
-    SRAM_ADDR <= s_Addr;
 
     MemState <= (EN and WE) & (EN and RE);  -- w & r
 
-    process (MemState, s_DataIn)
+    pre: process (clk, rst)
     begin
-        case MemState is
-            when "10" =>    -- write
-                SRAM_DATA <= s_DataIn;
-                s_DataOut <= (others=>'Z');
-            when "01" =>    -- read
-                SRAM_DATA <= (others=>'Z');
-                s_DataOut <= SRAM_DATA;
-            when others =>
-                SRAM_DATA <= (others=>'Z');
-                s_DataOut <= (others=>'Z');
-        end case;
+        if rst = '0' then
+            SRAM_ADDR <= (others=>'Z');
+            SRAM_EN <= '1';
+            SRAM_OE <= '1';
+            SRAM_WE <= '1';
+
+        elsif clk'event and clk = '1' then  -- rising
+            SRAM_EN <= not EN;
+            SRAM_OE <= not RE;
+            SRAM_WE <= not WE;
+            SRAM_ADDR <= s_Addr;
+        end if;
+    end process;
+
+    data: process (clk, rst)
+    begin
+        if rst = '0' then
+            SRAM_DATA <= (others=>'Z');
+            s_DataOut <= (others=>'Z');
+
+        elsif clk'event and clk = '0' then  --falling
+            case MemState is
+                when "10" =>    -- write
+                    SRAM_DATA <= s_DataIn;
+                    s_DataOut <= (others=>'Z');
+                when "01" =>    -- read
+                    SRAM_DATA <= (others=>'Z');
+                    s_DataOut <= SRAM_DATA;
+                when others =>
+                    SRAM_DATA <= (others=>'Z');
+                    s_DataOut <= (others=>'Z');
+            end case;
+        end if;
     end process;
 
 end Behavioral;
