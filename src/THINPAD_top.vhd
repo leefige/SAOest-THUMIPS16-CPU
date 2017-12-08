@@ -171,15 +171,15 @@ component Digit7 is
            seg : out  STD_LOGIC_VECTOR (6 downto 0));
 end component;
 
--- COMPONENT ClockGen
--- 	PORT(
--- 		CLKIN_IN : IN std_logic;
--- 		RST_IN : IN std_logic;
--- 		CLKFX_OUT : OUT std_logic;
--- 		CLKIN_IBUFG_OUT : OUT std_logic;
--- 		CLK0_OUT : OUT std_logic
--- 		);
--- END COMPONENT;
+COMPONENT ClockGen
+	PORT(
+		CLKIN_IN : IN std_logic;
+		RST_IN : IN std_logic;
+		CLKFX_OUT : OUT std_logic;
+		CLKIN_IBUFG_OUT : OUT std_logic;
+		CLK0_OUT : OUT std_logic
+		);
+END COMPONENT;
 
 --------------signal--------------------
 
@@ -258,15 +258,15 @@ begin
         seg => DYP2
 	);
 
-	-- c_ClockGen: ClockGen PORT MAP(
-	-- 	CLKIN_IN => clk_50M,
-	-- 	RST_IN => not rst,
-	-- 	CLKFX_OUT => clk_fx,
-	-- 	CLKIN_IBUFG_OUT => clk_bufg,
-	-- 	CLK0_OUT => clk_origin
-	-- );
+	c_ClockGen: ClockGen PORT MAP(
+		CLKIN_IN => clk_50M,
+		RST_IN => not rst,
+		CLKFX_OUT => clk_fx,
+		CLKIN_IBUFG_OUT => clk_bufg,
+		CLK0_OUT => clk_origin
+	);
 
-    clk_origin <= clk_50M;
+    -- clk_origin <= clk_50M;
 
     c_CPU : CPU port map (
         clk => s_clk_CPU,
@@ -374,12 +374,12 @@ begin
 
     with Switch (14) select
     clk_auto <=  clk_ori_dbl when '1',
-				clk_50M when '0',
+				clk_fx when '0',
                 '0' when others;
 
     with Switch (13) select
     clk_ori_dbl <=  clk_11M when '1',
-				clk_50M when '0',
+				clk_origin when '0',
                 '0' when others;
 
     s_DebugNum1 <= '0' & FlashIOType;
